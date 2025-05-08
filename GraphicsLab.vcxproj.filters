@@ -48,9 +48,6 @@
     <ClCompile Include="Src\GUIApp\GUI\CTimeLineView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\App\ScriptApp\CDevApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Src\GUIApp\GUI\CGUIMaterialFrameTab.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -105,9 +102,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\GUIApp\GUI\CTimeLineView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\App\ScriptApp\CDevApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\GUIApp\GUI\SGUIParams.h">
