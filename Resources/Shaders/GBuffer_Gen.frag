@@ -12,8 +12,7 @@ layout(location = 2) out vec4 gAlbedo;
 layout(location = 3) out vec4 gDepth;
 layout(location = 4) out vec4 gCustomParam0;
 
-layout(binding = 0) uniform FragUniformBuffer{
-
+layout(binding = 2) uniform FragUniformBuffer{
 	vec4 baseColorFactor;
 	
     float metallicFactor;
@@ -28,16 +27,16 @@ layout(binding = 0) uniform FragUniformBuffer{
 } f_ubo;
 
 #ifdef USE_OPENGL
-layout(binding = 2) uniform sampler2D baseColorTexture;
-layout(binding = 4) uniform sampler2D metallicRoughnessTexture;
-layout(binding = 6) uniform sampler2D normalTexture;
+layout(binding = 3) uniform sampler2D baseColorTexture;
+layout(binding = 5) uniform sampler2D metallicRoughnessTexture;
+layout(binding = 7) uniform sampler2D normalTexture;
 #else
-layout(binding = 2) uniform texture2D baseColorTexture;
-layout(binding = 3) uniform sampler baseColorTextureSampler;
-layout(binding = 4) uniform texture2D metallicRoughnessTexture;
-layout(binding = 5) uniform sampler metallicRoughnessTextureSampler;
-layout(binding = 6) uniform texture2D normalTexture;
-layout(binding = 7) uniform sampler normalTextureSampler;
+layout(binding = 3) uniform texture2D baseColorTexture;
+layout(binding = 4) uniform sampler baseColorTextureSampler;
+layout(binding = 5) uniform texture2D metallicRoughnessTexture;
+layout(binding = 6) uniform sampler metallicRoughnessTextureSampler;
+layout(binding = 7) uniform texture2D normalTexture;
+layout(binding = 8) uniform sampler normalTextureSampler;
 #endif
 
 vec4 GetBaseColor()

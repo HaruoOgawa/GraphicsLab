@@ -1,61 +1,158 @@
 {
-  "name": "sample_scene",
-
-  "materialframes": [
-    {
-      "name": "pbr_mat",
-      "filename": "Resources/MaterialFrame/PBR_MF.json"
-    }
-  ],
-
-  "objects": [
-    {
-      "name": "SampleObj",
-      "renderpasslist":[
-        "MainResultPass"
-      ],
-      "transform": {
-        "pos": [ 0.0, 0.0, 0.0 ],
-        "rotate": [ 0.0, 0.0, 0.0 ],
-        "scale": [ 1.0, 1.0, 1.0 ]
-      },
-      "enable": true,
-      "rootnodes": [
-        0
-      ],
-      "nodes": [
+    "materialframes": [
         {
-          "name": "testnode",
-          "transform": {
-            "pos": [ 0.0, 0.0, 0.0 ],
-            "rotate": [ 0.0, 0.0, 0.0 ],
-            "scale": [ 1.0, 1.0, 1.0 ]
-          },
-          "meshindex": 0
-        }
-      ],
-      "meshs": [
+            "name": "GBuffer_Gen",
+            "filename": "Resources/MaterialFrame/GBuffer_Gen_MF.json"
+        },
         {
-          "primitives": [
-            {
-              "type": "cube"
-            }
-          ]
+            "name": "pbr_mat",
+            "filename": "Resources/MaterialFrame/PBR_MF.json"
         }
-      ],
-      "materials": [
+    ],
+    "scenetextureset": {
+        "frametextures": null
+    },
+    "timeline": {
+        "filename": "Resources\\Scene\\Sample.tl"
+    },
+    "physics": {
+        "enabled": true
+    },
+    "objects": [
         {
-          "meshindex": 0,
-          "primitiveindex": 0,
-          "materialframe": "pbr_mat",
-          "uniformvalues": [
-          ],
-          "textures": [
-          ]
+            "name": "SampleObj",
+            "filename": "",
+            "renderpasslist": [
+                "GBufferGenPass"
+            ],
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "enable": true,
+            "rootnodes": [
+                0
+            ],
+            "nodes": [
+                {
+                    "name": "testnode",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 0
+                }
+            ],
+            "meshs": [
+                {
+                    "primitives": [
+                        {
+                            "type": "cube"
+                        }
+                    ]
+                }
+            ],
+            "materials": [
+                {
+                    "meshindex": 0,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "materialType",
+                            "type": "int",
+                            "value": [
+                                1
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "LightList",
+            "filename": "",
+            "renderpasslist": [
+                "MainResultPass"
+            ],
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "enable": true,
+            "rootnodes": [
+                0
+            ],
+            "nodes": [
+                {
+                    "name": "DirectionalLight",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": -1
+                }
+            ],
+            "components": [
+                {
+                    "type": "DirectionalLight"
+                }
+            ]
         }
-      ],
-      "textureset": [
-      ]
-    }
-  ]
+    ]
 }
