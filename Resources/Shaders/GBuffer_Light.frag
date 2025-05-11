@@ -1,6 +1,8 @@
 #version 450
 
-layout(location = 0) in vec4 v2f_ProjPos;
+layout(location = 0) in vec2 v2f_UV;
+layout(location = 1) in vec4 v2f_ProjPos;
+
 layout(location = 0) out vec4 outColor;
 
 layout(binding = 1) uniform LightUniformBuffer{
@@ -89,6 +91,7 @@ vec4 GetCustomParam0(vec2 ScreenUV)
 void main()
 {
     vec2 ScreenUV = v2f_ProjPos.xy / v2f_ProjPos.w;
+    ScreenUV = ScreenUV * 0.5 + 0.5;
 
     vec3 col = vec3(0.0);
 
@@ -110,6 +113,8 @@ void main()
         // ライトは加算描画なので黒でいい
         col = vec3(0.0);
     }
+
+    col = vec3(ScreenUV, 0.0);
 
     outColor = vec4(col, 1.0);
 }

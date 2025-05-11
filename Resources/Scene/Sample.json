@@ -122,7 +122,8 @@
             },
             "enable": true,
             "rootnodes": [
-                0
+                0,
+                1
             ],
             "nodes": [
                 {
@@ -145,12 +146,39 @@
                         ]
                     },
                     "enable": true,
-                    "meshindex": -1
-                }
-            ],
-            "components": [
+                    "meshindex": -1,
+                    "components": [
+                        {
+                            "type": "DirectionalLight"
+                        }
+                    ]
+                },
                 {
-                    "type": "DirectionalLight"
+                    "name": "PointLight",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": -1,
+                    "components": [
+                        {
+                            "type": "PointLight"
+                        }
+                    ]
                 }
             ]
         }

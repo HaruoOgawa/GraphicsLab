@@ -1,14 +1,56 @@
 {
-  "name": "DirectionalLight",
-  "outputcolorcount": 1,
+  "name": "PointLight",
+  "outputcolorcount": 5,
   "shaderList": [
     {
-      "name": "renderboard_vert",
-      "shaderFile": "Resources\\Shaders\\renderboard",
+      "name": "minvertex_vert",
+      "shaderFile": "Resources\\Shaders\\minvertex",
       "autoShaderExtension": true,
       "shadercode": "",
       "shaderType": "vertex",
-      "uniformBlockList": []
+      "uniformBlockList": [
+         {
+          "name": "VertUniformBuffer",
+          "binding": 0,
+          "isWritable": false,
+          "type": "ubo",
+          "bufferUpdateType": "cpu",
+          "values": [
+            {
+              "name": "model",
+              "type": "mat4",
+              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "view",
+              "type": "mat4",
+              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "proj",
+              "type": "mat4",
+              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "lightVPMat",
+              "type": "mat4",
+              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+              "input": {
+                "hide": true
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "GBuffer_Light_frag",
