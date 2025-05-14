@@ -55,6 +55,60 @@
               "input": {
                 "hide": true
               }
+            },
+            {
+              "name": "type",
+              "type": "int",
+              "initValue": [ 1 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "radius",
+              "type": "float",
+              "initValue": [ 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "intensity",
+              "type": "float",
+              "initValue": [ 1.0 ],
+              "input": {
+              }
+            },
+            {
+              "name": "fPad0",
+              "type": "float",
+              "initValue": [ 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "dir",
+              "type": "vec4",
+              "initValue": [ 1.0, 1.0, 1.0, 0.0 ],
+              "input": {
+              }
+            },
+            {
+              "name": "pos",
+              "type": "vec4",
+              "initValue": [ 0.0, 0.0, 0.0, 0.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "color",
+              "type": "vec4",
+              "initValue": [ 1.0, 1.0, 1.0, 1.0 ],
+              "input": {
+                "type": "color"
+              }
             }
           ]
         },
