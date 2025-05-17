@@ -209,8 +209,8 @@ namespace imageeffect
 			MaterialY->ReplaceTextureIndex("SrcTex", 1);
 		}
 
-		if (!m_ScreenObjX->CreatePresetSimply(m_pGraphicsAPI, nullptr, graphics::CPresetPrimitive::CreateBoard(m_pGraphicsAPI), graphics::EPresetPrimitiveType::BOARD, MaterialX, nullptr)) return false;
-		if (!m_ScreenObjY->CreatePresetSimply(m_pGraphicsAPI, nullptr, graphics::CPresetPrimitive::CreateBoard(m_pGraphicsAPI), graphics::EPresetPrimitiveType::BOARD, MaterialY, nullptr)) return false;
+		if (!m_ScreenObjX->CreatePresetSimply(m_pGraphicsAPI, nullptr, graphics::CPresetPrimitive::CreateBoard(m_pGraphicsAPI), graphics::EPresetPrimitiveType::BOARD, MaterialX)) return false;
+		if (!m_ScreenObjY->CreatePresetSimply(m_pGraphicsAPI, nullptr, graphics::CPresetPrimitive::CreateBoard(m_pGraphicsAPI), graphics::EPresetPrimitiveType::BOARD, MaterialY)) return false;
 
 		return true;
 	}

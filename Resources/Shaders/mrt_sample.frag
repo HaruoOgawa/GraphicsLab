@@ -1,6 +1,7 @@
 #version 450
 
 layout(location = 0) in vec2 fUV;
+layout(location = 1) in vec4 v2f_ProjPos;
 
 #ifdef USE_OPENGL
 layout(binding = 1) uniform sampler2D texGPosition;

@@ -311,7 +311,7 @@ namespace gui
 				Object->AddPassName(PassName);
 
 				// ToDo: ‘¦Žž¶¬‚·‚é
-				if (!Object->Create(pGraphicsAPI, nullptr, nullptr)) return false;
+				if (!Object->Create(pGraphicsAPI, nullptr)) return false;
 
 				GUIParams.SceneController->AddObject(Object);
 
