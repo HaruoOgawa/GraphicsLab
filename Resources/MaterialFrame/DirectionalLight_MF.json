@@ -58,8 +58,8 @@
             },
             {
               "name": "type",
-              "type": "int",
-              "initValue": [ 1 ],
+              "type": "float",
+              "initValue": [ 1.0 ],
               "input": {
                 "hide": true
               }
@@ -108,6 +108,14 @@
               "initValue": [ 1.0, 1.0, 1.0, 1.0 ],
               "input": {
                 "type": "color"
+              }
+            },
+            {
+              "name": "cameraPos",
+              "type": "vec4",
+              "initValue": [ 0.0, 0.0, 0.0, 0.0 ],
+              "input": {
+                "hide": true
               }
             }
           ]
