@@ -90,14 +90,14 @@
             {
               "name": "dir",
               "type": "vec4",
-              "initValue": [ 1.0, 1.0, 1.0, 0.0 ],
+              "initValue": [ 2.358, -15.6, 0.59, 0.0 ],
               "input": {
               }
             },
             {
               "name": "pos",
               "type": "vec4",
-              "initValue": [ 0.0, 0.0, 0.0, 0.0 ],
+              "initValue": [ -2.358, 15.6, -0.59, 0.0 ],
               "input": {
                 "hide": true
               }

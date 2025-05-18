@@ -349,6 +349,9 @@ vec3 ComputeLight(GBufferResult gResult, LightParam light)
 
     col *= light.attenuation;
 
+	// カラースペースをリニアにする
+	col = pow(col, vec3(1.0/2.2));
+
     return col;
 }
 
