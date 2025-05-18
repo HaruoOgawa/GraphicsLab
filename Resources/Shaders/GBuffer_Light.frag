@@ -56,6 +56,7 @@ struct LightParam
     vec3 dir;
     vec3 color;
     float attenuation; // 減衰(intensityやradiusを使った計算結果)
+	bool enabled;
 };
 
 vec3 GetWorldPos(vec2 ScreenUV)
@@ -139,14 +140,23 @@ LightParam GetLightParam(GBufferResult gResult)
         light.dir = normalize(l_ubo.dir.xyz);
         light.color = l_ubo.color.rgb;
         light.attenuation = 1.0; // 減衰なし
+		light.enabled = true;
     }
     else if(l_ubo.type == 2.0)
     {
         // Point Light
-        vec3 l2v = gResult.worldPos.xyz - l_ubo.pos.xyz;
+		vec3 l2v = l_ubo.pos.xyz - gResult.worldPos.xyz;
         light.dir = normalize(l2v);
         light.color = l_ubo.color.rgb;
-        light.attenuation = l_ubo.intensity * (length(l2v) / l_ubo.radius);
+
+		float len = length(l2v);
+
+		// https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_lights_punctual/README.md#range-property
+        light.attenuation = l_ubo.intensity * max( min(1.0 - pow((len / l_ubo.radius), 4.0), 1.0), 0.0 ) / pow(len, 2.0);
+        // light.attenuation = l_ubo.intensity * (1.0 - len / l_ubo.radius);
+
+		// ライト球の範囲外なら描画しない
+		light.enabled = (len <= l_ubo.radius); 
     }
 
     return light;
@@ -368,7 +378,7 @@ void main()
 	
     // Compute Color
     vec3 col = vec3(0.0);
-    if(gResult.materialType == 1.0)
+    if(gResult.materialType == 1.0 && light.enabled)
     {
         // PBR
         col = ComputeLight(gResult, light);

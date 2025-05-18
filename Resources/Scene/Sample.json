@@ -88,9 +88,9 @@
                     "uniformvalues": [
                         {
                             "name": "materialType",
-                            "type": "int",
+                            "type": "float",
                             "value": [
-                                1
+                                1.0
                             ]
                         }
                     ]

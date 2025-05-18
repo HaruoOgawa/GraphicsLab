@@ -23,7 +23,7 @@ layout(binding = 2) uniform FragUniformBuffer{
     int   useBaseColorTexture;
     int   useMetallicRoughnessTexture;
     int   useNormalTexture;
-	int   materialType;
+	float   materialType;
 } f_ubo;
 
 #ifdef USE_OPENGL
@@ -117,5 +117,5 @@ void main(){
 	gNormal = vec4(normal, 0.0);
 	gAlbedo = baseColor;
 	gDepth = vec4(depth);
-	gCustomParam0 = vec4(float(f_ubo.materialType), metallicRoughness.r, metallicRoughness.g, 0.0);
+	gCustomParam0 = vec4(f_ubo.materialType, metallicRoughness.r, metallicRoughness.g, 0.0);
 }
