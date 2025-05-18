@@ -139,7 +139,7 @@ LightParam GetLightParam(GBufferResult gResult)
         // Directional Light
         light.dir = normalize(l_ubo.dir.xyz);
         light.color = l_ubo.color.rgb;
-        light.attenuation = 1.0; // 減衰なし
+        light.attenuation = l_ubo.intensity;
 		light.enabled = true;
     }
     else if(l_ubo.type == 2.0)

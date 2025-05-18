@@ -9,6 +9,62 @@
             "filename": "Resources/MaterialFrame/PBR_MF.json"
         }
     ],
+    "valueregistries": [
+        {
+            "registryname": "DirectionalLight_27812_12898",
+            "values": [
+                {
+                    "name": "color",
+                    "type": "vec4",
+                    "initValue": [
+                        0.0,
+                        0.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "name": "dir",
+                    "type": "vec4",
+                    "initValue": [
+                        2.3580000400543213,
+                        -15.600000381469727,
+                        0.5899999737739563,
+                        0.0
+                    ]
+                },
+                {
+                    "name": "intensity",
+                    "type": "float",
+                    "initValue": [
+                        0.25
+                    ]
+                }
+            ]
+        },
+        {
+            "registryname": "PointLight_12109_14090",
+            "values": [
+                {
+                    "name": "color",
+                    "type": "vec4",
+                    "initValue": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                },
+                {
+                    "name": "intensity",
+                    "type": "float",
+                    "initValue": [
+                        0.25
+                    ]
+                }
+            ]
+        }
+    ],
     "scenetextureset": {
         "frametextures": null
     },
@@ -149,7 +205,8 @@
                     "meshindex": -1,
                     "components": [
                         {
-                            "type": "DirectionalLight"
+                            "type": "DirectionalLight",
+                            "valueregistry": "DirectionalLight_27812_12898"
                         }
                     ]
                 },
@@ -176,7 +233,8 @@
                     "meshindex": -1,
                     "components": [
                         {
-                            "type": "PointLight"
+                            "type": "PointLight",
+                            "valueregistry": "PointLight_12109_14090"
                         }
                     ]
                 }

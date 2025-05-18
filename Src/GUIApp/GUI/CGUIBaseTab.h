@@ -13,12 +13,15 @@ namespace object {
 	class CNode;
 }
 
+namespace scriptable { class CComponent; }
+
 namespace gui
 {
 	class CGUIBaseTab
 	{
 	private:
 		static bool DrawTransformGUI(const std::shared_ptr<math::CTransform>& Transform);
+		static bool DrawComponentGUI(const std::shared_ptr<scriptable::CComponent>& Component);
 	public:
 		static bool Draw(const std::vector<std::shared_ptr<object::C3DObject>>& ObjectList, int SelectedObjectIndex, int SelectedNodeIndex);
 	};
