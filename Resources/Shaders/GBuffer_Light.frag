@@ -145,7 +145,7 @@ LightParam GetLightParam(GBufferResult gResult)
     else if(l_ubo.type == 2.0)
     {
         // Point Light
-		vec3 l2v = l_ubo.pos.xyz - gResult.worldPos.xyz;
+		vec3 l2v = gResult.worldPos.xyz - l_ubo.pos.xyz;
         light.dir = normalize(l2v);
         light.color = l_ubo.color.rgb;
 

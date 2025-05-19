@@ -181,7 +181,7 @@
             {
               "name": "materialType",
               "type": "float",
-              "initValue": [ -1 ],
+              "initValue": [ 1 ],
               "input": {
               }
             }
