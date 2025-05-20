@@ -17,8 +17,8 @@
                     "name": "color",
                     "type": "vec4",
                     "initValue": [
-                        0.0,
-                        0.0,
+                        1.0,
+                        1.0,
                         1.0,
                         1.0
                     ]
@@ -37,7 +37,7 @@
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.25
+                        1.0
                     ]
                 }
             ]
@@ -50,8 +50,8 @@
                     "type": "vec4",
                     "initValue": [
                         1.0,
-                        0.0,
-                        0.0,
+                        0.9599999785423279,
+                        0.8399999737739563,
                         1.0
                     ]
                 },
@@ -59,7 +59,26 @@
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.25
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "registryname": "BloomRegistry",
+            "values": [
+                {
+                    "name": "Intencity",
+                    "type": "float",
+                    "initValue": [
+                        1.5
+                    ]
+                },
+                {
+                    "name": "Threshold",
+                    "type": "float",
+                    "initValue": [
+                        1.0
                     ]
                 }
             ]
@@ -84,7 +103,7 @@
             "transform": {
                 "pos": [
                     0.0,
-                    0.0,
+                    -2.0,
                     0.0
                 ],
                 "rotate": [
@@ -100,20 +119,66 @@
             },
             "enable": true,
             "rootnodes": [
-                0
+                0,
+                1,
+                2
             ],
             "nodes": [
                 {
                     "name": "testnode",
                     "transform": {
                         "pos": [
+                            1.0,
+                            0.5,
+                            -0.75
+                        ],
+                        "rotate": [
                             0.0,
+                            30.000001907348633,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            2.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 0
+                },
+                {
+                    "name": "aaa",
+                    "transform": {
+                        "pos": [
+                            -1.0,
                             0.0,
                             0.0
                         ],
                         "rotate": [
                             0.0,
                             -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            0.5,
+                            0.5,
+                            0.5
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 1
+                },
+                {
+                    "name": "Cube",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            0.0,
+                            1.25
+                        ],
+                        "rotate": [
+                            0.0,
+                            -20.0,
                             0.0
                         ],
                         "scale": [
@@ -133,6 +198,13 @@
                             "type": "cube"
                         }
                     ]
+                },
+                {
+                    "primitives": [
+                        {
+                            "type": "sphere"
+                        }
+                    ]
                 }
             ],
             "materials": [
@@ -140,16 +212,13 @@
                     "meshindex": 0,
                     "primitiveindex": 0,
                     "materialframe": "GBuffer_Gen",
-                    "cull": "back",
-                    "uniformvalues": [
-                        {
-                            "name": "materialType",
-                            "type": "float",
-                            "value": [
-                                1.0
-                            ]
-                        }
-                    ]
+                    "cull": "back"
+                },
+                {
+                    "meshindex": 1,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back"
                 }
             ]
         },
@@ -172,7 +241,7 @@
                 ],
                 "scale": [
                     1.0,
-                    1.0,
+                    5.0,
                     1.0
                 ]
             },
@@ -201,7 +270,7 @@
                             1.0
                         ]
                     },
-                    "enable": true,
+                    "enable": false,
                     "meshindex": -1,
                     "components": [
                         {
@@ -212,6 +281,37 @@
                 },
                 {
                     "name": "PointLight",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            1.5,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            10.0,
+                            10.0,
+                            10.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": -1,
+                    "children": [
+                        2
+                    ],
+                    "components": [
+                        {
+                            "type": "PointLight",
+                            "valueregistry": "PointLight_12109_14090"
+                        }
+                    ]
+                },
+                {
+                    "name": "Sphere",
                     "transform": {
                         "pos": [
                             0.0,
@@ -229,12 +329,284 @@
                             1.0
                         ]
                     },
-                    "enable": true,
-                    "meshindex": -1,
-                    "components": [
+                    "enable": false,
+                    "meshindex": 0
+                }
+            ],
+            "meshs": [
+                {
+                    "primitives": [
                         {
-                            "type": "PointLight",
-                            "valueregistry": "PointLight_12109_14090"
+                            "type": "sphere"
+                        }
+                    ]
+                }
+            ],
+            "materials": [
+                {
+                    "meshindex": 0,
+                    "primitiveindex": 0,
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "CornelBox",
+            "filename": "",
+            "renderpasslist": [
+                "GBufferGenPass"
+            ],
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "enable": true,
+            "rootnodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+            ],
+            "nodes": [
+                {
+                    "name": "Wall_NY",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            -2.5,
+                            0.0
+                        ],
+                        "rotate": [
+                            -90.0,
+                            5.008956122765085e-06,
+                            5.008956577512436e-06
+                        ],
+                        "scale": [
+                            2.5,
+                            2.5,
+                            2.5
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 0
+                },
+                {
+                    "name": "Wall_PY",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            2.5,
+                            0.0
+                        ],
+                        "rotate": [
+                            90.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            2.5,
+                            2.5,
+                            2.5
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 0
+                },
+                {
+                    "name": "Wall_NX",
+                    "transform": {
+                        "pos": [
+                            -2.5,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            89.98021697998047,
+                            0.0
+                        ],
+                        "scale": [
+                            2.5,
+                            2.5,
+                            2.5
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 0
+                },
+                {
+                    "name": "Wall_PX",
+                    "transform": {
+                        "pos": [
+                            2.5,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            180.0,
+                            89.98021697998047,
+                            0.0
+                        ],
+                        "scale": [
+                            2.5,
+                            2.5,
+                            2.5
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 0
+                },
+                {
+                    "name": "Wall_NZ",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            0.0,
+                            -2.5
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            2.5,
+                            2.5,
+                            2.5
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 1
+                },
+                {
+                    "name": "Wall_PZ",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            0.0,
+                            2.5
+                        ],
+                        "rotate": [
+                            180.0,
+                            -5.008956122765085e-06,
+                            180.0
+                        ],
+                        "scale": [
+                            2.5,
+                            2.5,
+                            2.5
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 2
+                }
+            ],
+            "meshs": [
+                {
+                    "primitives": [
+                        {
+                            "type": "board"
+                        }
+                    ]
+                },
+                {
+                    "primitives": [
+                        {
+                            "type": "board"
+                        }
+                    ]
+                },
+                {
+                    "primitives": [
+                        {
+                            "type": "board"
+                        }
+                    ]
+                }
+            ],
+            "materials": [
+                {
+                    "meshindex": 0,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back"
+                },
+                {
+                    "meshindex": 1,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "baseColorFactor",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "meshindex": 2,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "baseColorFactor",
+                            "type": "vec4",
+                            "value": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ]
                         }
                     ]
                 }
