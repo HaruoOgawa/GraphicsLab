@@ -19,6 +19,8 @@
 #include "../../GUIApp/GUI/CGraphicsEditingWindow.h"
 #include "../../GUIApp/Model/CFileModifier.h"
 
+#include "../../ImageEffect/CBloomEffect.h"
+
 namespace app
 {
 	CScriptApp::CScriptApp() :
@@ -37,7 +39,8 @@ namespace app
 		m_GraphicsEditingWindow(std::make_shared<gui::CGraphicsEditingWindow>()),
 #endif // USE_GUIENGINE
 		m_FileModifier(std::make_shared<CFileModifier>()),
-		m_TimelineController(std::make_shared<timeline::CTimelineController>())
+		m_TimelineController(std::make_shared<timeline::CTimelineController>()),
+		m_BloomEffect(std::make_shared<imageeffect::CBloomEffect>("MainResultPass"))
 	{
 		m_ViewCamera->SetPos(glm::vec3(-7.0f, 1.0f, 0.0f));
 		m_MainCamera = m_ViewCamera;
@@ -71,6 +74,9 @@ namespace app
 		}
 
 		if (!pGraphicsAPI->CreateRenderPass("MainResultPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), -1, -1, {})) return false;
+
+		// ブルームエフェクト
+		if (!m_BloomEffect->Initialize(pGraphicsAPI, pLoadWorker)) return false;
 
 		m_MainFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "", pGraphicsAPI->FindOffScreenRenderPass("MainResultPass")->GetFrameTextureList());
 		if (!m_MainFrameRenderer->Create(pLoadWorker, "Resources\\MaterialFrame\\FrameTexture_MF.json")) return false;
@@ -119,6 +125,7 @@ namespace app
 			}
 		}
 
+		if (!m_BloomEffect->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_MainFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 
 		return true;
@@ -155,6 +162,9 @@ namespace app
 			if (!pGraphicsAPI->EndRender()) return false;
 		}
 
+		// BloomEffect
+		if (!m_BloomEffect->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+
 		// Main FrameBuffer
 		{
 			if (!pGraphicsAPI->BeginRender()) return false;
@@ -169,6 +179,7 @@ namespace app
 				GUIParams.CameraMode = (m_CameraSwitchToggle) ? "ViewCamera" : "TraceCamera";
 				GUIParams.Camera = m_MainCamera;
 				GUIParams.InputState = InputState;
+				GUIParams.ValueRegistryList.emplace(m_BloomEffect->GetRegistryName(), m_BloomEffect);
 
 				if (!GUIEngine->BeginFrame(pGraphicsAPI)) return false;
 				if (!m_GraphicsEditingWindow->Draw(pGraphicsAPI, GUIParams, GUIEngine))
@@ -207,11 +218,14 @@ namespace app
 	{
 		if (!m_SceneController->Create(pGraphicsAPI, pPhysicsEngine)) return false;
 
+		m_BloomEffect->OnLoaded(m_SceneController);
+
 		if (!m_TimelineController->Initialize(shared_from_this())) return false;
 
 #ifdef USE_GUIENGINE
 		{
 			gui::SGUIParams GUIParams = gui::SGUIParams(shared_from_this(), GetObjectList(), m_SceneController, m_FileModifier, m_TimelineController, pLoadWorker, {}, pPhysicsEngine);
+			GUIParams.ValueRegistryList.emplace(m_BloomEffect->GetRegistryName(), m_BloomEffect);
 
 			if (!m_GraphicsEditingWindow->OnLoaded(pGraphicsAPI, GUIParams, GUIEngine)) return false;
 		}

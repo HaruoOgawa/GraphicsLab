@@ -489,7 +489,6 @@
     <ClCompile Include="Src\GUIApp\GUI\CGUIMeshTab.cpp" />
     <ClCompile Include="Src\GUIApp\GUI\CGUIMaterialFrameTab.cpp" />
     <ClCompile Include="Src\GUIApp\GUI\CTimeLineView.cpp" />
-    <ClCompile Include="Src\ImageEffect\CBlurEffect.cpp" />
     <ClCompile Include="Src\App\ScriptApp\CScriptApp.cpp" />
     <ClCompile Include="Src\GUIApp\GUI\CGraphicsEditingWindow.cpp" />
     <ClCompile Include="Src\GUIApp\GUI\CGUICameraTab.cpp" />
@@ -498,6 +497,7 @@
     <ClCompile Include="Src\GUIApp\GUI\CGUIRenderingTab.cpp" />
     <ClCompile Include="Src\GUIApp\GUI\CGUIResourcesTab.cpp" />
     <ClCompile Include="Src\GUIApp\Model\CFileModifier.cpp" />
+    <ClCompile Include="Src\ImageEffect\CBloomEffect.cpp" />
     <ClCompile Include="Src\Main\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -511,7 +511,6 @@
     <ClInclude Include="Src\GUIApp\GUI\CGUIMaterialFrameTab.h" />
     <ClInclude Include="Src\GUIApp\GUI\CTimeLineView.h" />
     <ClInclude Include="Src\GUIApp\GUI\SGUIParams.h" />
-    <ClInclude Include="Src\ImageEffect\CBlurEffect.h" />
     <ClInclude Include="Src\App\ScriptApp\CScriptApp.h" />
     <ClInclude Include="Src\GUIApp\GUI\CGraphicsEditingWindow.h" />
     <ClInclude Include="Src\GUIApp\GUI\CGUICameraTab.h" />
@@ -520,6 +519,7 @@
     <ClInclude Include="Src\GUIApp\GUI\CGUIRenderingTab.h" />
     <ClInclude Include="Src\GUIApp\GUI\CGUIResourcesTab.h" />
     <ClInclude Include="Src\GUIApp\Model\CFileModifier.h" />
+    <ClInclude Include="Src\ImageEffect\CBloomEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Commands\CompileGLSLToSpirV.bat" />
