@@ -7,6 +7,7 @@ namespace gui { class CGraphicsEditingWindow; }
 namespace timeline { class CTimelineController; }
 namespace scene { class CSceneController; }
 namespace camera { class CTraceCamera; }
+namespace imageeffect { class CBloomEffect; }
 
 namespace app
 {
@@ -32,6 +33,8 @@ namespace app
 		std::shared_ptr<timeline::CTimelineController> m_TimelineController;
 
 		bool m_CameraSwitchToggle;
+
+		std::shared_ptr<imageeffect::CBloomEffect> m_BloomEffect;
 
 	public:
 		CScriptApp();
