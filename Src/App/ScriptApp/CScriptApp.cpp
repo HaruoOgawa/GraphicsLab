@@ -42,7 +42,8 @@ namespace app
 		m_TimelineController(std::make_shared<timeline::CTimelineController>()),
 		m_BloomEffect(std::make_shared<imageeffect::CBloomEffect>("MainResultPass"))
 	{
-		m_ViewCamera->SetPos(glm::vec3(-7.0f, 1.0f, 0.0f));
+		m_ViewCamera->SetCenter(glm::vec3(0.0f, 1.0f, 0.0f));
+		m_ViewCamera->SetPos(glm::vec3(0.0f, 1.0f, 5.0f));
 		m_MainCamera = m_ViewCamera;
 
 		m_DrawInfo->GetLightCamera()->SetPos(glm::vec3(-2.358f, 15.6f, -0.59f));
@@ -63,7 +64,8 @@ namespace app
 
 	bool CScriptApp::Initialize(api::IGraphicsAPI* pGraphicsAPI, physics::IPhysicsEngine* pPhysicsEngine, resource::CLoadWorker* pLoadWorker)
 	{
-		pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\Scene\\Sample.json", m_SceneController));
+		//pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\Scene\\Sample.json", m_SceneController));
+		pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\Scene\\rtxgi.json", m_SceneController));
 
 		// オフスクリーンレンダリング
 
