@@ -7,7 +7,7 @@ struct FragUniformBuffer {
     useBaseColorTexture: i32,
     useMetallicRoughnessTexture: i32,
     useNormalTexture: i32,
-    materialType: i32,
+    materialType: f32,
 }
 
 struct FragmentOutput {
@@ -18,23 +18,23 @@ struct FragmentOutput {
     @location(4) member_4: vec4<f32>,
 }
 
-@group(0) @binding(0) 
-var<uniform> f_ubo: FragUniformBuffer;
 @group(0) @binding(2) 
-var baseColorTexture: texture_2d<f32>;
+var<uniform> f_ubo: FragUniformBuffer;
 @group(0) @binding(3) 
+var baseColorTexture: texture_2d<f32>;
+@group(0) @binding(4) 
 var baseColorTextureSampler: sampler;
 var<private> f_Texcoord_1: vec2<f32>;
 var<private> f_WorldTangent_1: vec3<f32>;
 var<private> f_WorldBioTangent_1: vec3<f32>;
 var<private> f_WorldNormal_1: vec3<f32>;
-@group(0) @binding(6) 
-var normalTexture: texture_2d<f32>;
 @group(0) @binding(7) 
+var normalTexture: texture_2d<f32>;
+@group(0) @binding(8) 
 var normalTextureSampler: sampler;
-@group(0) @binding(4) 
-var metallicRoughnessTexture: texture_2d<f32>;
 @group(0) @binding(5) 
+var metallicRoughnessTexture: texture_2d<f32>;
+@group(0) @binding(6) 
 var metallicRoughnessTextureSampler: sampler;
 var<private> gl_FragCoord_1: vec4<f32>;
 var<private> gPosition: vec4<f32>;
@@ -141,9 +141,9 @@ fn main_1() {
     let _e48 = depth;
     gDepth = vec4(_e48);
     let _e51 = f_ubo.materialType;
-    let _e54 = metallicRoughness[0u];
-    let _e56 = metallicRoughness[1u];
-    gCustomParam0_ = vec4<f32>(f32(_e51), _e54, _e56, 0f);
+    let _e53 = metallicRoughness[0u];
+    let _e55 = metallicRoughness[1u];
+    gCustomParam0_ = vec4<f32>(_e51, _e53, _e55, 0f);
     return;
 }
 

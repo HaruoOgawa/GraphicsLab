@@ -31,8 +31,8 @@ var<uniform> ubo: ParamUBO;
 var<storage> r_TBO: ReadOnlyTestBufferObject;
 
 fn randvf2_(st: ptr<function, vec2<f32>>) -> f32 {
-    let _e25 = (*st);
-    return fract((sin(dot(_e25, vec2<f32>(12.989800453186035, 78.23300170898438))) * 43758.546875));
+    let _e21 = (*st);
+    return fract((sin(dot(_e21, vec2<f32>(12.9898f, 78.233f))) * 43758.547f));
 }
 
 fn main_1() {
@@ -40,27 +40,27 @@ fn main_1() {
     var id_f: f32;
     var param: vec2<f32>;
 
-    let _e28 = gl_GlobalInvocationID_1[0u];
-    id = _e28;
-    let _e29 = id;
-    id_f = f32(_e29);
-    let _e31 = id;
-    let _e33 = ubo.deltaTime;
-    let _e37 = w_TBO.data[_e31].AccumulateDeltaTime;
-    w_TBO.data[_e31].AccumulateDeltaTime = (_e37 + _e33);
-    let _e42 = id;
-    let _e46 = w_TBO.data[_e42].AccumulateDeltaTime;
-    if (_e46 >= 0.008333333767950535) {
+    let _e24 = gl_GlobalInvocationID_1[0u];
+    id = _e24;
+    let _e25 = id;
+    id_f = f32(_e25);
+    let _e27 = id;
+    let _e29 = ubo.deltaTime;
+    let _e33 = w_TBO.data[_e27].AccumulateDeltaTime;
+    w_TBO.data[_e27].AccumulateDeltaTime = (_e33 + _e29);
+    let _e38 = id;
+    let _e42 = w_TBO.data[_e38].AccumulateDeltaTime;
+    if (_e42 >= 0.008333334f) {
+        let _e44 = id;
+        w_TBO.data[_e44].AccumulateDeltaTime = 0f;
         let _e48 = id;
-        w_TBO.data[_e48].AccumulateDeltaTime = 0.0;
-        let _e52 = id;
-        let _e54 = ubo.time;
-        let _e55 = id_f;
-        let _e56 = id_f;
-        param = vec2<f32>(_e55, (_e56 + 12.394000053405762));
-        let _e59 = randvf2_((&param));
-        let _e68 = w_TBO.data[_e52].offset[1u];
-        w_TBO.data[_e52].offset[1u] = (_e68 + (sin((_e54 + (_e59 * 10.0))) * 0.10000000149011612));
+        let _e50 = ubo.time;
+        let _e51 = id_f;
+        let _e52 = id_f;
+        param = vec2<f32>(_e51, (_e52 + 12.394f));
+        let _e55 = randvf2_((&param));
+        let _e64 = w_TBO.data[_e48].offset[1u];
+        w_TBO.data[_e48].offset[1u] = (_e64 + (sin((_e50 + (_e55 * 10f))) * 0.1f));
     }
     return;
 }

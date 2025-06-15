@@ -8,13 +8,13 @@ var<private> outColor: vec4<f32>;
 fn main_1() {
     var depth: f32;
 
-    let _e13 = fragTexCoord_1[0u];
-    let _e15 = fragTexCoord_1[1u];
-    let _e18 = textureSample(depthMap, depthSampler, vec2<f32>(_e13, (1.0 - _e15)));
-    depth = _e18.x;
-    let _e20 = depth;
-    let _e21 = vec3<f32>(_e20);
-    outColor = vec4<f32>(_e21.x, _e21.y, _e21.z, 1.0);
+    let _e9 = fragTexCoord_1[0u];
+    let _e11 = fragTexCoord_1[1u];
+    let _e14 = textureSample(depthMap, depthSampler, vec2<f32>(_e9, (1f - _e11)));
+    depth = _e14.x;
+    let _e16 = depth;
+    let _e17 = vec3(_e16);
+    outColor = vec4<f32>(_e17.x, _e17.y, _e17.z, 1f);
     return;
 }
 

@@ -5,8 +5,8 @@ var<private> f_Texcoord_1: vec2<f32>;
 var<private> f_WorldPos_1: vec4<f32>;
 
 fn main_1() {
-    let _e9 = f_Color_1;
-    outColor = _e9;
+    let _e5 = f_Color_1;
+    outColor = _e5;
     return;
 }
 

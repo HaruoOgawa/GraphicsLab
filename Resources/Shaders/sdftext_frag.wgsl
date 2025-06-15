@@ -28,38 +28,38 @@ fn main_1() {
     var t: f32;
     var alpha: f32;
 
-    col = vec4<f32>(0.0, 0.0, 0.0, 1.0);
-    let _e29 = fUV_1;
-    st = _e29;
-    let _e31 = f_ubo.maxWidth;
-    let _e34 = f_ubo.charWidth;
-    uvCharW = ((1.0 / _e31) * _e34);
-    let _e36 = uvCharW;
-    let _e38 = st[0u];
-    st[0u] = (_e38 * _e36);
-    let _e41 = uvCharW;
-    let _e43 = f_ubo.textID;
+    col = vec4<f32>(0f, 0f, 0f, 1f);
+    let _e25 = fUV_1;
+    st = _e25;
+    let _e27 = f_ubo.maxWidth;
+    let _e30 = f_ubo.charWidth;
+    uvCharW = ((1f / _e27) * _e30);
+    let _e32 = uvCharW;
+    let _e34 = st[0u];
+    st[0u] = (_e34 * _e32);
+    let _e37 = uvCharW;
+    let _e39 = f_ubo.textID;
+    let _e43 = st[0u];
+    st[0u] = (_e43 + (_e37 * floor(_e39)));
     let _e47 = st[0u];
-    st[0u] = (_e47 + (_e41 * floor(_e43)));
-    let _e51 = st[0u];
-    let _e53 = st[1u];
-    let _e56 = textureSample(MainTexture, MainTextureSampler, vec2<f32>(_e51, (1.0 - _e53)));
-    dist = _e56.x;
-    t = 0.5;
-    let _e58 = t;
-    let _e60 = t;
-    let _e62 = dist;
-    alpha = smoothstep((_e58 - 0.009999999776482582), (_e60 + 0.009999999776482582), _e62);
-    let _e64 = alpha;
-    if (_e64 > 0.5) {
-        col[0u] = vec3<f32>(1.0, 1.0, 1.0).x;
-        col[1u] = vec3<f32>(1.0, 1.0, 1.0).y;
-        col[2u] = vec3<f32>(1.0, 1.0, 1.0).z;
+    let _e49 = st[1u];
+    let _e52 = textureSample(MainTexture, MainTextureSampler, vec2<f32>(_e47, (1f - _e49)));
+    dist = _e52.x;
+    t = 0.5f;
+    let _e54 = t;
+    let _e56 = t;
+    let _e58 = dist;
+    alpha = smoothstep((_e54 - 0.01f), (_e56 + 0.01f), _e58);
+    let _e60 = alpha;
+    if (_e60 > 0.5f) {
+        col[0u] = vec3<f32>(1f, 1f, 1f).x;
+        col[1u] = vec3<f32>(1f, 1f, 1f).y;
+        col[2u] = vec3<f32>(1f, 1f, 1f).z;
     } else {
         discard;
     }
-    let _e72 = col;
-    outCol = _e72;
+    let _e68 = col;
+    outCol = _e68;
     return;
 }
 

@@ -1,8 +1,8 @@
 struct gl_PerVertex {
     @builtin(position) gl_Position: vec4<f32>,
     gl_PointSize: f32,
-    gl_ClipDistance: array<f32,1u>,
-    gl_CullDistance: array<f32,1u>,
+    gl_ClipDistance: array<f32, 1>,
+    gl_CullDistance: array<f32, 1>,
 }
 
 struct UniformBufferObject {
@@ -25,7 +25,7 @@ struct VertexOutput {
     @location(3) member_3: vec4<f32>,
 }
 
-var<private> perVertexStruct: gl_PerVertex = gl_PerVertex(vec4<f32>(0.0, 0.0, 0.0, 1.0), 1.0, array<f32,1u>(0.0), array<f32,1u>(0.0));
+var<private> unnamed: gl_PerVertex = gl_PerVertex(vec4<f32>(0f, 0f, 0f, 1f), 1f, array<f32, 1>(), array<f32, 1>());
 @group(0) @binding(0) 
 var<uniform> ubo: UniformBufferObject;
 var<private> inPosition_1: vec3<f32>;
@@ -40,21 +40,21 @@ var<private> inJoint0_1: vec4<u32>;
 var<private> inWeights0_1: vec4<f32>;
 
 fn main_1() {
-    let _e24 = ubo.proj;
-    let _e26 = ubo.view;
-    let _e29 = ubo.model;
-    let _e31 = inPosition_1;
-    perVertexStruct.gl_Position = (((_e24 * _e26) * _e29) * vec4<f32>(_e31.x, _e31.y, _e31.z, 1.0));
-    let _e39 = ubo.model;
-    let _e40 = inNormal_1;
-    f_WorldNormal = (_e39 * vec4<f32>(_e40.x, _e40.y, _e40.z, 0.0)).xyz;
-    let _e47 = inTexcoord_1;
-    f_Texcoord = _e47;
-    let _e49 = ubo.model;
-    let _e50 = inPosition_1;
-    f_WorldPos = (_e49 * vec4<f32>(_e50.x, _e50.y, _e50.z, 1.0));
-    let _e57 = ubo.color;
-    f_Color = _e57;
+    let _e20 = ubo.proj;
+    let _e22 = ubo.view;
+    let _e25 = ubo.model;
+    let _e27 = inPosition_1;
+    unnamed.gl_Position = (((_e20 * _e22) * _e25) * vec4<f32>(_e27.x, _e27.y, _e27.z, 1f));
+    let _e35 = ubo.model;
+    let _e36 = inNormal_1;
+    f_WorldNormal = (_e35 * vec4<f32>(_e36.x, _e36.y, _e36.z, 0f)).xyz;
+    let _e43 = inTexcoord_1;
+    f_Texcoord = _e43;
+    let _e45 = ubo.model;
+    let _e46 = inPosition_1;
+    f_WorldPos = (_e45 * vec4<f32>(_e46.x, _e46.y, _e46.z, 1f));
+    let _e53 = ubo.color;
+    f_Color = _e53;
     return;
 }
 
@@ -67,9 +67,9 @@ fn main(@location(0) inPosition: vec3<f32>, @location(1) inNormal: vec3<f32>, @l
     inJoint0_1 = inJoint0_;
     inWeights0_1 = inWeights0_;
     main_1();
-    let _e19 = perVertexStruct.gl_Position.y;
-    perVertexStruct.gl_Position.y = -(_e19);
-    let _e21 = perVertexStruct.gl_Position;
+    let _e19 = unnamed.gl_Position.y;
+    unnamed.gl_Position.y = -(_e19);
+    let _e21 = unnamed.gl_Position;
     let _e22 = f_WorldNormal;
     let _e23 = f_Texcoord;
     let _e24 = f_WorldPos;
