@@ -348,7 +348,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;USE_GLFW;USE_VULKAN;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;GLFW_INCLUDE_VULKAN;GLFW_EXPOSE_NATIVE_WIN32;USE_TEXTURE_LOADER;USE_GLTF;USE_VIEWER_CAMERA;USE_INPUT_SYSTEM;USE_GPGPU;USE_FBX;USE_ANIMATION;USE_MMD;USE_PHYSICS;B3_USE_CLEW;USE_GUIENGINE;USE_GUI_APP;USE_BINARY_WRITE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;USE_GLFW;USE_VULKAN;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;GLFW_INCLUDE_VULKAN;GLFW_EXPOSE_NATIVE_WIN32;USE_TEXTURE_LOADER;USE_GLTF;USE_VIEWER_CAMERA;USE_INPUT_SYSTEM;USE_GPGPU;USE_FBX;USE_ANIMATION;USE_MMD;USE_PHYSICS;B3_USE_CLEW;USE_GUIENGINE;USE_GUI_APP;USE_BINARY_WRITE;USE_RTXGI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\Garnet\Garnet/Src;..\Garnet\Garnet/Src\Library\glm;..\Garnet\Garnet/Src\Library\imgui\backends;..\Garnet\Garnet/Src\Library\imgui;..\Garnet\Garnet/Src\Library\json;..\Garnet\Garnet/Src\Library\GLFW\include;..\Garnet\Garnet/src\Library\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>

@@ -2,6 +2,7 @@
 
 #include <Graphics/CDrawInfo.h>
 #include <Graphics/CFrameRenderer.h>
+#include <Graphics/CRTXGIController.h>
 
 #include <Camera/CCamera.h>
 #include <Camera/CTraceCamera.h>
@@ -40,7 +41,8 @@ namespace app
 #endif // USE_GUIENGINE
 		m_FileModifier(std::make_shared<CFileModifier>()),
 		m_TimelineController(std::make_shared<timeline::CTimelineController>()),
-		m_BloomEffect(std::make_shared<imageeffect::CBloomEffect>("MainResultPass"))
+		m_BloomEffect(std::make_shared<imageeffect::CBloomEffect>("MainResultPass")),
+		m_RTXGI(nullptr)
 	{
 		m_ViewCamera->SetCenter(glm::vec3(0.0f, 1.0f, 0.0f));
 		m_ViewCamera->SetPos(glm::vec3(0.0f, 1.0f, 5.0f));
@@ -82,6 +84,9 @@ namespace app
 
 		m_MainFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "", pGraphicsAPI->FindOffScreenRenderPass("MainResultPass")->GetFrameTextureList());
 		if (!m_MainFrameRenderer->Create(pLoadWorker, "Resources\\MaterialFrame\\FrameTexture_MF.json")) return false;
+
+		m_RTXGI = pGraphicsAPI->CreateRTXGIController();
+		if (!m_RTXGI->Initialize(pGraphicsAPI)) return false;
 
 		return true;
 	}
@@ -129,6 +134,7 @@ namespace app
 
 		if (!m_BloomEffect->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_MainFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
+		if (!m_RTXGI->Update(pGraphicsAPI)) return false;
 
 		return true;
 	}
@@ -163,6 +169,9 @@ namespace app
 			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 			if (!pGraphicsAPI->EndRender()) return false;
 		}
+
+		// RTXGI
+		if (!m_RTXGI->Draw(pGraphicsAPI)) return false;
 
 		// BloomEffect
 		if (!m_BloomEffect->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
