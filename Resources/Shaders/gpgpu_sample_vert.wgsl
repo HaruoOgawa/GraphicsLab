@@ -14,8 +14,8 @@ struct TestBufferObject {
 struct gl_PerVertex {
     @builtin(position) gl_Position: vec4<f32>,
     gl_PointSize: f32,
-    gl_ClipDistance: array<f32,1u>,
-    gl_CullDistance: array<f32,1u>,
+    gl_ClipDistance: array<f32, 1>,
+    gl_CullDistance: array<f32, 1>,
 }
 
 struct UniformBufferObject {
@@ -34,7 +34,7 @@ struct VertexOutput {
 var<private> gl_InstanceIndex_1: i32;
 @group(0) @binding(1) 
 var<storage> r_TBO: TestBufferObject;
-var<private> perVertexStruct: gl_PerVertex = gl_PerVertex(vec4<f32>(0.0, 0.0, 0.0, 1.0), 1.0, array<f32,1u>(0.0), array<f32,1u>(0.0));
+var<private> unnamed: gl_PerVertex = gl_PerVertex(vec4<f32>(0f, 0f, 0f, 1f), 1f, array<f32, 1>(), array<f32, 1>());
 @group(0) @binding(0) 
 var<uniform> ubo: UniformBufferObject;
 var<private> inPosition_1: vec3<f32>;
@@ -50,23 +50,23 @@ fn main_1() {
     var id: i32;
     var offset: vec3<f32>;
 
-    let _e23 = gl_InstanceIndex_1;
-    id = _e23;
-    let _e24 = id;
-    let _e28 = r_TBO.data[_e24].offset;
-    offset = _e28.xyz;
-    let _e31 = ubo.proj;
-    let _e33 = ubo.view;
-    let _e36 = ubo.model;
-    let _e38 = inPosition_1;
-    let _e39 = offset;
-    let _e40 = (_e38 + _e39);
-    perVertexStruct.gl_Position = (((_e31 * _e33) * _e36) * vec4<f32>(_e40.x, _e40.y, _e40.z, 1.0));
-    let _e47 = inTexcoord_1;
-    fragTexCoord = _e47;
-    let _e48 = id;
-    let _e52 = r_TBO.data[_e48].color;
-    fragColor = _e52;
+    let _e19 = gl_InstanceIndex_1;
+    id = _e19;
+    let _e20 = id;
+    let _e24 = r_TBO.data[_e20].offset;
+    offset = _e24.xyz;
+    let _e27 = ubo.proj;
+    let _e29 = ubo.view;
+    let _e32 = ubo.model;
+    let _e34 = inPosition_1;
+    let _e35 = offset;
+    let _e36 = (_e34 + _e35);
+    unnamed.gl_Position = (((_e27 * _e29) * _e32) * vec4<f32>(_e36.x, _e36.y, _e36.z, 1f));
+    let _e43 = inTexcoord_1;
+    fragTexCoord = _e43;
+    let _e44 = id;
+    let _e48 = r_TBO.data[_e44].color;
+    fragColor = _e48;
     return;
 }
 
@@ -80,9 +80,9 @@ fn main(@builtin(instance_index) gl_InstanceIndex: u32, @location(0) inPosition:
     inJoint0_1 = inJoint0_;
     inWeights0_1 = inWeights0_;
     main_1();
-    let _e20 = perVertexStruct.gl_Position.y;
-    perVertexStruct.gl_Position.y = -(_e20);
-    let _e22 = perVertexStruct.gl_Position;
+    let _e20 = unnamed.gl_Position.y;
+    unnamed.gl_Position.y = -(_e20);
+    let _e22 = unnamed.gl_Position;
     let _e23 = fragTexCoord;
     let _e24 = fragColor;
     return VertexOutput(_e22, _e23, _e24);

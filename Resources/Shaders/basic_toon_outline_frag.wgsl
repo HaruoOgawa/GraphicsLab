@@ -21,13 +21,13 @@ fn main_1() {
     var col: vec3<f32>;
     var alpha: f32;
 
-    col = vec3<f32>(1.0, 1.0, 1.0);
-    alpha = 1.0;
-    let _e19 = fragUbo.edgeColor;
-    col = _e19.xyz;
-    let _e21 = col;
-    let _e22 = alpha;
-    outColor = vec4<f32>(_e21.x, _e21.y, _e21.z, _e22);
+    col = vec3<f32>(1f, 1f, 1f);
+    alpha = 1f;
+    let _e15 = fragUbo.edgeColor;
+    col = _e15.xyz;
+    let _e17 = col;
+    let _e18 = alpha;
+    outColor = vec4<f32>(_e17.x, _e17.y, _e17.z, _e18);
     return;
 }
 

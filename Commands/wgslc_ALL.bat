@@ -1,6 +1,6 @@
 set CurrentDir=%~dp0
 set ShaderDir=..\Resources\Shaders
-set EXEDir=E:\CppDev\Garnet\Garnet\src\Library\Vulkan\bin\
+set EXEDir=D:\CppDev\Garnet\Garnet\src\Library\Vulkan\bin\
 
 for /R %ShaderDir% %%i in (*.vert) do %EXEDir%glslc.exe -o %%~pi%%~ni_vert.spv %%~i
 

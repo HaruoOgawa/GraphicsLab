@@ -2,7 +2,10 @@
 #include <memory>
 #include <AppCore/CApp.h>
 
-namespace graphics { class CFrameRenderer; }
+namespace graphics { 
+	class CFrameRenderer; 
+	class CRTXGIController;
+}
 namespace gui { class CGraphicsEditingWindow; }
 namespace timeline { class CTimelineController; }
 namespace scene { class CSceneController; }
@@ -35,6 +38,8 @@ namespace app
 		bool m_CameraSwitchToggle;
 
 		std::shared_ptr<imageeffect::CBloomEffect> m_BloomEffect;
+
+		std::shared_ptr<graphics::CRTXGIController> m_RTXGI;
 
 	public:
 		CScriptApp();

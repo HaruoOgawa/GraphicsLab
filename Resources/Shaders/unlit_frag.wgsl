@@ -28,41 +28,41 @@ fn main_1() {
     var theta: f32;
     var phi: f32;
 
-    col = vec4<f32>(1.0, 1.0, 1.0, 1.0);
-    let _e26 = fUV_1;
-    st = _e26;
-    let _e28 = fbo_0_.useTexColor;
-    if (_e28 != 0) {
-        let _e31 = fbo_0_.useDirSampling;
-        if (_e31 != 0) {
-            pi = 3.1414999961853027;
-            let _e34 = fViewDir_1[1u];
-            theta = acos(_e34);
-            let _e37 = fViewDir_1[2u];
-            let _e39 = fViewDir_1[0u];
-            phi = atan2(_e37, _e39);
-            let _e41 = phi;
+    col = vec4<f32>(1f, 1f, 1f, 1f);
+    let _e22 = fUV_1;
+    st = _e22;
+    let _e24 = fbo_0_.useTexColor;
+    if (_e24 != 0i) {
+        let _e27 = fbo_0_.useDirSampling;
+        if (_e27 != 0i) {
+            pi = 3.1415f;
+            let _e30 = fViewDir_1[1u];
+            theta = acos(_e30);
+            let _e33 = fViewDir_1[2u];
+            let _e35 = fViewDir_1[0u];
+            phi = atan2(_e33, _e35);
+            let _e37 = phi;
+            let _e38 = pi;
+            let _e41 = theta;
             let _e42 = pi;
-            let _e45 = theta;
-            let _e46 = pi;
-            st = vec2<f32>((_e41 / (2.0 * _e42)), (_e45 / _e46));
+            st = vec2<f32>((_e37 / (2f * _e38)), (_e41 / _e42));
         }
-        let _e49 = st;
-        let _e50 = textureSample(texImage, texSampler, _e49);
-        let _e52 = col;
-        let _e54 = (_e52.xyz * _e50.xyz);
-        col[0u] = _e54.x;
-        col[1u] = _e54.y;
-        col[2u] = _e54.z;
+        let _e45 = st;
+        let _e46 = textureSample(texImage, texSampler, _e45);
+        let _e48 = col;
+        let _e50 = (_e48.xyz * _e46.xyz);
+        col[0u] = _e50.x;
+        col[1u] = _e50.y;
+        col[2u] = _e50.z;
     }
-    let _e62 = fbo_0_.baseColor;
-    let _e64 = col;
-    let _e66 = (_e64.xyz * _e62.xyz);
-    col[0u] = _e66.x;
-    col[1u] = _e66.y;
-    col[2u] = _e66.z;
-    let _e73 = col;
-    outColor = _e73;
+    let _e58 = fbo_0_.baseColor;
+    let _e60 = col;
+    let _e62 = (_e60.xyz * _e58.xyz);
+    col[0u] = _e62.x;
+    col[1u] = _e62.y;
+    col[2u] = _e62.z;
+    let _e69 = col;
+    outColor = _e69;
     return;
 }
 

@@ -1,3 +1,10 @@
+struct VertUniformBuffer {
+    model: mat4x4<f32>,
+    view: mat4x4<f32>,
+    proj: mat4x4<f32>,
+    lightVPMat: mat4x4<f32>,
+}
+
 struct gl_PerVertex {
     @builtin(position) gl_Position: vec4<f32>,
     gl_PointSize: f32,
@@ -11,6 +18,8 @@ struct VertexOutput {
     @location(1) member_1: vec4<f32>,
 }
 
+@group(0) @binding(0) 
+var<uniform> v_ubo: VertUniformBuffer;
 var<private> inPosition_1: vec3<f32>;
 var<private> unnamed: gl_PerVertex = gl_PerVertex(vec4<f32>(0f, 0f, 0f, 1f), 1f, array<f32, 1>(), array<f32, 1>());
 var<private> v2f_UV: vec2<f32>;
@@ -24,14 +33,17 @@ var<private> inWeights0_1: vec4<f32>;
 fn main_1() {
     var ProjPos: vec4<f32>;
 
-    let _e13 = inPosition_1;
-    ProjPos = vec4<f32>(_e13.x, _e13.y, _e13.z, 1f);
-    let _e18 = ProjPos;
-    unnamed.gl_Position = _e18;
-    let _e20 = inTexcoord_1;
-    v2f_UV = _e20;
-    let _e21 = ProjPos;
-    v2f_ProjPos = _e21;
+    let _e17 = v_ubo.proj;
+    let _e19 = v_ubo.view;
+    let _e22 = v_ubo.model;
+    let _e24 = inPosition_1;
+    ProjPos = (((_e17 * _e19) * _e22) * vec4<f32>(_e24.x, _e24.y, _e24.z, 1f));
+    let _e30 = ProjPos;
+    unnamed.gl_Position = _e30;
+    let _e32 = inTexcoord_1;
+    v2f_UV = _e32;
+    let _e33 = ProjPos;
+    v2f_ProjPos = _e33;
     return;
 }
 
