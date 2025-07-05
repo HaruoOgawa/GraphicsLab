@@ -248,7 +248,8 @@
             "enable": true,
             "rootnodes": [
                 0,
-                1
+                1,
+                2
             ],
             "nodes": [
                 {
@@ -300,9 +301,6 @@
                     },
                     "enable": true,
                     "meshindex": -1,
-                    "children": [
-                        2
-                    ],
                     "components": [
                         {
                             "type": "PointLight",
@@ -311,11 +309,11 @@
                     ]
                 },
                 {
-                    "name": "Sphere",
+                    "name": "SpotLight",
                     "transform": {
                         "pos": [
                             0.0,
-                            0.0,
+                            1.5,
                             0.0
                         ],
                         "rotate": [
@@ -329,8 +327,13 @@
                             1.0
                         ]
                     },
-                    "enable": false,
-                    "meshindex": 0
+                    "enable": true,
+                    "meshindex": -1,
+                    "components": [
+                        {
+                            "type": "SpotLight"
+                        }
+                    ]
                 }
             ],
             "meshs": [

@@ -284,6 +284,9 @@ namespace gui
 		case graphics::EPresetPrimitiveType::SPHERE:
 			Text = "SPHERE";
 			break;
+		case graphics::EPresetPrimitiveType::CYLINDER:
+			Text = "CYLINDER";
+			break;
 		default:
 			break;
 		}

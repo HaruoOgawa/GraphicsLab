@@ -158,6 +158,14 @@ LightParam GetLightParam(GBufferResult gResult)
 		// ライト球の範囲外なら描画しない
 		light.enabled = (len <= l_ubo.radius); 
     }
+	else if(l_ubo.type == 3.0)
+	{
+		// Spot Light
+		light.dir = normalize(l_ubo.dir.xyz);
+        light.color = l_ubo.color.rgb;
+        light.attenuation = l_ubo.intensity;
+		light.enabled = true;
+	}
 
     return light;
 }
