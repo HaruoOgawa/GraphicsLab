@@ -122,7 +122,39 @@
               }
             },
             {
+              "name": "angle",
+              "type": "float",
+              "initValue": [ 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "height",
+              "type": "float",
+              "initValue": [ 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
               "name": "fPad0",
+              "type": "float",
+              "initValue": [ 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "fPad1",
+              "type": "float",
+              "initValue": [ 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "fPad2",
               "type": "float",
               "initValue": [ 1.0 ],
               "input": {

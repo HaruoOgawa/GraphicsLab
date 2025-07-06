@@ -11,10 +11,15 @@ layout(binding = 1) uniform LightUniformBuffer{
 	mat4 mPad2;
 	mat4 mPad3;
 
-    float type;
-    float radius; // 光の有効範囲(ライトスフィアのサイズ)
+    float type; // ライトのタイプ
+    float radius; // ライトの有効範囲
     float intensity; // ライトの強さ
-    float fPad0;
+    float angle; // ライトの有効範囲
+
+	float height; // ライトの有効範囲
+	float fPad0;
+	float fPad1;
+	float fPad2;
 
     vec4 dir;
     vec4 pos;
@@ -161,10 +166,26 @@ LightParam GetLightParam(GBufferResult gResult)
 	else if(l_ubo.type == 3.0)
 	{
 		// Spot Light
-		light.dir = normalize(l_ubo.dir.xyz);
+		vec3 baseDir = normalize(l_ubo.dir.xyz);
+		vec3 l2g = gResult.worldPos.xyz - l_ubo.pos.xyz;
+		vec3 l2g_norm = normalize(l2g);
+
+		// スポットライトの範囲内であれば描画可能
+		// 角度チェック
+		float l2g_angle = acos(dot(baseDir, l2g_norm));
+		bool ValidAngle = (l2g_angle >= 0.0 && l2g_angle <= radians(l_ubo.angle));
+
+		// 高さ(長さ)チェック
+		// l2gをbaseDirに射影してその長さがHeight以下なら範囲内である
+		float height = l_ubo.height;
+		float l = length(l2g) * cos(l2g_angle);
+		bool ValidHeight = (l >= 0 && l < height);
+
+		//
+		light.dir = l2g_norm;
         light.color = l_ubo.color.rgb;
         light.attenuation = l_ubo.intensity;
-		light.enabled = true;
+		light.enabled = (ValidAngle && ValidHeight);
 	}
 
     return light;

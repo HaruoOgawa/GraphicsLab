@@ -18,18 +18,23 @@ layout(binding = 0) uniform VertUniformBuffer{
 
     float angle; // 初期値: 45° (0.0 ~ 89.0の間の値しか取れない)
     float height; // 初期値: 1.0
+    float fPad0;
+    float fPad1;
 } v_ubo;
 
 void main()
 {
     vec4 pos = vec4(inPosition, 1.0);
+    
+    // スポットライトの初期値は下を向かせたい
+    pos.y *= -1.0;
 
     // 高さの割合
     // 円柱はプリミティブ作成段階で高さ１・半径１の想定
-    // 
-    // ただしYの範囲が-0.5 ~ 0.5なのでその分補正する
-    // float HeightRate = 1.0 - (pos.y + 0.5) / 1.0;
-    float HeightRate = (pos.y) / 1.0;
+    // この時、円柱の上端を半径0にしぼり、下端は半径1のままにしてそれを2Dで考えると・・・
+    // 高さ1、底面1、角度が45・45・90の二等辺三角形が初期値としてできる
+    // 高さとスポットライトの半分の角度がUniformとしてわかっているのでこれらの情報を使って正弦定理を解くことで、スポットライトの形を作るための拡大率を求めることができる
+    float HeightRate = abs(pos.y) / 1.0;
 
     float angle = radians(v_ubo.angle);
     float subAngle = 3.1415 * 0.5 - angle;
