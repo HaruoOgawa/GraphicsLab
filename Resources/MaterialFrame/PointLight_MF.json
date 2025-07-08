@@ -1,6 +1,6 @@
 {
   "name": "PointLight",
-  "outputcolorcount": 5,
+  "outputcolorcount": 1,
   "shaderList": [
     {
       "name": "minvertex_vert",

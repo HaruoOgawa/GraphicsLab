@@ -1,5 +1,5 @@
 {
-  "name": "SpotLight",
+  "name": "SpotLight_Geom",
   "outputcolorcount": 1,
   "shaderList": [
     {
@@ -87,8 +87,8 @@
       ]
     },
     {
-      "name": "GBuffer_Light_frag",
-      "shaderFile": "Resources\\Shaders\\GBuffer_Light",
+      "name": "SpotLight_Geom_frag",
+      "shaderFile": "Resources\\Shaders\\SpotLight_Geom",
       "autoShaderExtension": true,
       "shadercode": "",
       "shaderType": "fragment",
@@ -228,46 +228,6 @@
               }
             }
           ]
-        },
-        {
-          "name": "gPositionTexture",
-          "viewBinding": 2,
-          "samplerBinding": 3,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "frame"
-        },
-        {
-          "name": "gNormalTexture",
-          "viewBinding": 4,
-          "samplerBinding": 5,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "frame"
-        },
-        {
-          "name": "gAlbedoTexture",
-          "viewBinding": 6,
-          "samplerBinding": 7,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "frame"
-        },
-        {
-          "name": "gDepthTexture",
-          "viewBinding": 8,
-          "samplerBinding": 9,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "frame"
-        },
-        {
-          "name": "gCustomParam0Texture",
-          "viewBinding": 10,
-          "samplerBinding": 11,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "frame"
         }
       ]
     }

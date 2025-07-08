@@ -172,8 +172,9 @@ LightParam GetLightParam(GBufferResult gResult)
 
 		// スポットライトの範囲内であれば描画可能
 		// 角度チェック
+		float coneAngle = radians(l_ubo.angle);
 		float l2g_angle = acos(dot(baseDir, l2g_norm));
-		bool ValidAngle = (l2g_angle >= 0.0 && l2g_angle <= radians(l_ubo.angle));
+		bool ValidAngle = (l2g_angle >= 0.0 && l2g_angle <= coneAngle);
 
 		// 高さ(長さ)チェック
 		// l2gをbaseDirに射影してその長さがHeight以下なら範囲内である
@@ -181,10 +182,12 @@ LightParam GetLightParam(GBufferResult gResult)
 		float l = length(l2g) * cos(l2g_angle);
 		bool ValidHeight = (l >= 0 && l < height);
 
+		float attenuation = 1.0 - clamp(l2g_angle, 0.0, coneAngle) / coneAngle;
+
 		//
 		light.dir = l2g_norm;
         light.color = l_ubo.color.rgb;
-        light.attenuation = l_ubo.intensity;
+        light.attenuation = l_ubo.intensity * attenuation;
 		light.enabled = (ValidAngle && ValidHeight);
 	}
 
