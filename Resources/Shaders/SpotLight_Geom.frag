@@ -60,20 +60,21 @@ float GetDepth(vec2 ScreenUV)
 
 void main()
 {
-    vec2 ScreenUV = v2f_ProjPos.xy / v2f_ProjPos.w;
+    /*vec2 ScreenUV = v2f_ProjPos.xy / v2f_ProjPos.w;
     ScreenUV = ScreenUV * 0.5 + 0.5;
 
     float gDepth = GetDepth(ScreenUV);
 
     float lightDepth = v2f_ProjPos.z / v2f_ProjPos.w;
+    lightDepth = lightDepth * 0.5 + 0.5;
 
     if(gDepth <= lightDepth)
     {
         discard;
     }
-    else
+    else*/
     {
-        vec3 col = l_ubo.color.rgb;
+        vec3 col = l_ubo.color.rgb * l_ubo.intensity;
         float alpha = 1.0;
 
         // Spot Light
