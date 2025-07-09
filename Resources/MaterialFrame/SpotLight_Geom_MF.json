@@ -228,6 +228,46 @@
               }
             }
           ]
+        },
+        {
+          "name": "gPositionTexture",
+          "viewBinding": 2,
+          "samplerBinding": 3,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame"
+        },
+        {
+          "name": "gNormalTexture",
+          "viewBinding": 4,
+          "samplerBinding": 5,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame"
+        },
+        {
+          "name": "gAlbedoTexture",
+          "viewBinding": 6,
+          "samplerBinding": 7,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame"
+        },
+        {
+          "name": "gDepthTexture",
+          "viewBinding": 8,
+          "samplerBinding": 9,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame"
+        },
+        {
+          "name": "gCustomParam0Texture",
+          "viewBinding": 10,
+          "samplerBinding": 11,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame"
         }
       ]
     }
