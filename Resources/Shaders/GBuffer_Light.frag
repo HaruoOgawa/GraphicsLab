@@ -180,16 +180,33 @@ LightParam GetLightParam(GBufferResult gResult)
 		// 高さ(長さ)チェック
 		// l2gをbaseDirに射影してその長さがHeight以下なら範囲内である
 		float height = l_ubo.height;
-		float l = length(l2g) * cos(l2g_angle);
-		bool ValidHeight = (l >= 0 && l < height);
+		float prjlen = length(l2g) * cos(l2g_angle);
+		bool ValidHeight = (prjlen >= 0 && prjlen < height);
 
-		float attenuation = 1.0 - clamp(l2g_angle, 0.0, coneAngle) / coneAngle;
+		// 半径チェック
+		// スポットライト底面の半径
+		float sinFactor = sin(coneAngle) / sin(3.1415 * 0.5 - coneAngle);
+		float spotR = sinFactor * height;
+		// l2gからその射影ベクトルに垂直なベクトルの長さ
+		vec3 l2g_perp = l2g - (prjlen * baseDir);
+		float l2gR = length(l2g_perp);
+		// l2gRが半径内であれば描画(角度付きのコーンではなく、上端と下端を底面の半径にした円柱で描画判定)
+		bool ValidRadius = (l2gR <= spotR);
+
+		// 現在のl2g射影ベクトルの高さにおける半径
+		// float cH_spotR = sinFactor * prjlen;
+
+		// 減衰
+		// float attenuation = max( min(1.0 - pow((l2gR / spotR), 4.0), 1.0), 0.0 ) / pow(l2gR, 2.0);
+		// attenuation = clamp(attenuation, 0.0, 1.0);
+		float attenuation = smoothstep(1.0, 0.0, l2gR / spotR);
 
 		//
 		light.dir = l2g_norm;
         light.color = l_ubo.color.rgb;
         light.attenuation = l_ubo.intensity * attenuation;
-		light.enabled = (ValidAngle && ValidHeight);
+		// light.enabled = (ValidAngle && ValidHeight);
+		light.enabled = (ValidRadius && ValidHeight);
 	}
 
     return light;
