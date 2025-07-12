@@ -60,7 +60,9 @@ float GetDepth(vec2 ScreenUV)
 
 void main()
 {
-    vec2 ScreenUV = v2f_ProjPos.xy / v2f_ProjPos.w;
+    // デファードレンダリングにおいて半透明オブジェクトをうまく取り扱うことはできないので諦めましょう
+    // 半透明オブジェクトは深度をあまり気にしなくていいものを上から乗算する感じで使っていきます
+    /*vec2 ScreenUV = v2f_ProjPos.xy / v2f_ProjPos.w;
     ScreenUV = ScreenUV * 0.5 + 0.5;
 
     float gDepth = GetDepth(ScreenUV);
@@ -72,7 +74,7 @@ void main()
     {
         discard;
     }
-    else
+    else*/
     {
         vec3 col = l_ubo.color.rgb * l_ubo.intensity;
         float alpha = 1.0;
