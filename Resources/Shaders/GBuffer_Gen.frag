@@ -5,6 +5,7 @@ layout(location = 1) in vec2 f_Texcoord;
 layout(location = 2) in vec4 f_WorldPos;
 layout(location = 3) in vec3 f_WorldTangent;
 layout(location = 4) in vec3 f_WorldBioTangent;
+layout(location = 5) in vec4 v2f_ProjPos;
 
 layout(location = 0) out vec4 gPosition;
 layout(location = 1) out vec4 gNormal;
@@ -110,7 +111,10 @@ vec2 GetMetallicRoughness()
 void main(){
 	vec4 baseColor = GetBaseColor();
 	vec3 normal = getNormal();
-	float depth = gl_FragCoord.z;
+	// float depth = gl_FragCoord.z;
+	float depth = v2f_ProjPos.z / v2f_ProjPos.w;
+	depth = depth * 0.5 + 0.5;
+
 	vec2 metallicRoughness = GetMetallicRoughness();
 
 	gPosition = f_WorldPos;

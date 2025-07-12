@@ -85,10 +85,17 @@ namespace app
 		{
 			graphics::SRenderPassState State{};
 			State.RenderTargetCount = 5;
+			State.EnabledAA = true;
+			State.AASampleNum = 8;
 			if (!pGraphicsAPI->CreateRenderPass("GBufferGenPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), -1, -1, State)) return false;
 		}
 
-		if (!pGraphicsAPI->CreateRenderPass("MainResultPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), -1, -1, {})) return false;
+		{
+			graphics::SRenderPassState State{};
+			State.EnabledAA = true;
+			State.AASampleNum = 8;
+			if (!pGraphicsAPI->CreateRenderPass("MainResultPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), -1, -1, State)) return false;
+		}
 
 		// ブルームエフェクト
 		if (!m_BloomEffect->Initialize(pGraphicsAPI, pLoadWorker)) return false;
