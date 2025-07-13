@@ -10,7 +10,10 @@ namespace timeline { class CTimelineController; }
 namespace scene { class CSceneController; }
 namespace camera { class CTraceCamera; }
 namespace imageeffect { class CBloomEffect; }
-namespace network { class CUDPSocket; }
+namespace network { 
+	class CUDPSocket; 
+	class CDMXDataHandler;
+}
 
 namespace app
 {
@@ -41,6 +44,7 @@ namespace app
 
 #ifdef USE_NETWORK
 		std::shared_ptr<network::CUDPSocket> m_UDPSocket;
+		std::shared_ptr<network::CDMXDataHandler> m_DMXHandler;
 #endif
 
 	public:
@@ -76,5 +80,8 @@ namespace app
 		// Getter
 		virtual std::vector<std::shared_ptr<object::C3DObject>> GetObjectList() const override;
 		virtual std::shared_ptr<scene::CSceneController> GetSceneController() const override;
+
+		// DMXデータ受信イベント
+		virtual void OnReceiveArtNetDMX(unsigned short Net, unsigned short SubNet, unsigned short Universe, const std::vector<unsigned char>& DataBuffer) override;
 	};
 }

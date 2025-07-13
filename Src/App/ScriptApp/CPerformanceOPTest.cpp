@@ -24,6 +24,7 @@
 
 #ifdef USE_NETWORK
 #include <Network/CUDPSocket.h>
+#include <Network/DMX/CDMXDataHandler.h>
 #endif
 
 namespace app
@@ -45,6 +46,7 @@ namespace app
 #endif // USE_GUIENGINE
 #ifdef USE_NETWORK
 		m_UDPSocket(std::make_shared<network::CUDPSocket>("192.168.0.252", 6454)),
+		m_DMXHandler(std::make_shared<network::CDMXDataHandler>()),
 #endif // USE_NETWORK
 
 		m_FileModifier(std::make_shared<CFileModifier>()),
@@ -308,5 +310,13 @@ namespace app
 	std::shared_ptr<scene::CSceneController> CPerformanceOPTest::GetSceneController() const
 	{
 		return m_SceneController;
+	}
+
+	// DMXデータ受信イベント
+	void CPerformanceOPTest::OnReceiveArtNetDMX(unsigned short Net, unsigned short SubNet, unsigned short Universe, const std::vector<unsigned char>& DataBuffer)
+	{
+		if (!m_DMXHandler) return;
+
+		m_DMXHandler->DispatchDMXData(Net, SubNet, Universe, DataBuffer);
 	}
 }
