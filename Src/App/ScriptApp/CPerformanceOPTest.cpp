@@ -77,6 +77,13 @@ namespace app
 	{
 #ifdef USE_NETWORK
 		if (!m_UDPSocket->Initialize()) return false;
+
+		// DMX€”õ
+		network::SDMXFixture Fixture{};
+		Fixture.DeviceName = "DefaultSpotLight";
+		Fixture.ChannelNameList = { "R", "G", "B", "Dimmer", "Pan", "Tilt" };
+
+		m_DMXHandler->RegistDeviceFixture(1, 0, 0, Fixture);
 #endif
 
 		pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\Scene\\DMXTest.json", m_SceneController));
@@ -270,6 +277,26 @@ namespace app
 				if (Node)
 				{
 					m_TraceCamera->SetTargetNode(Node);
+				}
+			}
+		}
+
+		// DMX‚ÉÆ–¾“”‘Ì‚ð“n‚·
+		{
+			const auto& Object = m_SceneController->FindObjectByName("LightList");
+			if (Object)
+			{
+				for (int i = 0; i < 3; i++)
+				{
+					std::string Name = "SpotLight_" + std::to_string(i);
+					const auto& SpotLight = Object->FindNodeByName(Name);
+					
+					for (const auto& Component : SpotLight->GetComponentList())
+					{
+						if (Component->GetComponentName() != "SpotLight") continue;
+
+						m_DMXHandler->AddDevice("DefaultSpotLight", Component);
+					}
 				}
 			}
 		}
