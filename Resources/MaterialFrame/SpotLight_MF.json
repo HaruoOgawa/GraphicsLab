@@ -54,9 +54,7 @@
               "type": "float",
               "initValue": [ 1.0 ],
               "input": {
-                "type": "range",
-                "minvalue": 0.0,
-                "maxvalue": 89.5
+                "hide": true
               }
             },
             {
@@ -64,18 +62,19 @@
               "type": "float",
               "initValue": [ 1.0 ],
               "input": {
+                "hide": true
               }
             },
             {
-              "name": "fPad0",
+              "name": "pan",
               "type": "float",
-              "initValue": [ 1.0 ],
+              "initValue": [ 0.0 ],
               "input": {
                 "hide": true
               }
             },
             {
-              "name": "fPad1",
+              "name": "tilt",
               "type": "float",
               "initValue": [ 1.0 ],
               "input": {

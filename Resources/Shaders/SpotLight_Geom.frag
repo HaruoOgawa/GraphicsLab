@@ -77,7 +77,7 @@ void main()
     else*/
     {
         vec3 col = l_ubo.color.rgb * l_ubo.intensity;
-        float alpha = 1.0;
+        float alpha = 1.0 * 0.75;
 
         // Spot Light
         vec3 baseDir = normalize(l_ubo.dir.xyz);

@@ -81,7 +81,7 @@ namespace app
 		// DMX€”õ
 		network::SDMXFixture Fixture{};
 		Fixture.DeviceName = "DefaultSpotLight";
-		Fixture.ChannelNameList = { "R", "G", "B", "Dimmer", "Pan", "Tilt" };
+		Fixture.ChannelNameList = { "R", "G", "B", "Dimmer", "Pan", "Tilt", "Angle", "Height"};
 
 		m_DMXHandler->RegistDeviceFixture(1, 0, 0, Fixture);
 #endif

@@ -19,9 +19,11 @@ layout(binding = 0) uniform VertUniformBuffer{
 
     float angle; // 初期値: 45° (0.0 ~ 89.0の間の値しか取れない)
     float height; // 初期値: 1.0
-    float fPad0;
-    float fPad1;
+    float pan;
+    float tilt;
 } v_ubo;
+
+#define rot(a) mat2(cos(a), sin(a), -sin(a), cos(a))
 
 void main()
 {
@@ -57,6 +59,9 @@ void main()
         0.0, 0.0, DeformedScale.z, 0.0,
         0.0, 0.0, 0.0, 1.0
     );
+
+    pos.yz *= rot(v_ubo.pan);
+    pos.xz *= rot(v_ubo.tilt);
 
     //
 	vec4 ProjPos = v_ubo.proj * v_ubo.view * v_ubo.model * pos;
