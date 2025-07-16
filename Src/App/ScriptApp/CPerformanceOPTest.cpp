@@ -286,7 +286,7 @@ namespace app
 			const auto& Object = m_SceneController->FindObjectByName("LightList");
 			if (Object)
 			{
-				for (int i = 0; i < 3; i++)
+				for (int i = 0; i < 6; i++)
 				{
 					std::string Name = "SpotLight_" + std::to_string(i);
 					const auto& SpotLight = Object->FindNodeByName(Name);
