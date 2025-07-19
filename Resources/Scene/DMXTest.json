@@ -829,7 +829,7 @@
                             1.0
                         ]
                     },
-                    "enable": true,
+                    "enable": false,
                     "meshindex": -1,
                     "components": [
                         {
@@ -857,7 +857,7 @@
                             10.0
                         ]
                     },
-                    "enable": false,
+                    "enable": true,
                     "meshindex": -1,
                     "components": [
                         {
