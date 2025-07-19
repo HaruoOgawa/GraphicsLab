@@ -95,15 +95,21 @@ namespace app
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(5);
 			State.InitColorList[3] = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-			State.EnabledAA = true;
-			State.AASampleNum = 8;
+			// デファードとフォアグラウンド周りがややこしくなるのでいったんMSAAはコメントアウト
+			//State.EnabledAA = true;
+			//State.AASampleNum = 8;
 			if (!pGraphicsAPI->CreateRenderPass("GBufferGenPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
 		}
 
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(1);
-			State.EnabledAA = true;
-			State.AASampleNum = 8;
+			// デファードとフォアグラウンド周りがややこしくなるのでいったんMSAAはコメントアウト
+			//State.EnabledAA = true;
+			//State.AASampleNum = 8;
+
+			// GBufferパスの深度をフォアグラウンドパスにコピーするので深度は初期化しない
+			State.ClearDepth = false;
+
 			if (!pGraphicsAPI->CreateRenderPass("MainResultPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
 		}
 
@@ -193,6 +199,9 @@ namespace app
 		
 		// MainResultPass
 		{
+			// フォアグラウンドパス(MainResultPass)にデファードパスの深度をコピーする
+			if (!pGraphicsAPI->CopyDepthBuffer("GBufferGenPass", "MainResultPass")) return false;
+
 			if (!pGraphicsAPI->BeginRender("MainResultPass")) return false;
 			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 			if (!pGraphicsAPI->EndRender()) return false;

@@ -37,7 +37,7 @@
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        1.0
+                        0.0020000000949949026
                     ]
                 }
             ]
@@ -71,7 +71,7 @@
                     "name": "angle",
                     "type": "float",
                     "initValue": [
-                        19.764705657958984
+                        15.882352828979492
                     ]
                 },
                 {
@@ -88,21 +88,21 @@
                     "name": "height",
                     "type": "float",
                     "initValue": [
-                        4.313725471496582
+                        20.58823585510254
                     ]
                 },
                 {
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.9529411792755127
+                        0.7019608020782471
                     ]
                 },
                 {
                     "name": "pan",
                     "type": "float",
                     "initValue": [
-                        0.0
+                        0.6159803867340088
                     ]
                 },
                 {
@@ -121,7 +121,7 @@
                     "name": "angle",
                     "type": "float",
                     "initValue": [
-                        19.764705657958984
+                        15.882352828979492
                     ]
                 },
                 {
@@ -138,28 +138,28 @@
                     "name": "height",
                     "type": "float",
                     "initValue": [
-                        4.313725471496582
+                        20.58823585510254
                     ]
                 },
                 {
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.8313725590705872
+                        0.125490203499794
                     ]
                 },
                 {
                     "name": "pan",
                     "type": "float",
                     "initValue": [
-                        0.0
+                        0.6159803867340088
                     ]
                 },
                 {
                     "name": "tilt",
                     "type": "float",
                     "initValue": [
-                        0.0
+                        1.256600022315979
                     ]
                 }
             ]
@@ -171,7 +171,7 @@
                     "name": "angle",
                     "type": "float",
                     "initValue": [
-                        19.764705657958984
+                        15.882352828979492
                     ]
                 },
                 {
@@ -188,28 +188,28 @@
                     "name": "height",
                     "type": "float",
                     "initValue": [
-                        4.313725471496582
+                        20.58823585510254
                     ]
                 },
                 {
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.24705882370471954
+                        0.06666667014360428
                     ]
                 },
                 {
                     "name": "pan",
                     "type": "float",
                     "initValue": [
-                        0.0
+                        0.6159803867340088
                     ]
                 },
                 {
                     "name": "tilt",
                     "type": "float",
                     "initValue": [
-                        0.0
+                        2.513200044631958
                     ]
                 }
             ]
@@ -221,7 +221,7 @@
                     "name": "angle",
                     "type": "float",
                     "initValue": [
-                        19.764705657958984
+                        15.882352828979492
                     ]
                 },
                 {
@@ -238,28 +238,28 @@
                     "name": "height",
                     "type": "float",
                     "initValue": [
-                        4.313725471496582
+                        20.58823585510254
                     ]
                 },
                 {
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.007843137718737125
+                        0.6039215922355652
                     ]
                 },
                 {
                     "name": "pan",
                     "type": "float",
                     "initValue": [
-                        0.0
+                        0.6159803867340088
                     ]
                 },
                 {
                     "name": "tilt",
                     "type": "float",
                     "initValue": [
-                        0.0
+                        3.7697999477386475
                     ]
                 }
             ]
@@ -271,7 +271,7 @@
                     "name": "angle",
                     "type": "float",
                     "initValue": [
-                        19.764705657958984
+                        15.882352828979492
                     ]
                 },
                 {
@@ -288,28 +288,28 @@
                     "name": "height",
                     "type": "float",
                     "initValue": [
-                        4.313725471496582
+                        20.58823585510254
                     ]
                 },
                 {
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.4470588266849518
+                        0.9960784316062927
                     ]
                 },
                 {
                     "name": "pan",
                     "type": "float",
                     "initValue": [
-                        0.0
+                        0.6159803867340088
                     ]
                 },
                 {
                     "name": "tilt",
                     "type": "float",
                     "initValue": [
-                        0.0
+                        5.026400089263916
                     ]
                 }
             ]
@@ -321,7 +321,7 @@
                     "name": "angle",
                     "type": "float",
                     "initValue": [
-                        19.764705657958984
+                        15.882352828979492
                     ]
                 },
                 {
@@ -338,28 +338,28 @@
                     "name": "height",
                     "type": "float",
                     "initValue": [
-                        4.313725471496582
+                        20.58823585510254
                     ]
                 },
                 {
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.9529411792755127
+                        0.7019608020782471
                     ]
                 },
                 {
                     "name": "pan",
                     "type": "float",
                     "initValue": [
-                        0.0
+                        0.6159803867340088
                     ]
                 },
                 {
                     "name": "tilt",
                     "type": "float",
                     "initValue": [
-                        0.0
+                        6.2829999923706055
                     ]
                 }
             ]
@@ -508,9 +508,9 @@
                             0.0
                         ],
                         "scale": [
-                            10.0,
-                            10.0,
-                            10.0
+                            100.0,
+                            100.0,
+                            100.0
                         ]
                     },
                     "enable": true,
@@ -667,6 +667,114 @@
             ]
         },
         {
+            "name": "ForegroundObj",
+            "filename": "",
+            "renderpasslist": [
+                "MainResultPass"
+            ],
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "enable": true,
+            "rootnodes": [
+                0
+            ],
+            "nodes": [
+                {
+                    "name": "Capsule",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            -2.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.25,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 0
+                }
+            ],
+            "meshs": [
+                {
+                    "primitives": [
+                        {
+                            "type": "cube"
+                        }
+                    ]
+                }
+            ],
+            "materials": [
+                {
+                    "meshindex": 0,
+                    "primitiveindex": 0,
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "ambientColor",
+                            "type": "vec4",
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.6352941393852234
+                            ]
+                        }
+                    ],
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "name": "LightList",
             "filename": "",
             "renderpasslist": [
@@ -720,7 +828,7 @@
                             1.0
                         ]
                     },
-                    "enable": false,
+                    "enable": true,
                     "meshindex": -1,
                     "components": [
                         {
