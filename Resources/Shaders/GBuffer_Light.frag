@@ -186,7 +186,8 @@ LightParam GetLightParam(GBufferResult gResult)
 		// 半径チェック
 		// スポットライト底面の半径
 		float sinFactor = sin(coneAngle) / sin(3.1415 * 0.5 - coneAngle);
-		float spotR = sinFactor * height;
+		// float spotR = sinFactor * height;
+		float spotR = sinFactor * prjlen;
 		// l2gからその射影ベクトルに垂直なベクトルの長さ
 		vec3 l2g_perp = l2g - (prjlen * baseDir);
 		float l2gR = length(l2g_perp);
@@ -206,7 +207,7 @@ LightParam GetLightParam(GBufferResult gResult)
         light.color = l_ubo.color.rgb;
         light.attenuation = l_ubo.intensity * attenuation;
 		// light.enabled = (ValidAngle && ValidHeight);
-		light.enabled = (ValidRadius && ValidHeight);
+		light.enabled = (ValidAngle && ValidRadius && ValidHeight);
 	}
 
     return light;
