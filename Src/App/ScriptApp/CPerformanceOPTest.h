@@ -8,7 +8,9 @@ namespace graphics {
 namespace gui { class CGraphicsEditingWindow; }
 namespace timeline { class CTimelineController; }
 namespace scene { class CSceneController; }
-namespace camera { class CTraceCamera; }
+namespace camera { 
+	class CLookUpTraceCamera;
+}
 namespace imageeffect { class CBloomEffect; }
 namespace network { 
 	class CUDPSocket; 
@@ -23,9 +25,16 @@ namespace app
 	{
 		std::shared_ptr<scene::CSceneController> m_SceneController;
 
+		bool m_CameraSwitchToggle;
+
 		std::shared_ptr<camera::CCamera> m_MainCamera;
 		std::shared_ptr<camera::CCamera> m_ViewCamera;
-		std::shared_ptr<camera::CTraceCamera> m_TraceCamera;
+
+		std::shared_ptr<camera::CLookUpTraceCamera> m_CurrentLookUpCamera;
+		std::shared_ptr<camera::CLookUpTraceCamera> m_LookUpCameraA;
+		std::shared_ptr<camera::CLookUpTraceCamera> m_LookUpCameraB;
+		bool m_LookUpSwitchToggle;
+
 		std::shared_ptr<projection::CProjection> m_Projection;
 		std::shared_ptr<graphics::CDrawInfo> m_DrawInfo;
 
@@ -37,8 +46,6 @@ namespace app
 #endif // USE_GUIENGINE
 
 		std::shared_ptr<timeline::CTimelineController> m_TimelineController;
-
-		bool m_CameraSwitchToggle;
 
 		std::shared_ptr<imageeffect::CBloomEffect> m_BloomEffect;
 
@@ -65,6 +72,9 @@ namespace app
 
 		virtual std::shared_ptr<graphics::CDrawInfo> GetDrawInfo() const override;
 
+		// コンポーネント作成
+		virtual std::shared_ptr<scriptable::CComponent> CreateComponent(const std::string& ComponentType, const std::string& ValueRegistry) override;
+
 		// 起動準備完了
 		virtual bool OnStartup(api::IGraphicsAPI* pGraphicsAPI, physics::IPhysicsEngine* pPhysicsEngine, resource::CLoadWorker* pLoadWorker, const std::shared_ptr<gui::IGUIEngine>& GUIEngine) override;
 
@@ -83,5 +93,8 @@ namespace app
 
 		// DMXデータ受信イベント
 		virtual void OnReceiveArtNetDMX(unsigned short Net, unsigned short SubNet, unsigned short Universe, const std::vector<unsigned char>& DataBuffer) override;
+
+		// カスタムイベント発火
+		virtual void OnRaisedEvent(const std::string& Type, const std::string& Params) override;
 	};
 }

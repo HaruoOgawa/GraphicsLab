@@ -78,6 +78,9 @@
     <ClCompile Include="Src\App\ScriptApp\CPerformanceOPTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Component\CCameraSwitcherComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\GUIApp\GUI\CGraphicsEditingWindow.h">
@@ -141,6 +144,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\App\ScriptApp\CPerformanceOPTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Component\CCameraSwitcherComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
