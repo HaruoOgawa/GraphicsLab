@@ -110,6 +110,20 @@ namespace app
 			// GBufferパスの深度をフォアグラウンドパスにコピーするので深度は初期化しない
 			State.ClearDepth = false;
 
+			if (!pGraphicsAPI->CreateRenderPass("GBufferLightPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
+		}
+		
+		{
+			graphics::SRenderPassState State = graphics::SRenderPassState(1);
+			// デファードとフォアグラウンド周りがややこしくなるのでいったんMSAAはコメントアウト
+			//State.EnabledAA = true;
+			//State.AASampleNum = 8;
+
+			// GBufferパスの深度をフォアグラウンドパスにコピーするので深度は初期化しない
+			State.ClearColor = false;
+			State.ClearDepth = false;
+			State.ClearStencil = false;
+
 			if (!pGraphicsAPI->CreateRenderPass("MainResultPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
 		}
 
@@ -197,10 +211,20 @@ namespace app
 			if (!pGraphicsAPI->EndRender()) return false;
 		}
 		
+		// GBufferLightPass
+		{
+			// フォアグラウンドパス(GBufferLightPass)にデファードパスの深度をコピーする
+			if (!pGraphicsAPI->CopyDepthBuffer("GBufferGenPass", "GBufferLightPass")) return false;
+
+			if (!pGraphicsAPI->BeginRender("GBufferLightPass")) return false;
+			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+			if (!pGraphicsAPI->EndRender()) return false;
+		}
+		
 		// MainResultPass
 		{
-			// フォアグラウンドパス(MainResultPass)にデファードパスの深度をコピーする
-			if (!pGraphicsAPI->CopyDepthBuffer("GBufferGenPass", "MainResultPass")) return false;
+			// フォアグラウンドパス(MainResultPass)にGBufferLightPassのカラー・深度をコピーする
+			if (!pGraphicsAPI->CopyRenderPass("GBufferLightPass", "MainResultPass", true, true)) return false;
 
 			if (!pGraphicsAPI->BeginRender("MainResultPass")) return false;
 			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;

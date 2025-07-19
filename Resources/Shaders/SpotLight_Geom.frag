@@ -90,7 +90,7 @@ void main()
         float coneAngle = radians(l_ubo.angle);
         float l2g_angle = acos(dot(baseDir, l2g_norm));
 
-        // alpha *= (clamp(l2g_angle, 0.0, coneAngle) / coneAngle);
+        alpha *= (clamp(l2g_angle, 0.0, coneAngle) / coneAngle);
 
         // 高さ(長さ)チェック
         // l2gをbaseDirに射影してその長さがHeight以下なら範囲内である

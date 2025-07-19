@@ -88,14 +88,14 @@
                     "name": "height",
                     "type": "float",
                     "initValue": [
-                        20.58823585510254
+                        6.078431606292725
                     ]
                 },
                 {
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.7019608020782471
+                        0.9725490212440491
                     ]
                 },
                 {
@@ -138,14 +138,14 @@
                     "name": "height",
                     "type": "float",
                     "initValue": [
-                        20.58823585510254
+                        6.078431606292725
                     ]
                 },
                 {
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.125490203499794
+                        0.49803921580314636
                     ]
                 },
                 {
@@ -188,14 +188,14 @@
                     "name": "height",
                     "type": "float",
                     "initValue": [
-                        20.58823585510254
+                        6.078431606292725
                     ]
                 },
                 {
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.06666667014360428
+                        0.0235294122248888
                     ]
                 },
                 {
@@ -238,14 +238,14 @@
                     "name": "height",
                     "type": "float",
                     "initValue": [
-                        20.58823585510254
+                        6.078431606292725
                     ]
                 },
                 {
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.6039215922355652
+                        0.20392157137393951
                     ]
                 },
                 {
@@ -288,14 +288,14 @@
                     "name": "height",
                     "type": "float",
                     "initValue": [
-                        20.58823585510254
+                        6.078431606292725
                     ]
                 },
                 {
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.9960784316062927
+                        0.7921568751335144
                     ]
                 },
                 {
@@ -338,14 +338,14 @@
                     "name": "height",
                     "type": "float",
                     "initValue": [
-                        20.58823585510254
+                        6.078431606292725
                     ]
                 },
                 {
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.7019608020782471
+                        0.9725490212440491
                     ]
                 },
                 {
@@ -778,6 +778,7 @@
             "name": "LightList",
             "filename": "",
             "renderpasslist": [
+                "GBufferLightPass",
                 "MainResultPass"
             ],
             "transform": {
