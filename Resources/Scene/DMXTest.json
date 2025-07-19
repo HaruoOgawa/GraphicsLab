@@ -95,21 +95,21 @@
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.9725490212440491
+                        0.3450980484485626
                     ]
                 },
                 {
                     "name": "pan",
                     "type": "float",
                     "initValue": [
-                        0.6159803867340088
+                        0.5667019486427307
                     ]
                 },
                 {
                     "name": "tilt",
                     "type": "float",
                     "initValue": [
-                        0.0
+                        1.4537136554718018
                     ]
                 }
             ]
@@ -145,21 +145,21 @@
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.49803921580314636
+                        0.007843137718737125
                     ]
                 },
                 {
                     "name": "pan",
                     "type": "float",
                     "initValue": [
-                        0.6159803867340088
+                        0.5667019486427307
                     ]
                 },
                 {
                     "name": "tilt",
                     "type": "float",
                     "initValue": [
-                        1.256600022315979
+                        2.513200044631958
                     ]
                 }
             ]
@@ -195,21 +195,21 @@
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.0235294122248888
+                        0.16470588743686676
                     ]
                 },
                 {
                     "name": "pan",
                     "type": "float",
                     "initValue": [
-                        0.6159803867340088
+                        0.5667019486427307
                     ]
                 },
                 {
                     "name": "tilt",
                     "type": "float",
                     "initValue": [
-                        2.513200044631958
+                        3.5480470657348633
                     ]
                 }
             ]
@@ -245,21 +245,21 @@
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.20392157137393951
+                        0.6509804129600525
                     ]
                 },
                 {
                     "name": "pan",
                     "type": "float",
                     "initValue": [
-                        0.6159803867340088
+                        0.5667019486427307
                     ]
                 },
                 {
                     "name": "tilt",
                     "type": "float",
                     "initValue": [
-                        3.7697999477386475
+                        4.6075334548950195
                     ]
                 }
             ]
@@ -295,21 +295,21 @@
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.7921568751335144
+                        0.9882352948188782
                     ]
                 },
                 {
                     "name": "pan",
                     "type": "float",
                     "initValue": [
-                        0.6159803867340088
+                        0.5667019486427307
                     ]
                 },
                 {
                     "name": "tilt",
                     "type": "float",
                     "initValue": [
-                        5.026400089263916
+                        5.642380237579346
                     ]
                 }
             ]
@@ -345,24 +345,27 @@
                     "name": "intensity",
                     "type": "float",
                     "initValue": [
-                        0.9725490212440491
+                        0.8313725590705872
                     ]
                 },
                 {
                     "name": "pan",
                     "type": "float",
                     "initValue": [
-                        0.6159803867340088
+                        0.5667019486427307
                     ]
                 },
                 {
                     "name": "tilt",
                     "type": "float",
                     "initValue": [
-                        6.2829999923706055
+                        0.41886666417121887
                     ]
                 }
             ]
+        },
+        {
+            "registryname": "CameraSwitcher_16626_11871"
         },
         {
             "registryname": "BloomRegistry",
@@ -1086,11 +1089,6 @@
             "renderpasslist": [
                 ""
             ],
-            "components": [
-                {
-                    "type": "CameraSwitcher"
-                }
-            ],
             "transform": {
                 "pos": [
                     0.0,
@@ -1108,7 +1106,13 @@
                     1.0
                 ]
             },
-            "enable": true
+            "enable": true,
+            "components": [
+                {
+                    "type": "CameraSwitcher",
+                    "valueregistry": "CameraSwitcher_16626_11871"
+                }
+            ]
         }
     ]
 }
