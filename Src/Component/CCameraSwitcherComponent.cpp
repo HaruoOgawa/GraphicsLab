@@ -27,7 +27,9 @@ namespace scriptable
 
 			int PrevID = m_CurrentID;
 
-			if (!Analyzer.GetInt(m_CurrentID)) return;
+			unsigned char IDByte = 0;
+			if (!Analyzer.GetByte(IDByte)) return;
+			m_CurrentID = static_cast<int>(IDByte);
 
 			// ƒJƒƒ‰î•ñ”½‰f
 			for (auto& Camera : m_CameraList)
