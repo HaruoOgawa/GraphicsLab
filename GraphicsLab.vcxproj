@@ -348,7 +348,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;USE_GLFW;USE_VULKAN;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;GLFW_INCLUDE_VULKAN;GLFW_EXPOSE_NATIVE_WIN32;USE_TEXTURE_LOADER;USE_GLTF;USE_VIEWER_CAMERA;USE_INPUT_SYSTEM;USE_GPGPU;USE_FBX;USE_ANIMATION;USE_MMD;USE_PHYSICS;B3_USE_CLEW;USE_GUIENGINE;USE_GUI_APP;USE_BINARY_WRITE;USE_RTXGI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;USE_GLFW;USE_VULKAN;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;GLFW_INCLUDE_VULKAN;GLFW_EXPOSE_NATIVE_WIN32;USE_TEXTURE_LOADER;USE_GLTF;USE_VIEWER_CAMERA;USE_INPUT_SYSTEM;USE_GPGPU;USE_FBX;USE_ANIMATION;USE_MMD;USE_PHYSICS;B3_USE_CLEW;USE_GUIENGINE;USE_GUI_APP;USE_BINARY_WRITE;USE_RTXGI;USE_NETWORK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\Garnet\Garnet/Src;..\Garnet\Garnet/Src\Library\glm;..\Garnet\Garnet/Src\Library\imgui\backends;..\Garnet\Garnet/Src\Library\imgui;..\Garnet\Garnet/Src\Library\json;..\Garnet\Garnet/Src\Library\GLFW\include;..\Garnet\Garnet/src\Library\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -362,7 +362,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;USE_GLFW;USE_WEBGPU;NOMINMAX;USE_WebGPUNative;USE_TEXTURE_LOADER;USE_GLTF;USE_VIEWER_CAMERA;USE_INPUT_SYSTEM;USE_GPGPU;USE_FBX;USE_ANIMATION;USE_SMALL_FBX;mrDebug;USE_MMD;USE_PHYSICS;B3_USE_CLEW;USE_GUIENGINE;USE_GUI_APP;USE_BINARY_WRITE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;USE_GLFW;USE_WEBGPU;NOMINMAX;USE_WebGPUNative;USE_TEXTURE_LOADER;USE_GLTF;USE_VIEWER_CAMERA;USE_INPUT_SYSTEM;USE_GPGPU;USE_FBX;USE_ANIMATION;USE_SMALL_FBX;mrDebug;USE_MMD;USE_PHYSICS;B3_USE_CLEW;USE_GUIENGINE;USE_GUI_APP;USE_BINARY_WRITE;USE_NETWORK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\Garnet\Garnet/Src;..\Garnet\Garnet/Src\Library\glm;..\Garnet\Garnet/Src\Library\imgui\backends;..\Garnet\Garnet/Src\Library\imgui;..\Garnet\Garnet/Src\Library\json;..\Garnet\Garnet/src\Library\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -378,7 +378,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;USE_GLFW;USE_OPENGL;NOMINMAX;USE_TEXTURE_LOADER;USE_GLTF;USE_VIEWER_CAMERA;USE_INPUT_SYSTEM;USE_GPGPU;USE_FBX;USE_ANIMATION;USE_MMD;USE_PHYSICS;B3_USE_CLEW;USE_GUIENGINE;USE_GUI_APP;USE_BINARY_WRITE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;USE_GLFW;USE_OPENGL;NOMINMAX;USE_TEXTURE_LOADER;USE_GLTF;USE_VIEWER_CAMERA;USE_INPUT_SYSTEM;USE_GPGPU;USE_FBX;USE_ANIMATION;USE_MMD;USE_PHYSICS;B3_USE_CLEW;USE_GUIENGINE;USE_GUI_APP;USE_BINARY_WRITE;USE_NETWORK;USE_BINARY_READ;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\Garnet\Garnet/Src;..\Garnet\Garnet/Src\Library\glm;..\Garnet\Garnet/Src\Library\imgui\backends;..\Garnet\Garnet/Src\Library\imgui;..\Garnet\Garnet/Src\Library\json;..\Garnet\Garnet/src\Library\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -392,7 +392,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;RUNTIME_SHADER_EDITING;USE_OPENGL;NOMINMAX;USE_WIN32_WindowAPI;USE_TEXTURE_LOADER;USE_GLTF;USE_VIEWER_CAMERA;USE_INPUT_SYSTEM;USE_GPGPU;USE_FBX;USE_ANIMATION;USE_MMD;USE_PHYSICS;B3_USE_CLEW;USE_GUIENGINE;USE_GUI_APP;USE_BINARY_WRITE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;RUNTIME_SHADER_EDITING;USE_OPENGL;NOMINMAX;USE_WIN32_WindowAPI;USE_TEXTURE_LOADER;USE_GLTF;USE_VIEWER_CAMERA;USE_INPUT_SYSTEM;USE_GPGPU;USE_FBX;USE_ANIMATION;USE_MMD;USE_PHYSICS;B3_USE_CLEW;USE_GUIENGINE;USE_GUI_APP;USE_BINARY_WRITE;USE_NETWORK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\Garnet\Garnet/Src;..\Garnet\Garnet/Src\Library\glm;..\Garnet\Garnet/Src\Library\imgui\backends;..\Garnet\Garnet/Src\Library\imgui;..\Garnet\Garnet/Src\Library\json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -480,6 +480,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Component\CCameraSwitcherComponent.cpp" />
+    <ClCompile Include="Src\App\ScriptApp\CPerformanceOPTest.cpp" />
+    <ClCompile Include="Src\App\ScriptApp\CRTXGITestApp.cpp" />
     <ClCompile Include="Src\GUIApp\GUI\CGUIAnimationTab.cpp" />
     <ClCompile Include="Src\Component\CCDIKTest.cpp" />
     <ClCompile Include="Src\GUIApp\GUI\C3DView.cpp" />
@@ -501,6 +504,9 @@
     <ClCompile Include="Src\Main\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Component\CCameraSwitcherComponent.h" />
+    <ClInclude Include="Src\App\ScriptApp\CPerformanceOPTest.h" />
+    <ClInclude Include="Src\App\ScriptApp\CRTXGITestApp.h" />
     <ClInclude Include="Src\GUIApp\GUI\CGUIAnimationTab.h" />
     <ClInclude Include="Src\Component\CCDIKTest.h" />
     <ClInclude Include="Src\GUIApp\GUI\C3DView.h" />

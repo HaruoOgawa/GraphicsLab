@@ -9,6 +9,7 @@ layout(location = 5) in vec4 inWeights0;
 
 layout(location = 0) out vec2 v2f_UV;
 layout(location = 1) out vec4 v2f_ProjPos;
+layout(location = 2) out vec4 v2f_WorldPos;
 
 layout(binding = 0) uniform VertUniformBuffer{
 	mat4 model;
@@ -24,4 +25,5 @@ void main()
 	gl_Position = ProjPos;
 	v2f_UV = inTexcoord;
 	v2f_ProjPos = ProjPos;
+	v2f_WorldPos = v_ubo.model * vec4(inPosition, 1.0);
 }

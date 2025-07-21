@@ -31,14 +31,13 @@ namespace imageeffect
 	bool CBloomEffect::Initialize(api::IGraphicsAPI* pGraphicsAPI, resource::CLoadWorker* pLoadWorker)
 	{
 		// オフスクリーンレンダーパス
-		graphics::SRenderPassState BrigtnessPassState{};
-		BrigtnessPassState.RenderTargetCount = 2;
+		graphics::SRenderPassState BrigtnessPassState = graphics::SRenderPassState(2);
 		BrigtnessPassState.ColorBuffer = true;
 		BrigtnessPassState.ColorTexture = true;
 		BrigtnessPassState.DepthBuffer = true;
-		if (!pGraphicsAPI->CreateRenderPass("BrigtnessPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), -1, -1, BrigtnessPassState)) return false;
+		if (!pGraphicsAPI->CreateRenderPass("BrigtnessPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, BrigtnessPassState)) return false;
 		
-		graphics::SRenderPassState ReducePassState{};
+		graphics::SRenderPassState ReducePassState = graphics::SRenderPassState();
 		ReducePassState.ColorBuffer = true;
 		ReducePassState.ColorTexture = true;
 		ReducePassState.DepthBuffer = true;
@@ -49,9 +48,9 @@ namespace imageeffect
 
 			int Rate = static_cast<int>(powf(2.0f, float(i) + 1.0f));
 
-			if (!pGraphicsAPI->CreateRenderPass(std::get<0>(ReduceBuf).DstPass, api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), 1024 / Rate, 1024 / Rate, ReducePassState)) return false;
-			if (!pGraphicsAPI->CreateRenderPass(std::get<1>(ReduceBuf).DstPass, api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), 1024 / Rate, 1024 / Rate, ReducePassState)) return false;
-			if (!pGraphicsAPI->CreateRenderPass(std::get<2>(ReduceBuf).DstPass, api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), 1024 / Rate, 1024 / Rate, ReducePassState)) return false;
+			if (!pGraphicsAPI->CreateRenderPass(std::get<0>(ReduceBuf).DstPass, api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, 1024 / Rate, 1024 / Rate, ReducePassState)) return false;
+			if (!pGraphicsAPI->CreateRenderPass(std::get<1>(ReduceBuf).DstPass, api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, 1024 / Rate, 1024 / Rate, ReducePassState)) return false;
+			if (!pGraphicsAPI->CreateRenderPass(std::get<2>(ReduceBuf).DstPass, api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, 1024 / Rate, 1024 / Rate, ReducePassState)) return false;
 		}
 
 		// FrameBufferRenderer

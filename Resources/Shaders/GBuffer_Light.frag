@@ -2,6 +2,7 @@
 
 layout(location = 0) in vec2 v2f_UV;
 layout(location = 1) in vec4 v2f_ProjPos;
+layout(location = 2) in vec4 v2f_WorldPos;
 
 layout(location = 0) out vec4 outColor;
 
@@ -11,10 +12,15 @@ layout(binding = 1) uniform LightUniformBuffer{
 	mat4 mPad2;
 	mat4 mPad3;
 
-    float type;
-    float radius; // 光の有効範囲(ライトスフィアのサイズ)
+    float type; // ライトのタイプ
+    float radius; // ライトの有効範囲
     float intensity; // ライトの強さ
-    float fPad0;
+    float angle; // ライトの有効範囲
+
+	float height; // ライトの有効範囲
+	float fPad0;
+	float fPad1;
+	float fPad2;
 
     vec4 dir;
     vec4 pos;
@@ -158,6 +164,50 @@ LightParam GetLightParam(GBufferResult gResult)
 		// ライト球の範囲外なら描画しない
 		light.enabled = (len <= l_ubo.radius); 
     }
+	else if(l_ubo.type == 3.0)
+	{
+		// Spot Light
+		vec3 baseDir = normalize(l_ubo.dir.xyz);
+		vec3 l2g = gResult.worldPos.xyz - l_ubo.pos.xyz;
+		vec3 l2g_norm = normalize(l2g);
+
+		// スポットライトの範囲内であれば描画可能
+		// 角度チェック
+		float coneAngle = radians(l_ubo.angle);
+		float l2g_angle = acos(dot(baseDir, l2g_norm));
+		bool ValidAngle = (l2g_angle >= 0.0 && l2g_angle <= coneAngle);
+
+		// 高さ(長さ)チェック
+		// l2gをbaseDirに射影してその長さがHeight以下なら範囲内である
+		float height = l_ubo.height;
+		float prjlen = length(l2g) * cos(l2g_angle);
+		bool ValidHeight = (prjlen >= 0 && prjlen < height);
+
+		// 半径チェック
+		// スポットライト底面の半径
+		float sinFactor = sin(coneAngle) / sin(3.1415 * 0.5 - coneAngle);
+		// float spotR = sinFactor * height;
+		float spotR = sinFactor * prjlen;
+		// l2gからその射影ベクトルに垂直なベクトルの長さ
+		vec3 l2g_perp = l2g - (prjlen * baseDir);
+		float l2gR = length(l2g_perp);
+		// l2gRが半径内であれば描画(角度付きのコーンではなく、上端と下端を底面の半径にした円柱で描画判定)
+		bool ValidRadius = (l2gR <= spotR);
+
+		// 現在のl2g射影ベクトルの高さにおける半径
+		// float cH_spotR = sinFactor * prjlen;
+
+		// 減衰
+		float attenuation = max( min(1.0 - pow((l2gR / spotR), 4.0), 1.0), 0.0 ) / pow(l2gR, 2.0);
+		attenuation = clamp(attenuation, 0.0, 1.0);
+		// float attenuation = smoothstep(1.0, 0.5, l2gR / spotR);
+
+		//
+		light.dir = l2g_norm;
+        light.color = l_ubo.color.rgb;
+        light.attenuation = l_ubo.intensity * attenuation;
+		light.enabled = (ValidAngle && ValidRadius && ValidHeight);
+	}
 
     return light;
 }

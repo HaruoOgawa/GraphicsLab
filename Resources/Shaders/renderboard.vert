@@ -9,6 +9,7 @@ layout(location = 5) in vec4 inWeights0;
 
 layout(location = 0) out vec2 v2f_UV;
 layout(location = 1) out vec4 v2f_ProjPos;
+layout(location = 2) out vec4 v2f_WorldPos;
 
 void main()
 {
@@ -17,4 +18,5 @@ void main()
 	gl_Position = ProjPos;
 	v2f_UV = inTexcoord;
 	v2f_ProjPos = ProjPos;
+	v2f_WorldPos = ProjPos;
 }

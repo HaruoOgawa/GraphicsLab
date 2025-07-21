@@ -65,6 +65,42 @@
             ]
         },
         {
+            "registryname": "SpotLight_2408_22419",
+            "values": [
+                {
+                    "name": "angle",
+                    "type": "float",
+                    "initValue": [
+                        20.0
+                    ]
+                },
+                {
+                    "name": "color",
+                    "type": "vec4",
+                    "initValue": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "name": "height",
+                    "type": "float",
+                    "initValue": [
+                        4.099999904632568
+                    ]
+                },
+                {
+                    "name": "intensity",
+                    "type": "float",
+                    "initValue": [
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
             "registryname": "BloomRegistry",
             "values": [
                 {
@@ -248,7 +284,8 @@
             "enable": true,
             "rootnodes": [
                 0,
-                1
+                1,
+                2
             ],
             "nodes": [
                 {
@@ -300,9 +337,6 @@
                     },
                     "enable": true,
                     "meshindex": -1,
-                    "children": [
-                        2
-                    ],
                     "components": [
                         {
                             "type": "PointLight",
@@ -311,11 +345,11 @@
                     ]
                 },
                 {
-                    "name": "Sphere",
+                    "name": "SpotLight",
                     "transform": {
                         "pos": [
                             0.0,
-                            0.0,
+                            1.5,
                             0.0
                         ],
                         "rotate": [
@@ -329,8 +363,14 @@
                             1.0
                         ]
                     },
-                    "enable": false,
-                    "meshindex": 0
+                    "enable": true,
+                    "meshindex": -1,
+                    "components": [
+                        {
+                            "type": "SpotLight",
+                            "valueregistry": "SpotLight_2408_22419"
+                        }
+                    ]
                 }
             ],
             "meshs": [
@@ -486,7 +526,7 @@
                             0.0
                         ],
                         "rotate": [
-                            180.0,
+                            -180.0,
                             89.98021697998047,
                             0.0
                         ],
@@ -530,9 +570,9 @@
                             2.5
                         ],
                         "rotate": [
-                            180.0,
+                            -180.0,
                             -5.008956122765085e-06,
-                            180.0
+                            -180.0
                         ],
                         "scale": [
                             2.5,

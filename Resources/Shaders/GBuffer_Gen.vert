@@ -29,6 +29,7 @@ layout(location = 1) out vec2 f_Texcoord;
 layout(location = 2) out vec4 f_WorldPos;
 layout(location = 3) out vec3 f_WorldTangent;
 layout(location = 4) out vec3 f_WorldBioTangent;
+layout(location = 5) out vec4 v2f_ProjPos;
 
 void main(){
     vec3 BioTangent = cross(inNormal, inTangent.xyz);
@@ -63,10 +64,13 @@ void main(){
         WorldBioTangent = normalize((v_ubo.model * vec4(BioTangent, 0.0)).xyz);
     }
 
-    gl_Position = v_ubo.proj * v_ubo.view * WorldPos;
+    vec4 ProjPos = v_ubo.proj * v_ubo.view * WorldPos;
+
+    gl_Position = ProjPos;
     f_WorldNormal = WorldNormal;
     f_Texcoord = inTexcoord;
     f_WorldPos = WorldPos;
     f_WorldTangent = WorldTangent;
     f_WorldBioTangent = WorldBioTangent;
+    v2f_ProjPos = ProjPos;
 }
