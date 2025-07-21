@@ -47,13 +47,14 @@ namespace scriptable
 				if (!Analyzer.GetFloat(ZAngle)) return;
 
 				Camera->SetPos(glm::vec3(PosX, PosY, PosZ));
-				Camera->SetZAngle(ZAngle);
+ 				Camera->SetZAngle(ZAngle);
 			}
 
 			// カメラ切り替え
 			if (PrevID != m_CurrentID)
 			{
-				m_App->OnRaisedEvent("CameraSwitch", "");
+				// 挙動が怪しいのでひとまず常に最初のカメラを使用(あとでリファクタリング)
+				//m_App->OnRaisedEvent("CameraSwitch", "");
 			}
 		}
 	}
