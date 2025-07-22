@@ -15,6 +15,7 @@ namespace imageeffect { class CBloomEffect; }
 namespace network { 
 	class CUDPSocket; 
 	class CDMXDataHandler;
+	class CNDIReceiver;
 }
 
 namespace app
@@ -52,6 +53,8 @@ namespace app
 #ifdef USE_NETWORK
 		std::shared_ptr<network::CUDPSocket> m_UDPSocket;
 		std::shared_ptr<network::CDMXDataHandler> m_DMXHandler;
+
+		std::shared_ptr<network::CNDIReceiver> m_NDIReceiver;
 #endif
 
 	public:

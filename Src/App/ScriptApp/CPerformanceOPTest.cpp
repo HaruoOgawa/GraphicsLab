@@ -25,6 +25,7 @@
 #ifdef USE_NETWORK
 #include <Network/CUDPSocket.h>
 #include <Network/DMX/CDMXDataHandler.h>
+#include <Network/CNDIReceiver.h>
 #endif
 
 #include "../../Component/CCameraSwitcherComponent.h"
@@ -52,6 +53,7 @@ namespace app
 #ifdef USE_NETWORK
 		m_UDPSocket(std::make_shared<network::CUDPSocket>("192.168.0.252", 6454)),
 		m_DMXHandler(std::make_shared<network::CDMXDataHandler>()),
+		m_NDIReceiver(std::make_shared<network::CNDIReceiver>()),
 #endif // USE_NETWORK
 
 		m_FileModifier(std::make_shared<CFileModifier>()),
@@ -120,6 +122,9 @@ namespace app
 
 			m_DMXHandler->RegistDeviceFixture(2, 0, 0, Fixture);
 		}
+
+		// NDIレシーバー初期化
+		if (!m_NDIReceiver->Initialize()) return false;
 #endif
 
 		pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\Scene\\DMXTest.json", m_SceneController));
@@ -190,6 +195,7 @@ namespace app
 	{
 #ifdef USE_NETWORK
 		if (!m_UDPSocket->Update(this)) return false;
+		if (!m_NDIReceiver->Update(this)) return false;
 #endif
 
 		if (!m_FileModifier->Update(pLoadWorker)) return false;
