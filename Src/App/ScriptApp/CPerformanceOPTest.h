@@ -97,6 +97,9 @@ namespace app
 		// DMXデータ受信イベント
 		virtual void OnReceiveArtNetDMX(unsigned short Net, unsigned short SubNet, unsigned short Universe, const std::vector<unsigned char>& DataBuffer) override;
 
+		// NDIデータ受信イベント
+		virtual void OnReceiveNDIImage(const std::vector<unsigned char>& pixelData, int Width, int Height, api::ERenderPassFormat RenderPassFormat) override;
+
 		// カスタムイベント発火
 		virtual void OnRaisedEvent(const std::string& Type, const std::string& Params) override;
 	};

@@ -7,6 +7,10 @@
         {
             "name": "pbr_mat",
             "filename": "Resources/MaterialFrame/PBR_MF.json"
+        },
+        {
+            "name": "simple_texture_mat",
+            "filename": "Resources/MaterialFrame/SimpleTexture_MF.json"
         }
     ],
     "valueregistries": [
@@ -1111,6 +1115,75 @@
                 {
                     "type": "CameraSwitcher",
                     "valueregistry": "CameraSwitcher_16626_11871"
+                }
+            ]
+        },
+        {
+            "name": "NDIObj",
+            "filename": "",
+            "renderpasslist": [
+                "MainResultPass"
+            ],
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "enable": true,
+            "rootnodes": [
+                0
+            ],
+            "nodes": [
+                {
+                    "name": "NDIPlane",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 0
+                }
+            ],
+            "meshs": [
+                {
+                    "primitives": [
+                        {
+                            "type": "board"
+                        }
+                    ]
+                }
+            ],
+            "materials": [
+                {
+                    "meshindex": 0,
+                    "primitiveindex": 0,
+                    "materialframe": "simple_texture_mat",
+                    "cull": "none"
                 }
             ]
         }

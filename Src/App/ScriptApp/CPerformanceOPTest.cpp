@@ -194,8 +194,11 @@ namespace app
 	bool CPerformanceOPTest::Update(api::IGraphicsAPI* pGraphicsAPI, physics::IPhysicsEngine* pPhysicsEngine, resource::CLoadWorker* pLoadWorker, const std::shared_ptr<input::CInputState>& InputState)
 	{
 #ifdef USE_NETWORK
-		if (!m_UDPSocket->Update(this)) return false;
-		if (!m_NDIReceiver->Update(this)) return false;
+		if (pLoadWorker->IsLoaded())
+		{
+			if (!m_UDPSocket->Update(this)) return false;
+			if (!m_NDIReceiver->Update(this)) return false;
+		}
 #endif
 
 		if (!m_FileModifier->Update(pLoadWorker)) return false;
@@ -436,6 +439,23 @@ namespace app
 		if (!m_DMXHandler) return;
 
 		m_DMXHandler->DispatchDMXData(Net, SubNet, Universe, DataBuffer);
+	}
+
+	// NDIデータ受信イベント
+	void CPerformanceOPTest::OnReceiveNDIImage(const std::vector<unsigned char>& pixelData, int Width, int Height, api::ERenderPassFormat RenderPassFormat)
+	{
+		if (!m_SceneController->IsLoaded()) return;
+
+		const auto& NDIObj = m_SceneController->FindObjectByName("NDIObj");
+		if (NDIObj)
+		{
+			const auto& TextureList = NDIObj->GetTextureSet()->Get2DTextureList();
+
+			if (!TextureList.empty())
+			{
+				TextureList[0]->ReplacePixelData(pixelData, Width, Height, RenderPassFormat);
+			}
+		}
 	}
 
 	// カスタムイベント発火
