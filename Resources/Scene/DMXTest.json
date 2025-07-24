@@ -1183,7 +1183,16 @@
                     "meshindex": 0,
                     "primitiveindex": 0,
                     "materialframe": "simple_texture_mat",
-                    "cull": "none"
+                    "cull": "none",
+                    "uniformvalues": [
+                        {
+                            "name": "useTexColor",
+                            "type": "int",
+                            "value": [
+                                1
+                            ]
+                        }
+                    ]
                 }
             ]
         }

@@ -1,5 +1,6 @@
 {
   "name": "simple_texture_mat",
+  "blendtype" : "transparent",
   "shaderList": [
     {
       "name": "minimum_vert",

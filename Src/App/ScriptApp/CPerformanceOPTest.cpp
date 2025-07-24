@@ -345,7 +345,37 @@ namespace app
 	// ロード完了イベント
 	bool CPerformanceOPTest::OnLoaded(api::IGraphicsAPI* pGraphicsAPI, physics::IPhysicsEngine* pPhysicsEngine, resource::CLoadWorker* pLoadWorker, const std::shared_ptr<gui::IGUIEngine>& GUIEngine)
 	{
+		//
 		if (!m_SceneController->Create(pGraphicsAPI, pPhysicsEngine)) return false;
+
+		//
+		{
+			auto EmptyTexture = pGraphicsAPI->CreateTexture(false);
+
+			int pixelByteSize = 1280 * 1280 * 4;
+			std::vector<unsigned char> emptyPixel;
+			emptyPixel.resize(pixelByteSize, 0);
+
+			EmptyTexture->Create(emptyPixel, 1280, 1280, 4, api::ERenderPassFormat::COLOR_BGRA);
+
+			const auto& NDIObj = m_SceneController->FindObjectByName("NDIObj");
+			if (NDIObj)
+			{
+				NDIObj->GetTextureSet()->Add2DTexture(EmptyTexture);
+
+				for (const auto& Mesh : NDIObj->GetMeshList())
+				{
+					for (const auto& Primitive : Mesh->GetPrimitiveList())
+					{
+						for (const auto& Renderer : Primitive->GetRendererList())
+						{
+							std::get<1>(Renderer)->ReplaceTextureIndex("texImage", 0);
+							std::get<1>(Renderer)->CreateRefTextureList(NDIObj->GetTextureSet());
+						}
+					}
+				}
+			}
+		}
 
 		m_BloomEffect->OnLoaded(m_SceneController);
 
