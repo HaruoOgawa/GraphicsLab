@@ -45,9 +45,9 @@ void main()
 		}
 
 		#ifdef USE_OPENGL
-		col.rgb *= texture(texImage, st).rgb;
+		col *= texture(texImage, st);
 		#else
-		col.rgb *= texture(sampler2D(texImage, texSampler), st).rgb;
+		col *= texture(sampler2D(texImage, texSampler), st);
 		#endif
 	}
 
