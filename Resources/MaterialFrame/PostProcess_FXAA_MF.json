@@ -12,7 +12,7 @@
     },
     {
       "name": "PostProcess_FXAA_frag",
-      "shaderFile": "Resources\\Shaders\\PostProcess_FXAA",
+      "shaderFile": "Resources\\Shaders\\PostProcess_FXAA_NVIDIA",
       "autoShaderExtension": true,
       "shadercode": "",
       "shaderType": "fragment",
