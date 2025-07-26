@@ -1,6 +1,6 @@
 #version 450
 
-layout(location = 0) in vec2 fUV;
+layout(location = 0) in vec2 v2f_UV;
 layout(location = 1) in vec4 v2f_ProjPos;
 layout(location = 2) in vec4 v2f_WorldPos;
 
@@ -42,7 +42,7 @@ vec3 GetTexColor(vec2 texcoord)
 void main()
 {
 	vec3 col = vec3(0.0); 
-	vec2 st = fUV;
+	vec2 st = v2f_UV;
 
 	#ifdef USE_OPENGL
 	vec2 texelSize = 1.0 / textureSize(texImage, 0);

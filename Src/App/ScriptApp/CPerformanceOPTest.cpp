@@ -3,6 +3,7 @@
 #include <Graphics/CDrawInfo.h>
 #include <Graphics/CFrameRenderer.h>
 #include <Graphics/CRTXGIController.h>
+#include <Graphics/PostProcess/CPostProcess.h>
 
 #include <Camera/CCamera.h>
 #include <Camera/CLookUpTraceCamera.h>
@@ -58,6 +59,7 @@ namespace app
 
 		m_FileModifier(std::make_shared<CFileModifier>()),
 		m_TimelineController(std::make_shared<timeline::CTimelineController>()),
+		m_PostProcess(std::make_shared<graphics::CPostProcess>("MainResultPass")),
 		m_BloomEffect(std::make_shared<imageeffect::CBloomEffect>("MainResultPass"))
 	{
 		//
@@ -132,21 +134,16 @@ namespace app
 		//pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\Scene\\rtxgi.json", m_SceneController));
 
 		// オフスクリーンレンダリング
-
+		// GBufferを組み込んだレンダリングパイプラインではフレームバッファコピー周りがややこしく非効率なことになるのでMSAAは使わない
+		// 代わりにFXAAのポストプロセスでアンチエイリアシングを行う
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(5);
 			State.InitColorList[3] = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-			// デファードとフォアグラウンド周りがややこしくなるのでいったんMSAAはコメントアウト
-			//State.EnabledAA = true;
-			//State.AASampleNum = 8;
 			if (!pGraphicsAPI->CreateRenderPass("GBufferGenPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
 		}
 
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(1);
-			// デファードとフォアグラウンド周りがややこしくなるのでいったんMSAAはコメントアウト
-			//State.EnabledAA = true;
-			//State.AASampleNum = 8;
 
 			// GBufferパスの深度をフォアグラウンドパスにコピーするので深度は初期化しない
 			State.ClearDepth = false;
@@ -156,10 +153,7 @@ namespace app
 		
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(1);
-			// デファードとフォアグラウンド周りがややこしくなるのでいったんMSAAはコメントアウト
-			//State.EnabledAA = true;
-			//State.AASampleNum = 8;
-
+			
 			// GBufferパスの深度をフォアグラウンドパスにコピーするので深度は初期化しない
 			State.ClearColor = false;
 			State.ClearDepth = false;
@@ -167,6 +161,10 @@ namespace app
 
 			if (!pGraphicsAPI->CreateRenderPass("MainResultPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
 		}
+
+		// ポストプロセス
+		m_PostProcess->SetUseFXAA(true);
+		if (!m_PostProcess->Initialize(pGraphicsAPI, pLoadWorker)) return false;
 
 		// ブルームエフェクト
 		if (!m_BloomEffect->Initialize(pGraphicsAPI, pLoadWorker)) return false;
@@ -226,6 +224,7 @@ namespace app
 			}
 		}
 
+		if (!m_PostProcess->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_BloomEffect->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_MainFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 
@@ -275,6 +274,9 @@ namespace app
 			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 			if (!pGraphicsAPI->EndRender()) return false;
 		}
+
+		// ポストプロセス
+		if (!m_PostProcess->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 
 		// BloomEffect
 		if (!m_BloomEffect->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;

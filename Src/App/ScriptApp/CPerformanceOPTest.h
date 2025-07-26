@@ -4,6 +4,7 @@
 
 namespace graphics { 
 	class CFrameRenderer; 
+	class CPostProcess;
 }
 namespace gui { class CGraphicsEditingWindow; }
 namespace timeline { class CTimelineController; }
@@ -48,6 +49,7 @@ namespace app
 
 		std::shared_ptr<timeline::CTimelineController> m_TimelineController;
 
+		std::shared_ptr<graphics::CPostProcess> m_PostProcess;
 		std::shared_ptr<imageeffect::CBloomEffect> m_BloomEffect;
 
 #ifdef USE_NETWORK
