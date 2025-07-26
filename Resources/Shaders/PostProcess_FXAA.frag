@@ -56,10 +56,13 @@ void main()
     float contrast = maxLuma - minLuma;
 
     // 3. エッジ判定。エッジ(境界線)とは色の急激な変化が起こる場所なのでコントラストが閾値以上ならエッジと判定 ////////////////
-    float edgeThreshold = 0.166; // エッジの閾値
-    if (contrast < edgeThreshold) {
+    float edgeThreshold = 0.0166; // エッジの閾値
+    if (contrast < edgeThreshold)
+    {
         // エッジではない場合は、元の色をそのまま出力
         outColor = GetTexColor(pos);
+        // outColor = vec4(0.0);
+        return;
     }
 
     // 4. エッジの方向を判定(水平な線か垂直な線か) //////////////////////////////////////////////////////////////////////
@@ -83,4 +86,5 @@ void main()
     vec3 blendedColor = (colA + colB) * 0.5;
 
     outColor = vec4(blendedColor, 1.0);
+    // outColor = vec4(1.0);
 }
