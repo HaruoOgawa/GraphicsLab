@@ -17,7 +17,8 @@ GarnetLauncher_Python/GarnetLauncher/GarnetLauncher/GarnetLauncher.spec
 GarnetLauncher_Python/GarnetLauncher/GarnetLauncher/build/
 imgui.ini
 
-Resources/TD/DMXSender.*.toe
+Resources/TD/DMXSender/DMXSender.*.toe
+Resources/TD/NDISender/NDISender.*.toe
 
 # User-specific files
 *.rsuser

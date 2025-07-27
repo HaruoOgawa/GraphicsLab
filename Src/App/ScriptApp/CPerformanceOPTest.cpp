@@ -3,6 +3,7 @@
 #include <Graphics/CDrawInfo.h>
 #include <Graphics/CFrameRenderer.h>
 #include <Graphics/CRTXGIController.h>
+#include <Graphics/PostProcess/CPostProcess.h>
 
 #include <Camera/CCamera.h>
 #include <Camera/CLookUpTraceCamera.h>
@@ -20,11 +21,10 @@
 #include "../../GUIApp/GUI/CGraphicsEditingWindow.h"
 #include "../../GUIApp/Model/CFileModifier.h"
 
-#include "../../ImageEffect/CBloomEffect.h"
-
 #ifdef USE_NETWORK
 #include <Network/CUDPSocket.h>
 #include <Network/DMX/CDMXDataHandler.h>
+#include <Network/CNDIReceiver.h>
 #endif
 
 #include "../../Component/CCameraSwitcherComponent.h"
@@ -52,11 +52,12 @@ namespace app
 #ifdef USE_NETWORK
 		m_UDPSocket(std::make_shared<network::CUDPSocket>("192.168.0.252", 6454)),
 		m_DMXHandler(std::make_shared<network::CDMXDataHandler>()),
+		m_NDIReceiver(std::make_shared<network::CNDIReceiver>()),
 #endif // USE_NETWORK
 
 		m_FileModifier(std::make_shared<CFileModifier>()),
 		m_TimelineController(std::make_shared<timeline::CTimelineController>()),
-		m_BloomEffect(std::make_shared<imageeffect::CBloomEffect>("MainResultPass"))
+		m_PostProcess(std::make_shared<graphics::CPostProcess>("MainResultPass"))
 	{
 		//
 		m_ViewCamera->SetCenter(glm::vec3(0.0f, 1.0f, 0.0f));
@@ -71,7 +72,7 @@ namespace app
 		m_DrawInfo->GetLightProjection()->SetNear(2.0f);
 		m_DrawInfo->GetLightProjection()->SetFar(100.0f);
 
-		m_SceneController->SetDefaultPass("MainResultPass");
+		m_SceneController->SetDefaultPass("MainGeometryPass");
 
 #ifdef USE_GUIENGINE
 		m_GraphicsEditingWindow->SetDefaultPass("MainResultPass", "");
@@ -120,28 +121,26 @@ namespace app
 
 			m_DMXHandler->RegistDeviceFixture(2, 0, 0, Fixture);
 		}
+
+		// NDIレシーバー初期化
+		if (!m_NDIReceiver->Initialize()) return false;
 #endif
 
-		pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\Scene\\DMXTest.json", m_SceneController));
-		//pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\Scene\\Sample.json", m_SceneController));
-		//pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\Scene\\rtxgi.json", m_SceneController));
+		pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\User\\Scene\\DMXTest.json", m_SceneController));
+		//pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\User\\Scene\\Sample.json", m_SceneController));
+		//pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\User\\Scene\\rtxgi.json", m_SceneController));
 
 		// オフスクリーンレンダリング
-
+		// GBufferを組み込んだレンダリングパイプラインではフレームバッファコピー周りがややこしく非効率なことになるのでMSAAは使わない
+		// 代わりにFXAAのポストプロセスでアンチエイリアシングを行う
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(5);
 			State.InitColorList[3] = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-			// デファードとフォアグラウンド周りがややこしくなるのでいったんMSAAはコメントアウト
-			//State.EnabledAA = true;
-			//State.AASampleNum = 8;
 			if (!pGraphicsAPI->CreateRenderPass("GBufferGenPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
 		}
 
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(1);
-			// デファードとフォアグラウンド周りがややこしくなるのでいったんMSAAはコメントアウト
-			//State.EnabledAA = true;
-			//State.AASampleNum = 8;
 
 			// GBufferパスの深度をフォアグラウンドパスにコピーするので深度は初期化しない
 			State.ClearDepth = false;
@@ -151,23 +150,24 @@ namespace app
 		
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(1);
-			// デファードとフォアグラウンド周りがややこしくなるのでいったんMSAAはコメントアウト
-			//State.EnabledAA = true;
-			//State.AASampleNum = 8;
-
+			
 			// GBufferパスの深度をフォアグラウンドパスにコピーするので深度は初期化しない
 			State.ClearColor = false;
 			State.ClearDepth = false;
 			State.ClearStencil = false;
 
-			if (!pGraphicsAPI->CreateRenderPass("MainResultPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
+			if (!pGraphicsAPI->CreateRenderPass("MainGeometryPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
 		}
 
-		// ブルームエフェクト
-		if (!m_BloomEffect->Initialize(pGraphicsAPI, pLoadWorker)) return false;
+		if (!pGraphicsAPI->CreateRenderPass("MainResultPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1)) return false;
+
+		// ポストプロセス
+		m_PostProcess->SetUseFXAA(true);
+		m_PostProcess->SetUseBloom(true);
+		if (!m_PostProcess->Initialize(pGraphicsAPI, pLoadWorker)) return false;
 
 		m_MainFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "", pGraphicsAPI->FindOffScreenRenderPass("MainResultPass")->GetFrameTextureList());
-		if (!m_MainFrameRenderer->Create(pLoadWorker, "Resources\\MaterialFrame\\FrameTexture_MF.json")) return false;
+		if (!m_MainFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\FrameTexture_MF.json")) return false;
 
 		return true;
 	}
@@ -189,7 +189,11 @@ namespace app
 	bool CPerformanceOPTest::Update(api::IGraphicsAPI* pGraphicsAPI, physics::IPhysicsEngine* pPhysicsEngine, resource::CLoadWorker* pLoadWorker, const std::shared_ptr<input::CInputState>& InputState)
 	{
 #ifdef USE_NETWORK
-		if (!m_UDPSocket->Update(this)) return false;
+		if (pLoadWorker->IsLoaded())
+		{
+			if (!m_UDPSocket->Update(this)) return false;
+			if (!m_NDIReceiver->Update(this)) return false;
+		}
 #endif
 
 		if (!m_FileModifier->Update(pLoadWorker)) return false;
@@ -217,7 +221,7 @@ namespace app
 			}
 		}
 
-		if (!m_BloomEffect->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
+		if (!m_PostProcess->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_MainFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 
 		return true;
@@ -257,18 +261,27 @@ namespace app
 			if (!pGraphicsAPI->EndRender()) return false;
 		}
 		
-		// MainResultPass
+		// MainGeometryPass
 		{
-			// フォアグラウンドパス(MainResultPass)にGBufferLightPassのカラー・深度をコピーする
-			if (!pGraphicsAPI->CopyRenderPass("GBufferLightPass", "MainResultPass", true, true)) return false;
+			// フォアグラウンドパス(MainGeometryPass)にGBufferLightPassのカラー・深度をコピーする
+			if (!pGraphicsAPI->CopyRenderPass("GBufferLightPass", "MainGeometryPass", true, true)) return false;
 
-			if (!pGraphicsAPI->BeginRender("MainResultPass")) return false;
+			if (!pGraphicsAPI->BeginRender("MainGeometryPass")) return false;
 			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 			if (!pGraphicsAPI->EndRender()) return false;
 		}
 
-		// BloomEffect
-		if (!m_BloomEffect->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+		// MainResultPass 
+		{
+			// ポストプロセスに渡すためにここではコピーだけを行う
+			// パスを始めてしまうとせっかくコピーした内容がリセットされてしまう
+			// MainGeometryPassとMainResultPassを分離したのはMainGeometryPassではカラー・デプスを初期化しないようにしているため、
+			// その影響でうまくポストプロセスが効かなくなるから
+			if (!pGraphicsAPI->CopyRenderPass("MainGeometryPass", "MainResultPass", true, true)) return false;
+		}
+
+		// ポストプロセス
+		if (!m_PostProcess->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 
 		// Main FrameBuffer
 		{
@@ -284,7 +297,7 @@ namespace app
 				GUIParams.CameraMode = (m_CameraSwitchToggle) ? "ViewCamera" : "TraceCamera";
 				GUIParams.Camera = m_MainCamera;
 				GUIParams.InputState = InputState;
-				GUIParams.ValueRegistryList.emplace(m_BloomEffect->GetRegistryName(), m_BloomEffect);
+				GUIParams.ValueRegistryList.emplace(m_PostProcess->GetBloomFilter()->GetRegistryName(), m_PostProcess->GetBloomFilter());
 
 				if (!GUIEngine->BeginFrame(pGraphicsAPI)) return false;
 				if (!m_GraphicsEditingWindow->Draw(pGraphicsAPI, GUIParams, GUIEngine))
@@ -336,16 +349,46 @@ namespace app
 	// ロード完了イベント
 	bool CPerformanceOPTest::OnLoaded(api::IGraphicsAPI* pGraphicsAPI, physics::IPhysicsEngine* pPhysicsEngine, resource::CLoadWorker* pLoadWorker, const std::shared_ptr<gui::IGUIEngine>& GUIEngine)
 	{
+		//
 		if (!m_SceneController->Create(pGraphicsAPI, pPhysicsEngine)) return false;
 
-		m_BloomEffect->OnLoaded(m_SceneController);
+		//
+		{
+			auto EmptyTexture = pGraphicsAPI->CreateTexture(false);
+
+			int pixelByteSize = 1280 * 1280 * 4;
+			std::vector<unsigned char> emptyPixel;
+			emptyPixel.resize(pixelByteSize, 0);
+
+			EmptyTexture->Create(emptyPixel, 1280, 1280, 4, api::ERenderPassFormat::COLOR_BGRA);
+
+			const auto& NDIObj = m_SceneController->FindObjectByName("NDIObj");
+			if (NDIObj)
+			{
+				NDIObj->GetTextureSet()->Add2DTexture(EmptyTexture);
+
+				for (const auto& Mesh : NDIObj->GetMeshList())
+				{
+					for (const auto& Primitive : Mesh->GetPrimitiveList())
+					{
+						for (const auto& Renderer : Primitive->GetRendererList())
+						{
+							std::get<1>(Renderer)->ReplaceTextureIndex("texImage", 0);
+							std::get<1>(Renderer)->CreateRefTextureList(NDIObj->GetTextureSet());
+						}
+					}
+				}
+			}
+		}
+
+		m_PostProcess->GetBloomFilter()->OnLoaded(m_SceneController);
 
 		if (!m_TimelineController->Initialize(shared_from_this())) return false;
 
 #ifdef USE_GUIENGINE
 		{
 			gui::SGUIParams GUIParams = gui::SGUIParams(shared_from_this(), GetObjectList(), m_SceneController, m_FileModifier, m_TimelineController, pLoadWorker, {}, pPhysicsEngine);
-			GUIParams.ValueRegistryList.emplace(m_BloomEffect->GetRegistryName(), m_BloomEffect);
+			GUIParams.ValueRegistryList.emplace(m_PostProcess->GetBloomFilter()->GetRegistryName(), m_PostProcess->GetBloomFilter());
 
 			if (!m_GraphicsEditingWindow->OnLoaded(pGraphicsAPI, GUIParams, GUIEngine)) return false;
 		}
@@ -430,6 +473,23 @@ namespace app
 		if (!m_DMXHandler) return;
 
 		m_DMXHandler->DispatchDMXData(Net, SubNet, Universe, DataBuffer);
+	}
+
+	// NDIデータ受信イベント
+	void CPerformanceOPTest::OnReceiveNDIImage(const std::vector<unsigned char>& pixelData, int Width, int Height, api::ERenderPassFormat RenderPassFormat)
+	{
+		if (!m_SceneController->IsLoaded()) return;
+
+		const auto& NDIObj = m_SceneController->FindObjectByName("NDIObj");
+		if (NDIObj)
+		{
+			const auto& TextureList = NDIObj->GetTextureSet()->Get2DTextureList();
+
+			if (!TextureList.empty())
+			{
+				TextureList[0]->ReplacePixelData(pixelData, Width, Height, RenderPassFormat);
+			}
+		}
 	}
 
 	// カスタムイベント発火
