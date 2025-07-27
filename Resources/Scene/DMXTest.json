@@ -72,6 +72,21 @@
             "registryname": "SpotLight_2408_22419",
             "values": [
                 {
+                    "name": "DefferdPassName",
+                    "type": "string",
+                    "initValue": "GBufferGenPass"
+                },
+                {
+                    "name": "ForegroundPassName",
+                    "type": "string",
+                    "initValue": "MainGeometryPass"
+                },
+                {
+                    "name": "LightingPassName",
+                    "type": "string",
+                    "initValue": "GBufferLightPass"
+                },
+                {
                     "name": "angle",
                     "type": "float",
                     "initValue": [
@@ -121,6 +136,21 @@
         {
             "registryname": "SpotLight_3719_25721",
             "values": [
+                {
+                    "name": "DefferdPassName",
+                    "type": "string",
+                    "initValue": "GBufferGenPass"
+                },
+                {
+                    "name": "ForegroundPassName",
+                    "type": "string",
+                    "initValue": "MainGeometryPass"
+                },
+                {
+                    "name": "LightingPassName",
+                    "type": "string",
+                    "initValue": "GBufferLightPass"
+                },
                 {
                     "name": "angle",
                     "type": "float",
@@ -172,6 +202,21 @@
             "registryname": "SpotLight_20936_9563",
             "values": [
                 {
+                    "name": "DefferdPassName",
+                    "type": "string",
+                    "initValue": "GBufferGenPass"
+                },
+                {
+                    "name": "ForegroundPassName",
+                    "type": "string",
+                    "initValue": "MainGeometryPass"
+                },
+                {
+                    "name": "LightingPassName",
+                    "type": "string",
+                    "initValue": "GBufferLightPass"
+                },
+                {
                     "name": "angle",
                     "type": "float",
                     "initValue": [
@@ -221,6 +266,21 @@
         {
             "registryname": "SpotLight_18953_173",
             "values": [
+                {
+                    "name": "DefferdPassName",
+                    "type": "string",
+                    "initValue": "GBufferGenPass"
+                },
+                {
+                    "name": "ForegroundPassName",
+                    "type": "string",
+                    "initValue": "MainGeometryPass"
+                },
+                {
+                    "name": "LightingPassName",
+                    "type": "string",
+                    "initValue": "GBufferLightPass"
+                },
                 {
                     "name": "angle",
                     "type": "float",
@@ -272,6 +332,21 @@
             "registryname": "SpotLight_19625_21292",
             "values": [
                 {
+                    "name": "DefferdPassName",
+                    "type": "string",
+                    "initValue": "GBufferGenPass"
+                },
+                {
+                    "name": "ForegroundPassName",
+                    "type": "string",
+                    "initValue": "MainGeometryPass"
+                },
+                {
+                    "name": "LightingPassName",
+                    "type": "string",
+                    "initValue": "GBufferLightPass"
+                },
+                {
                     "name": "angle",
                     "type": "float",
                     "initValue": [
@@ -321,6 +396,21 @@
         {
             "registryname": "SpotLight_4530_27554",
             "values": [
+                {
+                    "name": "DefferdPassName",
+                    "type": "string",
+                    "initValue": "GBufferGenPass"
+                },
+                {
+                    "name": "ForegroundPassName",
+                    "type": "string",
+                    "initValue": "MainGeometryPass"
+                },
+                {
+                    "name": "LightingPassName",
+                    "type": "string",
+                    "initValue": "GBufferLightPass"
+                },
                 {
                     "name": "angle",
                     "type": "float",
@@ -1191,6 +1281,13 @@
                             "value": [
                                 1
                             ]
+                        }
+                    ],
+                    "textures": [
+                        {
+                            "texturebuffername": "texImage",
+                            "textureindex": 0,
+                            "texturename": ""
                         }
                     ]
                 }
