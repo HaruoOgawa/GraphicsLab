@@ -35,9 +35,6 @@ namespace app
 		std::shared_ptr<timeline::CTimelineController> m_TimelineController;
 
 		bool m_CameraSwitchToggle;
-
-		std::shared_ptr<imageeffect::CBloomEffect> m_BloomEffect;
-
 	public:
 		CScriptApp();
 		virtual ~CScriptApp() = default;

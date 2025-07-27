@@ -385,7 +385,7 @@
                     "name": "Threshold",
                     "type": "float",
                     "initValue": [
-                        1.0
+                        0.5
                     ]
                 }
             ]
@@ -677,7 +677,7 @@
             "name": "ForegroundObj",
             "filename": "",
             "renderpasslist": [
-                "MainResultPass"
+                "MainGeometryPass"
             ],
             "transform": {
                 "pos": [
@@ -786,7 +786,7 @@
             "filename": "",
             "renderpasslist": [
                 "GBufferLightPass",
-                "MainResultPass"
+                "MainGeometryPass"
             ],
             "transform": {
                 "pos": [
@@ -1122,7 +1122,7 @@
             "name": "NDIObj",
             "filename": "",
             "renderpasslist": [
-                "MainResultPass"
+                "MainGeometryPass"
             ],
             "transform": {
                 "pos": [

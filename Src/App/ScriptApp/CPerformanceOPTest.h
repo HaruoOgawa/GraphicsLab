@@ -9,10 +9,7 @@ namespace graphics {
 namespace gui { class CGraphicsEditingWindow; }
 namespace timeline { class CTimelineController; }
 namespace scene { class CSceneController; }
-namespace camera { 
-	class CLookUpTraceCamera;
-}
-namespace imageeffect { class CBloomEffect; }
+namespace camera { class CLookUpTraceCamera; }
 namespace network { 
 	class CUDPSocket; 
 	class CDMXDataHandler;
@@ -50,7 +47,6 @@ namespace app
 		std::shared_ptr<timeline::CTimelineController> m_TimelineController;
 
 		std::shared_ptr<graphics::CPostProcess> m_PostProcess;
-		std::shared_ptr<imageeffect::CBloomEffect> m_BloomEffect;
 
 #ifdef USE_NETWORK
 		std::shared_ptr<network::CUDPSocket> m_UDPSocket;

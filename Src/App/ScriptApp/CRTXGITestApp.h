@@ -37,8 +37,6 @@ namespace app
 
 		bool m_CameraSwitchToggle;
 
-		std::shared_ptr<imageeffect::CBloomEffect> m_BloomEffect;
-
 #ifdef USE_RTXGI
 		std::shared_ptr<graphics::CRTXGIController> m_RTXGI;
 #endif // USE_RTXGI

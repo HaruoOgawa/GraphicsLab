@@ -500,7 +500,6 @@
     <ClCompile Include="Src\GUIApp\GUI\CGUIRenderingTab.cpp" />
     <ClCompile Include="Src\GUIApp\GUI\CGUIResourcesTab.cpp" />
     <ClCompile Include="Src\GUIApp\Model\CFileModifier.cpp" />
-    <ClCompile Include="Src\ImageEffect\CBloomEffect.cpp" />
     <ClCompile Include="Src\Main\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -525,7 +524,6 @@
     <ClInclude Include="Src\GUIApp\GUI\CGUIRenderingTab.h" />
     <ClInclude Include="Src\GUIApp\GUI\CGUIResourcesTab.h" />
     <ClInclude Include="Src\GUIApp\Model\CFileModifier.h" />
-    <ClInclude Include="Src\ImageEffect\CBloomEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Commands\CompileGLSLToSpirV.bat" />

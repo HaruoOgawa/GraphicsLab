@@ -262,7 +262,7 @@
             "name": "LightList",
             "filename": "",
             "renderpasslist": [
-                "MainResultPass"
+                "MainGeometryPass"
             ],
             "transform": {
                 "pos": [
