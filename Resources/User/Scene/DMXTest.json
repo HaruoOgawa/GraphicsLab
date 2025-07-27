@@ -1,0 +1,1294 @@
+{
+    "materialframes": [
+        {
+            "name": "GBuffer_Gen",
+            "filename": "Resources\\Common\\MaterialFrame\\GBuffer_Gen_MF.json"
+        },
+        {
+            "name": "pbr_mat",
+            "filename": "Resources\\Common\\MaterialFrame\\PBR_MF.json"
+        },
+        {
+            "name": "simple_texture_mat",
+            "filename": "Resources\\Common\\MaterialFrame\\SimpleTexture_MF.json"
+        }
+    ],
+    "valueregistries": [
+        {
+            "registryname": "DirectionalLight_27812_12898",
+            "values": [
+                {
+                    "name": "color",
+                    "type": "vec4",
+                    "initValue": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "name": "dir",
+                    "type": "vec4",
+                    "initValue": [
+                        2.3580000400543213,
+                        -15.600000381469727,
+                        0.5899999737739563,
+                        0.0
+                    ]
+                },
+                {
+                    "name": "intensity",
+                    "type": "float",
+                    "initValue": [
+                        0.0020000000949949026
+                    ]
+                }
+            ]
+        },
+        {
+            "registryname": "PointLight_12109_14090",
+            "values": [
+                {
+                    "name": "color",
+                    "type": "vec4",
+                    "initValue": [
+                        1.0,
+                        0.9599999785423279,
+                        0.8399999737739563,
+                        1.0
+                    ]
+                },
+                {
+                    "name": "intensity",
+                    "type": "float",
+                    "initValue": [
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "registryname": "SpotLight_2408_22419",
+            "values": [
+                {
+                    "name": "DefferdPassName",
+                    "type": "string",
+                    "initValue": "GBufferGenPass"
+                },
+                {
+                    "name": "ForegroundPassName",
+                    "type": "string",
+                    "initValue": "MainGeometryPass"
+                },
+                {
+                    "name": "LightingPassName",
+                    "type": "string",
+                    "initValue": "GBufferLightPass"
+                },
+                {
+                    "name": "angle",
+                    "type": "float",
+                    "initValue": [
+                        15.882352828979492
+                    ]
+                },
+                {
+                    "name": "color",
+                    "type": "vec4",
+                    "initValue": [
+                        0.8705882430076599,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                },
+                {
+                    "name": "height",
+                    "type": "float",
+                    "initValue": [
+                        6.078431606292725
+                    ]
+                },
+                {
+                    "name": "intensity",
+                    "type": "float",
+                    "initValue": [
+                        0.3450980484485626
+                    ]
+                },
+                {
+                    "name": "pan",
+                    "type": "float",
+                    "initValue": [
+                        0.5667019486427307
+                    ]
+                },
+                {
+                    "name": "tilt",
+                    "type": "float",
+                    "initValue": [
+                        1.4537136554718018
+                    ]
+                }
+            ]
+        },
+        {
+            "registryname": "SpotLight_3719_25721",
+            "values": [
+                {
+                    "name": "DefferdPassName",
+                    "type": "string",
+                    "initValue": "GBufferGenPass"
+                },
+                {
+                    "name": "ForegroundPassName",
+                    "type": "string",
+                    "initValue": "MainGeometryPass"
+                },
+                {
+                    "name": "LightingPassName",
+                    "type": "string",
+                    "initValue": "GBufferLightPass"
+                },
+                {
+                    "name": "angle",
+                    "type": "float",
+                    "initValue": [
+                        15.882352828979492
+                    ]
+                },
+                {
+                    "name": "color",
+                    "type": "vec4",
+                    "initValue": [
+                        0.0,
+                        1.0,
+                        0.0,
+                        1.0
+                    ]
+                },
+                {
+                    "name": "height",
+                    "type": "float",
+                    "initValue": [
+                        6.078431606292725
+                    ]
+                },
+                {
+                    "name": "intensity",
+                    "type": "float",
+                    "initValue": [
+                        0.007843137718737125
+                    ]
+                },
+                {
+                    "name": "pan",
+                    "type": "float",
+                    "initValue": [
+                        0.5667019486427307
+                    ]
+                },
+                {
+                    "name": "tilt",
+                    "type": "float",
+                    "initValue": [
+                        2.513200044631958
+                    ]
+                }
+            ]
+        },
+        {
+            "registryname": "SpotLight_20936_9563",
+            "values": [
+                {
+                    "name": "DefferdPassName",
+                    "type": "string",
+                    "initValue": "GBufferGenPass"
+                },
+                {
+                    "name": "ForegroundPassName",
+                    "type": "string",
+                    "initValue": "MainGeometryPass"
+                },
+                {
+                    "name": "LightingPassName",
+                    "type": "string",
+                    "initValue": "GBufferLightPass"
+                },
+                {
+                    "name": "angle",
+                    "type": "float",
+                    "initValue": [
+                        15.882352828979492
+                    ]
+                },
+                {
+                    "name": "color",
+                    "type": "vec4",
+                    "initValue": [
+                        0.0,
+                        0.7843137383460999,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "name": "height",
+                    "type": "float",
+                    "initValue": [
+                        6.078431606292725
+                    ]
+                },
+                {
+                    "name": "intensity",
+                    "type": "float",
+                    "initValue": [
+                        0.16470588743686676
+                    ]
+                },
+                {
+                    "name": "pan",
+                    "type": "float",
+                    "initValue": [
+                        0.5667019486427307
+                    ]
+                },
+                {
+                    "name": "tilt",
+                    "type": "float",
+                    "initValue": [
+                        3.5480470657348633
+                    ]
+                }
+            ]
+        },
+        {
+            "registryname": "SpotLight_18953_173",
+            "values": [
+                {
+                    "name": "DefferdPassName",
+                    "type": "string",
+                    "initValue": "GBufferGenPass"
+                },
+                {
+                    "name": "ForegroundPassName",
+                    "type": "string",
+                    "initValue": "MainGeometryPass"
+                },
+                {
+                    "name": "LightingPassName",
+                    "type": "string",
+                    "initValue": "GBufferLightPass"
+                },
+                {
+                    "name": "angle",
+                    "type": "float",
+                    "initValue": [
+                        15.882352828979492
+                    ]
+                },
+                {
+                    "name": "color",
+                    "type": "vec4",
+                    "initValue": [
+                        1.0,
+                        1.0,
+                        0.0,
+                        1.0
+                    ]
+                },
+                {
+                    "name": "height",
+                    "type": "float",
+                    "initValue": [
+                        6.078431606292725
+                    ]
+                },
+                {
+                    "name": "intensity",
+                    "type": "float",
+                    "initValue": [
+                        0.6509804129600525
+                    ]
+                },
+                {
+                    "name": "pan",
+                    "type": "float",
+                    "initValue": [
+                        0.5667019486427307
+                    ]
+                },
+                {
+                    "name": "tilt",
+                    "type": "float",
+                    "initValue": [
+                        4.6075334548950195
+                    ]
+                }
+            ]
+        },
+        {
+            "registryname": "SpotLight_19625_21292",
+            "values": [
+                {
+                    "name": "DefferdPassName",
+                    "type": "string",
+                    "initValue": "GBufferGenPass"
+                },
+                {
+                    "name": "ForegroundPassName",
+                    "type": "string",
+                    "initValue": "MainGeometryPass"
+                },
+                {
+                    "name": "LightingPassName",
+                    "type": "string",
+                    "initValue": "GBufferLightPass"
+                },
+                {
+                    "name": "angle",
+                    "type": "float",
+                    "initValue": [
+                        15.882352828979492
+                    ]
+                },
+                {
+                    "name": "color",
+                    "type": "vec4",
+                    "initValue": [
+                        0.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "name": "height",
+                    "type": "float",
+                    "initValue": [
+                        6.078431606292725
+                    ]
+                },
+                {
+                    "name": "intensity",
+                    "type": "float",
+                    "initValue": [
+                        0.9882352948188782
+                    ]
+                },
+                {
+                    "name": "pan",
+                    "type": "float",
+                    "initValue": [
+                        0.5667019486427307
+                    ]
+                },
+                {
+                    "name": "tilt",
+                    "type": "float",
+                    "initValue": [
+                        5.642380237579346
+                    ]
+                }
+            ]
+        },
+        {
+            "registryname": "SpotLight_4530_27554",
+            "values": [
+                {
+                    "name": "DefferdPassName",
+                    "type": "string",
+                    "initValue": "GBufferGenPass"
+                },
+                {
+                    "name": "ForegroundPassName",
+                    "type": "string",
+                    "initValue": "MainGeometryPass"
+                },
+                {
+                    "name": "LightingPassName",
+                    "type": "string",
+                    "initValue": "GBufferLightPass"
+                },
+                {
+                    "name": "angle",
+                    "type": "float",
+                    "initValue": [
+                        15.882352828979492
+                    ]
+                },
+                {
+                    "name": "color",
+                    "type": "vec4",
+                    "initValue": [
+                        1.0,
+                        0.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "name": "height",
+                    "type": "float",
+                    "initValue": [
+                        6.078431606292725
+                    ]
+                },
+                {
+                    "name": "intensity",
+                    "type": "float",
+                    "initValue": [
+                        0.8313725590705872
+                    ]
+                },
+                {
+                    "name": "pan",
+                    "type": "float",
+                    "initValue": [
+                        0.5667019486427307
+                    ]
+                },
+                {
+                    "name": "tilt",
+                    "type": "float",
+                    "initValue": [
+                        0.41886666417121887
+                    ]
+                }
+            ]
+        },
+        {
+            "registryname": "CameraSwitcher_16626_11871"
+        },
+        {
+            "registryname": "BloomRegistry",
+            "values": [
+                {
+                    "name": "Intencity",
+                    "type": "float",
+                    "initValue": [
+                        1.5
+                    ]
+                },
+                {
+                    "name": "Threshold",
+                    "type": "float",
+                    "initValue": [
+                        0.5
+                    ]
+                }
+            ]
+        }
+    ],
+    "scenetextureset": {
+        "frametextures": null
+    },
+    "physics": {
+        "enabled": true
+    },
+    "objects": [
+        {
+            "name": "SampleObj",
+            "filename": "",
+            "renderpasslist": [
+                "GBufferGenPass"
+            ],
+            "transform": {
+                "pos": [
+                    0.0,
+                    -2.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "enable": true,
+            "rootnodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ],
+            "nodes": [
+                {
+                    "name": "testnode",
+                    "transform": {
+                        "pos": [
+                            3.0,
+                            0.5,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            30.000001907348633,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            2.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 0
+                },
+                {
+                    "name": "aaa",
+                    "transform": {
+                        "pos": [
+                            1.5,
+                            0.5,
+                            2.5980000495910645
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            0.5,
+                            0.5,
+                            0.5
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 1
+                },
+                {
+                    "name": "Cube",
+                    "transform": {
+                        "pos": [
+                            -1.5,
+                            0.0,
+                            2.5980000495910645
+                        ],
+                        "rotate": [
+                            0.0,
+                            -20.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 0
+                },
+                {
+                    "name": "Plane",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            -0.5,
+                            0.0
+                        ],
+                        "rotate": [
+                            -90.0,
+                            0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            100.0,
+                            100.0,
+                            100.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 2
+                },
+                {
+                    "name": "obj4",
+                    "transform": {
+                        "pos": [
+                            -3.0,
+                            0.5,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            0.8999999761581421,
+                            0.8999999761581421,
+                            0.8999999761581421
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 3
+                },
+                {
+                    "name": "obj5",
+                    "transform": {
+                        "pos": [
+                            -1.5,
+                            0.0,
+                            -2.5980000495910645
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 4
+                },
+                {
+                    "name": "obj6",
+                    "transform": {
+                        "pos": [
+                            1.5,
+                            0.0,
+                            -2.5980000495910645
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            0.5,
+                            0.5,
+                            0.5
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 5
+                }
+            ],
+            "meshs": [
+                {
+                    "primitives": [
+                        {
+                            "type": "cube"
+                        }
+                    ]
+                },
+                {
+                    "primitives": [
+                        {
+                            "type": "sphere"
+                        }
+                    ]
+                },
+                {
+                    "primitives": [
+                        {
+                            "type": "board"
+                        }
+                    ]
+                },
+                {
+                    "primitives": [
+                        {
+                            "type": "sphere"
+                        }
+                    ]
+                },
+                {
+                    "primitives": [
+                        {
+                            "type": "cube"
+                        }
+                    ]
+                },
+                {
+                    "primitives": [
+                        {
+                            "type": "sphere"
+                        }
+                    ]
+                }
+            ],
+            "materials": [
+                {
+                    "meshindex": 0,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back"
+                },
+                {
+                    "meshindex": 1,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back"
+                },
+                {
+                    "meshindex": 2,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "none"
+                },
+                {
+                    "meshindex": 3,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back"
+                },
+                {
+                    "meshindex": 4,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back"
+                },
+                {
+                    "meshindex": 5,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back"
+                }
+            ]
+        },
+        {
+            "name": "ForegroundObj",
+            "filename": "",
+            "renderpasslist": [
+                "MainGeometryPass"
+            ],
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "enable": true,
+            "rootnodes": [
+                0
+            ],
+            "nodes": [
+                {
+                    "name": "Capsule",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            -2.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.25,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 0
+                }
+            ],
+            "meshs": [
+                {
+                    "primitives": [
+                        {
+                            "type": "cube"
+                        }
+                    ]
+                }
+            ],
+            "materials": [
+                {
+                    "meshindex": 0,
+                    "primitiveindex": 0,
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "ambientColor",
+                            "type": "vec4",
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.6352941393852234
+                            ]
+                        }
+                    ],
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "LightList",
+            "filename": "",
+            "renderpasslist": [
+                "GBufferLightPass",
+                "MainGeometryPass"
+            ],
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    5.0,
+                    1.0
+                ]
+            },
+            "enable": true,
+            "rootnodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            "nodes": [
+                {
+                    "name": "DirectionalLight",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": false,
+                    "meshindex": -1,
+                    "components": [
+                        {
+                            "type": "DirectionalLight",
+                            "valueregistry": "DirectionalLight_27812_12898"
+                        }
+                    ]
+                },
+                {
+                    "name": "PointLight",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            1.5,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            10.0,
+                            10.0,
+                            10.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": -1,
+                    "components": [
+                        {
+                            "type": "PointLight",
+                            "valueregistry": "PointLight_12109_14090"
+                        }
+                    ]
+                },
+                {
+                    "name": "SpotLight_0",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            1.5,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": -1,
+                    "components": [
+                        {
+                            "type": "SpotLight",
+                            "valueregistry": "SpotLight_2408_22419"
+                        }
+                    ]
+                },
+                {
+                    "name": "SpotLight_1",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            1.5,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": -1,
+                    "components": [
+                        {
+                            "type": "SpotLight",
+                            "valueregistry": "SpotLight_3719_25721"
+                        }
+                    ]
+                },
+                {
+                    "name": "SpotLight_2",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            1.5,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": -1,
+                    "components": [
+                        {
+                            "type": "SpotLight",
+                            "valueregistry": "SpotLight_20936_9563"
+                        }
+                    ]
+                },
+                {
+                    "name": "SpotLight_3",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            1.5,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": -1,
+                    "components": [
+                        {
+                            "type": "SpotLight",
+                            "valueregistry": "SpotLight_18953_173"
+                        }
+                    ]
+                },
+                {
+                    "name": "SpotLight_4",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            1.5,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": -1,
+                    "components": [
+                        {
+                            "type": "SpotLight",
+                            "valueregistry": "SpotLight_19625_21292"
+                        }
+                    ]
+                },
+                {
+                    "name": "SpotLight_5",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            1.5,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": -1,
+                    "components": [
+                        {
+                            "type": "SpotLight",
+                            "valueregistry": "SpotLight_4530_27554"
+                        }
+                    ]
+                }
+            ],
+            "meshs": [
+                {
+                    "primitives": [
+                        {
+                            "type": "sphere"
+                        }
+                    ]
+                }
+            ],
+            "materials": [
+                {
+                    "meshindex": 0,
+                    "primitiveindex": 0,
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "CameraSwitcher",
+            "filename": "",
+            "renderpasslist": [
+                ""
+            ],
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "enable": true,
+            "components": [
+                {
+                    "type": "CameraSwitcher",
+                    "valueregistry": "CameraSwitcher_16626_11871"
+                }
+            ]
+        },
+        {
+            "name": "NDIObj",
+            "filename": "",
+            "renderpasslist": [
+                "MainGeometryPass"
+            ],
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "enable": true,
+            "rootnodes": [
+                0
+            ],
+            "nodes": [
+                {
+                    "name": "NDIPlane",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": 0
+                }
+            ],
+            "meshs": [
+                {
+                    "primitives": [
+                        {
+                            "type": "board"
+                        }
+                    ]
+                }
+            ],
+            "materials": [
+                {
+                    "meshindex": 0,
+                    "primitiveindex": 0,
+                    "materialframe": "simple_texture_mat",
+                    "cull": "none",
+                    "uniformvalues": [
+                        {
+                            "name": "useTexColor",
+                            "type": "int",
+                            "value": [
+                                1
+                            ]
+                        }
+                    ],
+                    "textures": [
+                        {
+                            "texturebuffername": "texImage",
+                            "textureindex": 0,
+                            "texturename": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
