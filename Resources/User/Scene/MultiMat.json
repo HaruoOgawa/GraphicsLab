@@ -1,0 +1,1100 @@
+{
+    "materialframes": [
+        {
+            "name": "basic_toon_mat",
+            "filename": "Resources/MaterialFrame/basic_toon_mf.json"
+        },
+        {
+            "name": "pbr_mat",
+            "filename": "Resources/MaterialFrame/PBR_MF.json"
+        }
+    ],
+    "physics": {
+        "enabled": true
+    },
+    "animations": [
+      {
+        "name": "MotionTest",
+        "filename": "Resources/Motions/bibbidiba_DanceMotion.vmd"
+      }
+    ],
+    "objects": [
+        {
+            "name": "Ground",
+            "filename": "",
+            "renderpass": "MainResultPass",
+            "depthpass": "",
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "enable": true,
+            "rootnodes": [
+                0
+            ],
+            "nodes": [
+                {
+                    "name": "GroundNode",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            100.0,
+                            0.1,
+                            100.0
+                        ]
+                    },
+                    "enable": true,
+                    "collider": {
+                        "shape": "box",
+                        "size": [
+                            50.0,
+                            0.05,
+                            50.0
+                        ]
+                    },
+                    "rigidbody": {
+                        "mass": 0.0,
+                        "physicstype": "static",
+                        "transdamping": 0.0,
+                        "rotatedamping": 0.0,
+                        "repulsion": 0.0,
+                        "friction": 0.5
+                    },
+                    "meshindex": 0
+                }
+            ],
+            "meshs": [
+                {
+                    "primitives": [
+                        {
+                            "materialindex": 0,
+                            "type": "cube"
+                        }
+                    ]
+                }
+            ],
+            "materials": [
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "DynamicObjList",
+            "filename": "",
+            "renderpass": "MainResultPass",
+            "depthpass": "",
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "enable": true,
+            "rootnodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ],
+            "nodes": [
+                {
+                    "name": "TestBox",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            5.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "collider": {
+                        "shape": "box",
+                        "size": [
+                            0.5,
+                            0.5,
+                            0.5
+                        ]
+                    },
+                    "rigidbody": {
+                        "mass": 1.0,
+                        "physicstype": "dynamic",
+                        "transdamping": 0.0,
+                        "rotatedamping": 0.0,
+                        "repulsion": 0.0,
+                        "friction": 0.5
+                    },
+                    "meshindex": 0
+                },
+                {
+                    "name": "Joint_0",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            5.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            0.25,
+                            0.25,
+                            0.25
+                        ]
+                    },
+                    "enable": true,
+                    "collider": {
+                        "shape": "sphere",
+                        "size": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "rigidbody": {
+                        "mass": 0.0,
+                        "physicstype": "static",
+                        "transdamping": 0.0,
+                        "rotatedamping": 0.0,
+                        "repulsion": 0.0,
+                        "friction": 0.5
+                    },
+                    "meshindex": 1
+                },
+                {
+                    "name": "Joint_1",
+                    "transform": {
+                        "pos": [
+                            -1.0,
+                            5.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            0.25,
+                            0.25,
+                            0.25
+                        ]
+                    },
+                    "enable": true,
+                    "collider": {
+                        "shape": "sphere",
+                        "size": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "rigidbody": {
+                        "mass": 1.0,
+                        "physicstype": "dynamic",
+                        "transdamping": 0.0,
+                        "rotatedamping": 0.0,
+                        "repulsion": 0.0,
+                        "friction": 0.5
+                    },
+                    "meshindex": 2
+                },
+                {
+                    "name": "Joint_2",
+                    "transform": {
+                        "pos": [
+                            -2.0,
+                            5.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            0.25,
+                            0.25,
+                            0.25
+                        ]
+                    },
+                    "enable": true,
+                    "collider": {
+                        "shape": "sphere",
+                        "size": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "rigidbody": {
+                        "mass": 1.0,
+                        "physicstype": "dynamic",
+                        "transdamping": 0.0,
+                        "rotatedamping": 0.0,
+                        "repulsion": 0.0,
+                        "friction": 0.5
+                    },
+                    "meshindex": 3
+                },
+                {
+                    "name": "Joint_3",
+                    "transform": {
+                        "pos": [
+                            -3.0,
+                            5.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            0.25,
+                            0.25,
+                            0.25
+                        ]
+                    },
+                    "enable": true,
+                    "collider": {
+                        "shape": "sphere",
+                        "size": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "rigidbody": {
+                        "mass": 1.0,
+                        "physicstype": "dynamic",
+                        "transdamping": 0.0,
+                        "rotatedamping": 0.0,
+                        "repulsion": 0.0,
+                        "friction": 0.5
+                    },
+                    "meshindex": 4
+                },
+                {
+                    "name": "Joint_4",
+                    "transform": {
+                        "pos": [
+                            -4.0,
+                            5.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            0.25,
+                            0.25,
+                            0.25
+                        ]
+                    },
+                    "enable": true,
+                    "collider": {
+                        "shape": "sphere",
+                        "size": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "rigidbody": {
+                        "mass": 1.0,
+                        "physicstype": "dynamic",
+                        "transdamping": 0.0,
+                        "rotatedamping": 0.0,
+                        "repulsion": 0.0,
+                        "friction": 0.5
+                    },
+                    "meshindex": 5
+                },
+                {
+                    "name": "Joint_5",
+                    "transform": {
+                        "pos": [
+                            -5.0,
+                            5.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            0.25,
+                            0.25,
+                            0.25
+                        ]
+                    },
+                    "enable": true,
+                    "collider": {
+                        "shape": "sphere",
+                        "size": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "rigidbody": {
+                        "mass": 1.0,
+                        "physicstype": "dynamic",
+                        "transdamping": 0.0,
+                        "rotatedamping": 0.0,
+                        "repulsion": 0.0,
+                        "friction": 0.5
+                    },
+                    "meshindex": 6
+                }
+            ],
+            "meshs": [
+                {
+                    "primitives": [
+                        {
+                            "materialindex": 0,
+                            "type": "cube"
+                        }
+                    ]
+                },
+                {
+                    "primitives": [
+                        {
+                            "materialindex": 0,
+                            "type": "sphere"
+                        }
+                    ]
+                },
+                {
+                    "primitives": [
+                        {
+                            "materialindex": 0,
+                            "type": "sphere"
+                        }
+                    ]
+                },
+                {
+                    "primitives": [
+                        {
+                            "materialindex": 0,
+                            "type": "sphere"
+                        }
+                    ]
+                },
+                {
+                    "primitives": [
+                        {
+                            "materialindex": 0,
+                            "type": "sphere"
+                        }
+                    ]
+                },
+                {
+                    "primitives": [
+                        {
+                            "materialindex": 0,
+                            "type": "sphere"
+                        }
+                    ]
+                },
+                {
+                    "primitives": [
+                        {
+                            "materialindex": 0,
+                            "type": "sphere"
+                        }
+                    ]
+                }
+            ],
+            "materials": [
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                }
+            ],
+            "joints": [
+                {
+                    "fixednode": 1,
+                    "freenode": 2,
+                    "jointtype": "spring_6dof",
+                    "jointpos": [
+                        0.0,
+                        5.0,
+                        0.0
+                    ],
+                    "jointrotate": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "lowertranslimit": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "uppertranslimit": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "lowerrotatelimit": [
+                        -6.28000020980835,
+                        -6.28000020980835,
+                        -6.28000020980835
+                    ],
+                    "upperrotatelimit": [
+                        6.28000020980835,
+                        6.28000020980835,
+                        6.28000020980835
+                    ],
+                    "transspring": [
+                        35.0,
+                        35.0,
+                        35.0
+                    ],
+                    "rotatespring": [
+                        35.0,
+                        35.0,
+                        35.0
+                    ]
+                },
+                {
+                    "fixednode": 2,
+                    "freenode": 3,
+                    "jointtype": "spring_6dof",
+                    "jointpos": [
+                        -1.0,
+                        5.0,
+                        0.0
+                    ],
+                    "jointrotate": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "lowertranslimit": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "uppertranslimit": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "lowerrotatelimit": [
+                        -6.28000020980835,
+                        -6.28000020980835,
+                        -6.28000020980835
+                    ],
+                    "upperrotatelimit": [
+                        6.28000020980835,
+                        6.28000020980835,
+                        6.28000020980835
+                    ],
+                    "transspring": [
+                        35.0,
+                        35.0,
+                        35.0
+                    ],
+                    "rotatespring": [
+                        35.0,
+                        35.0,
+                        35.0
+                    ]
+                },
+                {
+                    "fixednode": 3,
+                    "freenode": 4,
+                    "jointtype": "spring_6dof",
+                    "jointpos": [
+                        -2.0,
+                        5.0,
+                        0.0
+                    ],
+                    "jointrotate": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "lowertranslimit": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "uppertranslimit": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "lowerrotatelimit": [
+                        -6.28000020980835,
+                        -6.28000020980835,
+                        -6.28000020980835
+                    ],
+                    "upperrotatelimit": [
+                        6.28000020980835,
+                        6.28000020980835,
+                        6.28000020980835
+                    ],
+                    "transspring": [
+                        35.0,
+                        35.0,
+                        35.0
+                    ],
+                    "rotatespring": [
+                        35.0,
+                        35.0,
+                        35.0
+                    ]
+                },
+                {
+                    "fixednode": 4,
+                    "freenode": 5,
+                    "jointtype": "spring_6dof",
+                    "jointpos": [
+                        -3.0,
+                        5.0,
+                        0.0
+                    ],
+                    "jointrotate": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "lowertranslimit": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "uppertranslimit": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "lowerrotatelimit": [
+                        -6.28000020980835,
+                        -6.28000020980835,
+                        -6.28000020980835
+                    ],
+                    "upperrotatelimit": [
+                        6.28000020980835,
+                        6.28000020980835,
+                        6.28000020980835
+                    ],
+                    "transspring": [
+                        35.0,
+                        35.0,
+                        35.0
+                    ],
+                    "rotatespring": [
+                        35.0,
+                        35.0,
+                        35.0
+                    ]
+                },
+                {
+                    "fixednode": 5,
+                    "freenode": 6,
+                    "jointtype": "spring_6dof",
+                    "jointpos": [
+                        -4.0,
+                        5.0,
+                        0.0
+                    ],
+                    "jointrotate": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "lowertranslimit": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "uppertranslimit": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "lowerrotatelimit": [
+                        -6.28000020980835,
+                        -6.28000020980835,
+                        -6.28000020980835
+                    ],
+                    "upperrotatelimit": [
+                        6.28000020980835,
+                        6.28000020980835,
+                        6.28000020980835
+                    ],
+                    "transspring": [
+                        35.0,
+                        35.0,
+                        35.0
+                    ],
+                    "rotatespring": [
+                        35.0,
+                        35.0,
+                        35.0
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "PmxObj",
+            "filename": "Resources/Avatar/Tda_Miku/Tda_Miku.pmx",
+            "defaultmaterialframe": "basic_toon_mat",
+            "animation": {
+                "clips": null,
+                "humanoidclips": [
+                  {
+                    "key": "Dance",
+                    "motionname": "MotionTest",
+                    "index": 0,
+                    "loop": true,
+                    "ik": true
+                  }
+                ],
+                "playmotionindex": -1,
+                "playmotion": "Dance",
+                "blendshapes": [
+                ],
+                "playblendshapes": [
+                ]
+            },
+            "transform": {
+                "pos": [
+                    3.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    0.10000000149011612,
+                    0.10000000149011612,
+                    0.10000000149011612
+                ]
+            }
+        },
+        {
+            "name": "CCDIKTest",
+            "filename": "Resources\\Models\\CCDIKTest\\CCDIKTest.glb",
+            "defaultmaterialframe": "pbr_mat",
+            "renderpass": "MainResultPass",
+            "depthpass": "",
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "enable": true,
+            "materials": [
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "baseColorFactor",
+                            "type": "vec4",
+                            "value": [
+                                0.8000001907348633,
+                                0.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.5
+                            ]
+                        }
+                    ],
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "baseColorFactor",
+                            "type": "vec4",
+                            "value": [
+                                0.0,
+                                0.39999985694885254,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.5
+                            ]
+                        }
+                    ],
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "baseColorFactor",
+                            "type": "vec4",
+                            "value": [
+                                0.0,
+                                1.0,
+                                0.40000009536743164,
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.5
+                            ]
+                        }
+                    ],
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "baseColorFactor",
+                            "type": "vec4",
+                            "value": [
+                                0.7999999523162842,
+                                1.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.5
+                            ]
+                        }
+                    ],
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "baseColorFactor",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.5
+                            ]
+                        }
+                    ],
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

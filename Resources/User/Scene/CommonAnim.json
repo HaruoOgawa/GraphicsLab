@@ -1,0 +1,1780 @@
+{
+    "materialframes": [
+        {
+            "name": "pbr_mat",
+            "filename": "Resources/MaterialFrame/PBR_MF.json"
+        }
+    ],
+    "animations": [
+        {
+            "filename": "Resources/Motions/Walking.fbx",
+            "humanbonelist": [
+                {
+                    "bonename": "Hips",
+                    "nodename": "mixamorig:Hips"
+                },
+                {
+                    "bonename": "LeftUpperLeg",
+                    "nodename": "mixamorig:LeftUpLeg"
+                },
+                {
+                    "bonename": "RightUpperLeg",
+                    "nodename": "mixamorig:RightUpLeg"
+                },
+                {
+                    "bonename": "LeftLowerLeg",
+                    "nodename": "mixamorig:LeftLeg"
+                },
+                {
+                    "bonename": "RightLowerLeg",
+                    "nodename": "mixamorig:RightLeg"
+                },
+                {
+                    "bonename": "LeftFoot",
+                    "nodename": "mixamorig:LeftFoot"
+                },
+                {
+                    "bonename": "RightFoot",
+                    "nodename": "mixamorig:RightFoot"
+                },
+                {
+                    "bonename": "Spine",
+                    "nodename": "mixamorig:Spine"
+                },
+                {
+                    "bonename": "Chest",
+                    "nodename": "mixamorig:Spine1"
+                },
+                {
+                    "bonename": "UpperChest",
+                    "nodename": "mixamorig:Spine2"
+                },
+                {
+                    "bonename": "Neck",
+                    "nodename": "mixamorig:Neck"
+                },
+                {
+                    "bonename": "Head",
+                    "nodename": "mixamorig:Head"
+                },
+                {
+                    "bonename": "LeftShoulder",
+                    "nodename": "mixamorig:LeftShoulder"
+                },
+                {
+                    "bonename": "RightShoulder",
+                    "nodename": "mixamorig:RightShoulder"
+                },
+                {
+                    "bonename": "LeftUpperArm",
+                    "nodename": "mixamorig:LeftArm"
+                },
+                {
+                    "bonename": "RightUpperArm",
+                    "nodename": "mixamorig:RightArm"
+                },
+                {
+                    "bonename": "LeftLowerArm",
+                    "nodename": "mixamorig:LeftForeArm"
+                },
+                {
+                    "bonename": "RightLowerArm",
+                    "nodename": "mixamorig:RightForeArm"
+                },
+                {
+                    "bonename": "LeftHand",
+                    "nodename": "mixamorig:LeftHand"
+                },
+                {
+                    "bonename": "RightHand",
+                    "nodename": "mixamorig:RightHand"
+                },
+                {
+                    "bonename": "LeftToes",
+                    "nodename": "mixamorig:LeftToeBase"
+                },
+                {
+                    "bonename": "RightToes",
+                    "nodename": "mixamorig:RightToeBase"
+                },
+                {
+                    "bonename": "LeftThumbProximal",
+                    "nodename": "mixamorig:LeftHandThumb1"
+                },
+                {
+                    "bonename": "LeftThumbIntermediate",
+                    "nodename": "mixamorig:LeftHandThumb2"
+                },
+                {
+                    "bonename": "LeftThumbDistal",
+                    "nodename": "mixamorig:LeftHandThumb3"
+                },
+                {
+                    "bonename": "LeftIndexProximal",
+                    "nodename": "mixamorig:LeftHandIndex1"
+                },
+                {
+                    "bonename": "LeftIndexIntermediate",
+                    "nodename": "mixamorig:LeftHandIndex2"
+                },
+                {
+                    "bonename": "LeftIndexDistal",
+                    "nodename": "mixamorig:LeftHandIndex3"
+                },
+                {
+                    "bonename": "LeftMiddleProximal",
+                    "nodename": "mixamorig:LeftHandMiddle1"
+                },
+                {
+                    "bonename": "LeftMiddleIntermediate",
+                    "nodename": "mixamorig:LeftHandMiddle2"
+                },
+                {
+                    "bonename": "LeftMiddleDistal",
+                    "nodename": "mixamorig:LeftHandMiddle3"
+                },
+                {
+                    "bonename": "LeftRingProximal",
+                    "nodename": "mixamorig:LeftHandRing1"
+                },
+                {
+                    "bonename": "LeftRingIntermediate",
+                    "nodename": "mixamorig:LeftHandRing2"
+                },
+                {
+                    "bonename": "LeftRingDistal",
+                    "nodename": "mixamorig:LeftHandRing3"
+                },
+                {
+                    "bonename": "LeftLittleProximal",
+                    "nodename": "mixamorig:LeftHandPinky1"
+                },
+                {
+                    "bonename": "LeftLittleIntermediate",
+                    "nodename": "mixamorig:LeftHandPinky2"
+                },
+                {
+                    "bonename": "LeftLittleDistal",
+                    "nodename": "mixamorig:LeftHandPinky3"
+                },
+                {
+                    "bonename": "RightThumbProximal",
+                    "nodename": "mixamorig:RightHandThumb1"
+                },
+                {
+                    "bonename": "RightThumbIntermediate",
+                    "nodename": "mixamorig:RightHandThumb2"
+                },
+                {
+                    "bonename": "RightThumbDistal",
+                    "nodename": "mixamorig:RightHandThumb3"
+                },
+                {
+                    "bonename": "RightIndexProximal",
+                    "nodename": "mixamorig:RightHandIndex1"
+                },
+                {
+                    "bonename": "RightIndexIntermediate",
+                    "nodename": "mixamorig:RightHandIndex2"
+                },
+                {
+                    "bonename": "RightIndexDistal",
+                    "nodename": "mixamorig:RightHandIndex3"
+                },
+                {
+                    "bonename": "RightMiddleProximal",
+                    "nodename": "mixamorig:RightHandMiddle1"
+                },
+                {
+                    "bonename": "RightMiddleIntermediate",
+                    "nodename": "mixamorig:RightHandMiddle2"
+                },
+                {
+                    "bonename": "RightMiddleDistal",
+                    "nodename": "mixamorig:RightHandMiddle3"
+                },
+                {
+                    "bonename": "RightRingProximal",
+                    "nodename": "mixamorig:RightHandRing1"
+                },
+                {
+                    "bonename": "RightRingIntermediate",
+                    "nodename": "mixamorig:RightHandRing2"
+                },
+                {
+                    "bonename": "RightRingDistal",
+                    "nodename": "mixamorig:RightHandRing3"
+                },
+                {
+                    "bonename": "RightLittleProximal",
+                    "nodename": "mixamorig:RightHandPinky1"
+                },
+                {
+                    "bonename": "RightLittleIntermediate",
+                    "nodename": "mixamorig:RightHandPinky2"
+                },
+                {
+                    "bonename": "RightLittleDistal",
+                    "nodename": "mixamorig:RightHandPinky3"
+                }
+            ],
+            "name": "FBX_Walking",
+            "rig": "humanoid"
+        },
+        {
+            "filename": "Resources/Avatar/PBROrc/PBROrc_Walk.fbx",
+            "name": "PBROrc_Walk"
+        },
+        {
+            "filename": "Resources/Motions/unitychan_RUN00_F.fbx",
+            "humanbonelist": [
+                {
+                    "bonename": "Hips",
+                    "nodename": "Character1_Hips"
+                },
+                {
+                    "bonename": "LeftUpperLeg",
+                    "nodename": "Character1_LeftUpLeg"
+                },
+                {
+                    "bonename": "RightUpperLeg",
+                    "nodename": "Character1_RightUpLeg"
+                },
+                {
+                    "bonename": "LeftLowerLeg",
+                    "nodename": "Character1_LeftLeg"
+                },
+                {
+                    "bonename": "RightLowerLeg",
+                    "nodename": "Character1_RightLeg"
+                },
+                {
+                    "bonename": "LeftFoot",
+                    "nodename": "Character1_LeftFoot"
+                },
+                {
+                    "bonename": "RightFoot",
+                    "nodename": "Character1_RightFoot"
+                },
+                {
+                    "bonename": "Spine",
+                    "nodename": "Character1_Spine"
+                },
+                {
+                    "bonename": "Chest",
+                    "nodename": "Character1_Spine1"
+                },
+                {
+                    "bonename": "UpperChest",
+                    "nodename": "Character1_Spine2"
+                },
+                {
+                    "bonename": "Neck",
+                    "nodename": "Character1_Neck"
+                },
+                {
+                    "bonename": "Head",
+                    "nodename": "Character1_Head"
+                },
+                {
+                    "bonename": "LeftShoulder",
+                    "nodename": "Character1_LeftShoulder"
+                },
+                {
+                    "bonename": "RightShoulder",
+                    "nodename": "Character1_RightShoulder"
+                },
+                {
+                    "bonename": "LeftUpperArm",
+                    "nodename": "Character1_LeftArm"
+                },
+                {
+                    "bonename": "RightUpperArm",
+                    "nodename": "Character1_RightArm"
+                },
+                {
+                    "bonename": "LeftLowerArm",
+                    "nodename": "Character1_LeftForeArm"
+                },
+                {
+                    "bonename": "RightLowerArm",
+                    "nodename": "Character1_RightForeArm"
+                },
+                {
+                    "bonename": "LeftHand",
+                    "nodename": "Character1_LeftHand"
+                },
+                {
+                    "bonename": "RightHand",
+                    "nodename": "Character1_RightHand"
+                },
+                {
+                    "bonename": "LeftToes",
+                    "nodename": "Character1_LeftToeBase"
+                },
+                {
+                    "bonename": "RightToes",
+                    "nodename": "Character1_RightToeBase"
+                },
+                {
+                    "bonename": "LeftThumbProximal",
+                    "nodename": "Character1_LeftHandThumb1"
+                },
+                {
+                    "bonename": "LeftThumbIntermediate",
+                    "nodename": "Character1_LeftHandThumb2"
+                },
+                {
+                    "bonename": "LeftThumbDistal",
+                    "nodename": "Character1_LeftHandThumb3"
+                },
+                {
+                    "bonename": "LeftIndexProximal",
+                    "nodename": "Character1_LeftHandIndex1"
+                },
+                {
+                    "bonename": "LeftIndexIntermediate",
+                    "nodename": "Character1_LeftHandIndex2"
+                },
+                {
+                    "bonename": "LeftIndexDistal",
+                    "nodename": "Character1_LeftHandIndex3"
+                },
+                {
+                    "bonename": "LeftMiddleProximal",
+                    "nodename": "Character1_LeftHandMiddle1"
+                },
+                {
+                    "bonename": "LeftMiddleIntermediate",
+                    "nodename": "Character1_LeftHandMiddle2"
+                },
+                {
+                    "bonename": "LeftMiddleDistal",
+                    "nodename": "Character1_LeftHandMiddle3"
+                },
+                {
+                    "bonename": "LeftRingProximal",
+                    "nodename": "Character1_LeftHandRing1"
+                },
+                {
+                    "bonename": "LeftRingIntermediate",
+                    "nodename": "Character1_LeftHandRing2"
+                },
+                {
+                    "bonename": "LeftRingDistal",
+                    "nodename": "Character1_LeftHandRing3"
+                },
+                {
+                    "bonename": "LeftLittleProximal",
+                    "nodename": "Character1_LeftHandPinky1"
+                },
+                {
+                    "bonename": "LeftLittleIntermediate",
+                    "nodename": "Character1_LeftHandPinky2"
+                },
+                {
+                    "bonename": "LeftLittleDistal",
+                    "nodename": "Character1_LeftHandPinky3"
+                },
+                {
+                    "bonename": "RightThumbProximal",
+                    "nodename": "Character1_RightHandThumb1"
+                },
+                {
+                    "bonename": "RightThumbIntermediate",
+                    "nodename": "Character1_RightHandThumb2"
+                },
+                {
+                    "bonename": "RightThumbDistal",
+                    "nodename": "Character1_RightHandThumb3"
+                },
+                {
+                    "bonename": "RightIndexProximal",
+                    "nodename": "Character1_RightHandIndex1"
+                },
+                {
+                    "bonename": "RightIndexIntermediate",
+                    "nodename": "Character1_RightHandIndex2"
+                },
+                {
+                    "bonename": "RightIndexDistal",
+                    "nodename": "Character1_RightHandIndex3"
+                },
+                {
+                    "bonename": "RightMiddleProximal",
+                    "nodename": "Character1_RightHandMiddle1"
+                },
+                {
+                    "bonename": "RightMiddleIntermediate",
+                    "nodename": "Character1_RightHandMiddle2"
+                },
+                {
+                    "bonename": "RightMiddleDistal",
+                    "nodename": "Character1_RightHandMiddle3"
+                },
+                {
+                    "bonename": "RightRingProximal",
+                    "nodename": "Character1_RightHandRing1"
+                },
+                {
+                    "bonename": "RightRingIntermediate",
+                    "nodename": "Character1_RightHandRing2"
+                },
+                {
+                    "bonename": "RightRingDistal",
+                    "nodename": "Character1_RightHandRing3"
+                },
+                {
+                    "bonename": "RightLittleProximal",
+                    "nodename": "Character1_RightHandPinky1"
+                },
+                {
+                    "bonename": "RightLittleIntermediate",
+                    "nodename": "Character1_RightHandPinky2"
+                },
+                {
+                    "bonename": "RightLittleDistal",
+                    "nodename": "Character1_RightHandPinky3"
+                }
+            ],
+            "name": "unitychan_RUN00_F"
+        }
+    ],
+    "timeline": {
+        "filename": "Resources\\Scene\\CommonAnim.tl"
+    },
+    "objects": [
+        {
+            "name": "unitychan",
+            "filename": "Resources/Avatar/unitychan.fbx",
+            "defaultmaterialframe": "pbr_mat",
+            "renderpass": "MainResultPass",
+            "depthpass": "",
+            "animation": {
+                "humanbonelist": [
+                    {
+                        "bonename": "Hips",
+                        "nodename": "Character1_Hips"
+                    },
+                    {
+                        "bonename": "LeftUpperLeg",
+                        "nodename": "Character1_LeftUpLeg"
+                    },
+                    {
+                        "bonename": "RightUpperLeg",
+                        "nodename": "Character1_RightUpLeg"
+                    },
+                    {
+                        "bonename": "LeftLowerLeg",
+                        "nodename": "Character1_LeftLeg"
+                    },
+                    {
+                        "bonename": "RightLowerLeg",
+                        "nodename": "Character1_RightLeg"
+                    },
+                    {
+                        "bonename": "LeftFoot",
+                        "nodename": "Character1_LeftFoot"
+                    },
+                    {
+                        "bonename": "RightFoot",
+                        "nodename": "Character1_RightFoot"
+                    },
+                    {
+                        "bonename": "Spine",
+                        "nodename": "Character1_Spine"
+                    },
+                    {
+                        "bonename": "Chest",
+                        "nodename": "Character1_Spine1"
+                    },
+                    {
+                        "bonename": "UpperChest",
+                        "nodename": "Character1_Spine2"
+                    },
+                    {
+                        "bonename": "Neck",
+                        "nodename": "Character1_Neck"
+                    },
+                    {
+                        "bonename": "Head",
+                        "nodename": "Character1_Head"
+                    },
+                    {
+                        "bonename": "LeftShoulder",
+                        "nodename": "Character1_LeftShoulder"
+                    },
+                    {
+                        "bonename": "RightShoulder",
+                        "nodename": "Character1_RightShoulder"
+                    },
+                    {
+                        "bonename": "LeftUpperArm",
+                        "nodename": "Character1_LeftArm"
+                    },
+                    {
+                        "bonename": "RightUpperArm",
+                        "nodename": "Character1_RightArm"
+                    },
+                    {
+                        "bonename": "LeftLowerArm",
+                        "nodename": "Character1_LeftForeArm"
+                    },
+                    {
+                        "bonename": "RightLowerArm",
+                        "nodename": "Character1_RightForeArm"
+                    },
+                    {
+                        "bonename": "LeftHand",
+                        "nodename": "Character1_LeftHand"
+                    },
+                    {
+                        "bonename": "RightHand",
+                        "nodename": "Character1_RightHand"
+                    },
+                    {
+                        "bonename": "LeftToes",
+                        "nodename": "Character1_LeftToeBase"
+                    },
+                    {
+                        "bonename": "RightToes",
+                        "nodename": "Character1_RightToeBase"
+                    },
+                    {
+                        "bonename": "Jaw",
+                        "nodename": "Character1_Hips"
+                    },
+                    {
+                        "bonename": "LeftThumbProximal",
+                        "nodename": "Character1_LeftHandThumb1"
+                    },
+                    {
+                        "bonename": "LeftThumbIntermediate",
+                        "nodename": "Character1_LeftHandThumb2"
+                    },
+                    {
+                        "bonename": "LeftThumbDistal",
+                        "nodename": "Character1_LeftHandThumb3"
+                    },
+                    {
+                        "bonename": "LeftIndexProximal",
+                        "nodename": "Character1_LeftHandIndex1"
+                    },
+                    {
+                        "bonename": "LeftIndexIntermediate",
+                        "nodename": "Character1_LeftHandIndex2"
+                    },
+                    {
+                        "bonename": "LeftIndexDistal",
+                        "nodename": "Character1_LeftHandIndex3"
+                    },
+                    {
+                        "bonename": "LeftMiddleProximal",
+                        "nodename": "Character1_LeftHandMiddle1"
+                    },
+                    {
+                        "bonename": "LeftMiddleIntermediate",
+                        "nodename": "Character1_LeftHandMiddle2"
+                    },
+                    {
+                        "bonename": "LeftMiddleDistal",
+                        "nodename": "Character1_LeftHandMiddle3"
+                    },
+                    {
+                        "bonename": "LeftRingProximal",
+                        "nodename": "Character1_LeftHandRing1"
+                    },
+                    {
+                        "bonename": "LeftRingIntermediate",
+                        "nodename": "Character1_LeftHandRing2"
+                    },
+                    {
+                        "bonename": "LeftRingDistal",
+                        "nodename": "Character1_LeftHandRing3"
+                    },
+                    {
+                        "bonename": "LeftLittleProximal",
+                        "nodename": "Character1_LeftHandPinky1"
+                    },
+                    {
+                        "bonename": "LeftLittleIntermediate",
+                        "nodename": "Character1_LeftHandPinky2"
+                    },
+                    {
+                        "bonename": "LeftLittleDistal",
+                        "nodename": "Character1_LeftHandPinky3"
+                    },
+                    {
+                        "bonename": "RightThumbProximal",
+                        "nodename": "Character1_RightHandThumb1"
+                    },
+                    {
+                        "bonename": "RightThumbIntermediate",
+                        "nodename": "Character1_RightHandThumb2"
+                    },
+                    {
+                        "bonename": "RightThumbDistal",
+                        "nodename": "Character1_RightHandThumb3"
+                    },
+                    {
+                        "bonename": "RightIndexProximal",
+                        "nodename": "Character1_RightHandIndex1"
+                    },
+                    {
+                        "bonename": "RightIndexIntermediate",
+                        "nodename": "Character1_RightHandIndex2"
+                    },
+                    {
+                        "bonename": "RightIndexDistal",
+                        "nodename": "Character1_RightHandIndex3"
+                    },
+                    {
+                        "bonename": "RightMiddleProximal",
+                        "nodename": "Character1_RightHandMiddle1"
+                    },
+                    {
+                        "bonename": "RightMiddleIntermediate",
+                        "nodename": "Character1_RightHandMiddle2"
+                    },
+                    {
+                        "bonename": "RightMiddleDistal",
+                        "nodename": "Character1_RightHandMiddle3"
+                    },
+                    {
+                        "bonename": "RightRingProximal",
+                        "nodename": "Character1_RightHandRing1"
+                    },
+                    {
+                        "bonename": "RightRingIntermediate",
+                        "nodename": "Character1_RightHandRing2"
+                    },
+                    {
+                        "bonename": "RightRingDistal",
+                        "nodename": "Character1_RightHandRing3"
+                    },
+                    {
+                        "bonename": "RightLittleProximal",
+                        "nodename": "Character1_RightHandPinky1"
+                    },
+                    {
+                        "bonename": "RightLittleIntermediate",
+                        "nodename": "Character1_RightHandPinky2"
+                    },
+                    {
+                        "bonename": "RightLittleDistal",
+                        "nodename": "Character1_RightHandPinky3"
+                    }
+                ],
+                "humanoidclips": [
+                    {
+                        "ik": false,
+                        "index": 0,
+                        "key": "Walk",
+                        "loop": true,
+                        "motionname": "unitychan_RUN00_F"
+                    }
+                ],
+                "playmotion": "Walk",
+                "playmotionindex": -1,
+                "rig": "humanoid"
+            },
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    0.009999999776482582,
+                    0.009999999776482582,
+                    0.009999999776482582
+                ]
+            },
+            "enable": true,
+            "materials": [
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                },
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "PBROrc",
+            "filename": "Resources/Avatar/PBROrc/PBROrc.fbx",
+            "defaultmaterialframe": "pbr_mat",
+            "renderpass": "MainResultPass",
+            "depthpass": "",
+            "animation": {
+                "clips": [
+                    {
+                        "index": 0,
+                        "key": "Idle",
+                        "loop": true,
+                        "motionname": "PBROrc_Walk"
+                    }
+                ],
+                "playmotion": "Idle",
+                "playmotionindex": -1
+            },
+            "transform": {
+                "pos": [
+                    2.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    0.009999999776482582,
+                    0.009999999776482582,
+                    0.009999999776482582
+                ]
+            },
+            "enable": true,
+            "materials": [
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "FbxObj",
+            "filename": "Resources/Avatar/Warrok_W_Kurniawan.fbx",
+            "defaultmaterialframe": "pbr_mat",
+            "renderpass": "MainResultPass",
+            "depthpass": "",
+            "animation": {
+                "humanbonelist": [
+                    {
+                        "bonename": "Hips",
+                        "nodename": "mixamorig:Hips"
+                    },
+                    {
+                        "bonename": "LeftUpperLeg",
+                        "nodename": "mixamorig:LeftUpLeg"
+                    },
+                    {
+                        "bonename": "RightUpperLeg",
+                        "nodename": "mixamorig:RightUpLeg"
+                    },
+                    {
+                        "bonename": "LeftLowerLeg",
+                        "nodename": "mixamorig:LeftLeg"
+                    },
+                    {
+                        "bonename": "RightLowerLeg",
+                        "nodename": "mixamorig:RightLeg"
+                    },
+                    {
+                        "bonename": "LeftFoot",
+                        "nodename": "mixamorig:LeftFoot"
+                    },
+                    {
+                        "bonename": "RightFoot",
+                        "nodename": "mixamorig:RightFoot"
+                    },
+                    {
+                        "bonename": "Spine",
+                        "nodename": "mixamorig:Spine"
+                    },
+                    {
+                        "bonename": "Chest",
+                        "nodename": "mixamorig:Spine1"
+                    },
+                    {
+                        "bonename": "UpperChest",
+                        "nodename": "mixamorig:Spine2"
+                    },
+                    {
+                        "bonename": "Neck",
+                        "nodename": "mixamorig:Neck"
+                    },
+                    {
+                        "bonename": "Head",
+                        "nodename": "mixamorig:Head"
+                    },
+                    {
+                        "bonename": "LeftShoulder",
+                        "nodename": "mixamorig:LeftShoulder"
+                    },
+                    {
+                        "bonename": "RightShoulder",
+                        "nodename": "mixamorig:RightShoulder"
+                    },
+                    {
+                        "bonename": "LeftUpperArm",
+                        "nodename": "mixamorig:LeftArm"
+                    },
+                    {
+                        "bonename": "RightUpperArm",
+                        "nodename": "mixamorig:RightArm"
+                    },
+                    {
+                        "bonename": "LeftLowerArm",
+                        "nodename": "mixamorig:LeftForeArm"
+                    },
+                    {
+                        "bonename": "RightLowerArm",
+                        "nodename": "mixamorig:RightForeArm"
+                    },
+                    {
+                        "bonename": "LeftHand",
+                        "nodename": "mixamorig:LeftHand"
+                    },
+                    {
+                        "bonename": "RightHand",
+                        "nodename": "mixamorig:RightHand"
+                    },
+                    {
+                        "bonename": "LeftToes",
+                        "nodename": "mixamorig:LeftToeBase"
+                    },
+                    {
+                        "bonename": "RightToes",
+                        "nodename": "mixamorig:RightToeBase"
+                    },
+                    {
+                        "bonename": "LeftEye",
+                        "nodename": "mixamorig:LeftEye"
+                    },
+                    {
+                        "bonename": "RightEye",
+                        "nodename": "mixamorig:RightEye"
+                    },
+                    {
+                        "bonename": "Jaw",
+                        "nodename": "mixamorig:Jaw"
+                    },
+                    {
+                        "bonename": "LeftThumbProximal",
+                        "nodename": "mixamorig:LeftHandThumb1"
+                    },
+                    {
+                        "bonename": "LeftThumbIntermediate",
+                        "nodename": "mixamorig:LeftHandThumb2"
+                    },
+                    {
+                        "bonename": "LeftThumbDistal",
+                        "nodename": "mixamorig:LeftHandThumb3"
+                    },
+                    {
+                        "bonename": "LeftIndexProximal",
+                        "nodename": "mixamorig:LeftHandIndex1"
+                    },
+                    {
+                        "bonename": "LeftIndexIntermediate",
+                        "nodename": "mixamorig:LeftHandIndex2"
+                    },
+                    {
+                        "bonename": "LeftIndexDistal",
+                        "nodename": "mixamorig:LeftHandIndex3"
+                    },
+                    {
+                        "bonename": "LeftMiddleProximal",
+                        "nodename": "mixamorig:LeftHandMiddle1"
+                    },
+                    {
+                        "bonename": "LeftMiddleIntermediate",
+                        "nodename": "mixamorig:LeftHandMiddle2"
+                    },
+                    {
+                        "bonename": "LeftMiddleDistal",
+                        "nodename": "mixamorig:LeftHandMiddle3"
+                    },
+                    {
+                        "bonename": "LeftRingProximal",
+                        "nodename": "mixamorig:LeftHandRing1"
+                    },
+                    {
+                        "bonename": "LeftRingIntermediate",
+                        "nodename": "mixamorig:LeftHandRing2"
+                    },
+                    {
+                        "bonename": "LeftRingDistal",
+                        "nodename": "mixamorig:LeftHandRing3"
+                    },
+                    {
+                        "bonename": "LeftLittleProximal",
+                        "nodename": "mixamorig:LeftHandPinky1"
+                    },
+                    {
+                        "bonename": "LeftLittleIntermediate",
+                        "nodename": "mixamorig:LeftHandPinky2"
+                    },
+                    {
+                        "bonename": "LeftLittleDistal",
+                        "nodename": "mixamorig:LeftHandPinky3"
+                    },
+                    {
+                        "bonename": "RightThumbProximal",
+                        "nodename": "mixamorig:RightHandThumb1"
+                    },
+                    {
+                        "bonename": "RightThumbIntermediate",
+                        "nodename": "mixamorig:RightHandThumb2"
+                    },
+                    {
+                        "bonename": "RightThumbDistal",
+                        "nodename": "mixamorig:RightHandThumb3"
+                    },
+                    {
+                        "bonename": "RightIndexProximal",
+                        "nodename": "mixamorig:RightHandIndex1"
+                    },
+                    {
+                        "bonename": "RightIndexIntermediate",
+                        "nodename": "mixamorig:RightHandIndex2"
+                    },
+                    {
+                        "bonename": "RightIndexDistal",
+                        "nodename": "mixamorig:RightHandIndex3"
+                    },
+                    {
+                        "bonename": "RightMiddleProximal",
+                        "nodename": "mixamorig:RightHandMiddle1"
+                    },
+                    {
+                        "bonename": "RightMiddleIntermediate",
+                        "nodename": "mixamorig:RightHandMiddle2"
+                    },
+                    {
+                        "bonename": "RightMiddleDistal",
+                        "nodename": "mixamorig:RightHandMiddle3"
+                    },
+                    {
+                        "bonename": "RightRingProximal",
+                        "nodename": "mixamorig:RightHandRing1"
+                    },
+                    {
+                        "bonename": "RightRingIntermediate",
+                        "nodename": "mixamorig:RightHandRing2"
+                    },
+                    {
+                        "bonename": "RightRingDistal",
+                        "nodename": "mixamorig:RightHandRing3"
+                    },
+                    {
+                        "bonename": "RightLittleProximal",
+                        "nodename": "mixamorig:RightHandPinky1"
+                    },
+                    {
+                        "bonename": "RightLittleIntermediate",
+                        "nodename": "mixamorig:RightHandPinky2"
+                    },
+                    {
+                        "bonename": "RightLittleDistal",
+                        "nodename": "mixamorig:RightHandPinky3"
+                    }
+                ],
+                "humanoidclips": [
+                    {
+                        "ik": false,
+                        "index": 0,
+                        "key": "Walk",
+                        "loop": true,
+                        "motionname": "FBX_Walking"
+                    }
+                ],
+                "playmotion": "Walk",
+                "playmotionindex": -1,
+                "rig": "humanoid"
+            },
+            "transform": {
+                "pos": [
+                    -2.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    0.009999999776482582,
+                    0.009999999776482582,
+                    0.009999999776482582
+                ]
+            },
+            "enable": true,
+            "materials": [
+                {
+                    "materialframe": "pbr_mat",
+                    "cull": "back",
+                    "textures": [
+                        {
+                            "texturebuffername": "cubemapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "shadowmapTexture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Diffuse_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_Specular_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        },
+                        {
+                            "texturebuffername": "IBL_GGXLUT_Texture",
+                            "textureindex": -1,
+                            "texturename": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
