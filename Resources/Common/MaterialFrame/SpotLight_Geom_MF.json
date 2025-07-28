@@ -1,6 +1,7 @@
 {
   "name": "SpotLight_Geom",
   "outputcolorcount": 1,
+  "renderqueue" : 3000,
   "shaderList": [
     {
       "name": "SpotLight_vert",
