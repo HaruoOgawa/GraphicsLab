@@ -290,28 +290,32 @@ namespace app
 			if (!m_MainFrameRenderer->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 
 			// GUIEngine
+			std::function<bool(void)> DrawGUIEngine = [this, pLoadWorker, GUIEngine, pGraphicsAPI, pPhysicsEngine, InputState]() {
 #ifdef USE_GUIENGINE
-			if (pLoadWorker->IsLoaded())
-			{
-				gui::SGUIParams GUIParams = gui::SGUIParams(shared_from_this(), GetObjectList(), m_SceneController, m_FileModifier, m_TimelineController, pLoadWorker, {}, pPhysicsEngine);
-				GUIParams.CameraMode = (m_CameraSwitchToggle) ? "ViewCamera" : "TraceCamera";
-				GUIParams.Camera = m_MainCamera;
-				GUIParams.InputState = InputState;
-				GUIParams.ValueRegistryList.emplace(m_PostProcess->GetBloomFilter()->GetRegistryName(), m_PostProcess->GetBloomFilter());
-
-				if (!GUIEngine->BeginFrame(pGraphicsAPI)) return false;
-				if (!m_GraphicsEditingWindow->Draw(pGraphicsAPI, GUIParams, GUIEngine))
+				if (pLoadWorker->IsLoaded())
 				{
-					Console::Log("[Error] InValid GUI\n");
-					return false;
+					gui::SGUIParams GUIParams = gui::SGUIParams(shared_from_this(), GetObjectList(), m_SceneController, m_FileModifier, m_TimelineController, pLoadWorker, {}, pPhysicsEngine);
+					GUIParams.CameraMode = (m_CameraSwitchToggle) ? "ViewCamera" : "TraceCamera";
+					GUIParams.Camera = m_MainCamera;
+					GUIParams.InputState = InputState;
+					GUIParams.ValueRegistryList.emplace(m_PostProcess->GetBloomFilter()->GetRegistryName(), m_PostProcess->GetBloomFilter());
+
+					if (!GUIEngine->BeginFrame(pGraphicsAPI)) return false;
+					if (!m_GraphicsEditingWindow->Draw(pGraphicsAPI, GUIParams, GUIEngine))
+					{
+						Console::Log("[Error] InValid GUI\n");
+						return false;
+					}
+					if (!GUIEngine->EndFrame(pGraphicsAPI)) return false;
 				}
-				if (!GUIEngine->EndFrame(pGraphicsAPI)) return false;
-			}
 #endif // USE_GUIENGINE
+
+				return true;
+			};
 
 			if (!pLoadWorker->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 
-			if (!pGraphicsAPI->EndRender()) return false;
+			if (!pGraphicsAPI->EndRender(DrawGUIEngine)) return false;
 		}
 
 		return true;
