@@ -66,8 +66,11 @@ void main(){
 	// Ambient
 	if(fragUbo.UseToonTexture == 0)
 	{
-		//diffuseColor.rgb +=  fragUbo.ambientFactor.rgb * max(dot(-fragUbo.lightDir.xyz, f_WorldNormal), 0.0);
+		diffuseColor.rgb +=  fragUbo.ambientFactor.rgb;
 	}
+
+	//
+	diffuseColor = clamp(diffuseColor, 0.0, 1.0);
 
 	// MainTexture
 	if(fragUbo.UseMainTexture != 0)
@@ -93,11 +96,11 @@ void main(){
 		vec3 SphereColor = texture(sampler2D(SphereTexture, SphereTextureSampler), f_SphereUV).rgb;
 		#endif
 
-		if(fragUbo.SphereMode == 1) // ùÊéZ
+		if(fragUbo.SphereMode == 1) // ÔøΩÔøΩZ
 		{
 			col *= SphereColor;		
 		}
-		else if(fragUbo.SphereMode == 2) // â¡éZ
+		else if(fragUbo.SphereMode == 2) // ÔøΩÔøΩÔøΩZ
 		{
 			col += SphereColor;
 		}

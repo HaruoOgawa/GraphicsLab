@@ -1,6 +1,12 @@
 {
   "name": "GBuffer_Gen",
-  "outputcolorcount": 5,
+  "outputcolorcount": 6,
+  "stencil":{
+    "enabled" : true,
+    "value" : 0,
+    "comp" : "always",
+    "pass" : "replace"
+  },
   "shaderList": [
     {
       "name": "GBuffer_Gen_vert",
@@ -10,7 +16,7 @@
       "shaderType": "vertex",
       "uniformBlockList": [
         {
-          "name": "VertUniformBuffer",
+          "name": "UniformBufferObject",
           "binding": 0,
           "isWritable": false,
           "type": "ubo",
@@ -57,7 +63,7 @@
               }
             },
             {
-              "name": "pad0",
+              "name": "useSpatialCulling",
               "type": "int",
               "initValue": [ 0 ],
               "input": {
@@ -78,6 +84,94 @@
               "initValue": [ 0 ],
               "input": {
                 "hide": true
+              }
+            },
+
+            {
+              "name": "baseColorFactor",
+              "type": "vec4",
+              "initValue": [ 1.0, 1.0, 1.0, 1.0 ],
+              "input": {
+                "type": "color"
+              }
+            },
+            {
+              "name": "spatialCullPos",
+              "type": "vec4",
+              "initValue": [ 0.0, 0.0, 0.0, 0.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "emissiveFactor",
+              "type": "vec4",
+              "initValue": [ 0.0, 0.0, 0.0, 0.0 ],
+              "input": {
+                "type": "color"
+              }
+            },
+            {
+              "name": "metallicFactor",
+              "type": "float",
+              "initValue": [ 0.0 ],
+              "input": {
+              }
+            },
+            {
+              "name": "roughnessFactor",
+              "type": "float",
+              "initValue": [ 0.0 ],
+              "input": {
+              }
+            },
+            {
+              "name": "emissiveStrength",
+              "type": "float",
+              "initValue": [ 0.0 ],
+              "input": {
+              }
+            },
+            {
+              "name": "materialType",
+              "type": "float",
+              "initValue": [ 1 ],
+              "input": {
+              }
+            },
+            {
+              "name": "useBaseColorTexture",
+              "type": "int",
+              "initValue": [ 0 ],
+              "input": {
+              }
+            },
+            {
+              "name": "useMetallicRoughnessTexture",
+              "type": "int",
+              "initValue": [ 0 ],
+              "input": {
+              }
+            },
+            {
+              "name": "useNormalTexture",
+              "type": "int",
+              "initValue": [ 0 ],
+              "input": {
+              }
+            },
+            {
+              "name": "useEmissiveTexture",
+              "type": "int",
+              "initValue": [ 0 ],
+              "input": {
+              }
+            },
+            {
+              "name": "baseColorTexture_ST",
+              "type": "vec4",
+              "initValue": [ 1.0, 1.0, 0.0, 0.0 ],
+              "input": {
               }
             }
           ]
@@ -110,84 +204,6 @@
       "shaderType": "fragment",
       "uniformBlockList": [
         {
-          "name": "FragUniformBuffer",
-          "binding": 2,
-          "isWritable": false,
-          "type": "ubo",
-          "bufferUpdateType": "cpu",
-          "values": [
-            {
-              "name": "baseColorFactor",
-              "type": "vec4",
-              "initValue": [ 1.0, 1.0, 1.0, 1.0 ],
-              "input": {
-                "type": "color"
-              }
-            },
-            {
-              "name": "metallicFactor",
-              "type": "float",
-              "initValue": [ 0.0 ],
-              "input": {
-              }
-            },
-            {
-              "name": "roughnessFactor",
-              "type": "float",
-              "initValue": [ 0.0 ],
-              "input": {
-              }
-            },
-            {
-              "name": "f_pad0",
-              "type": "float",
-              "initValue": [ 0.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "f_pad1",
-              "type": "float",
-              "initValue": [ 0.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "useBaseColorTexture",
-              "type": "int",
-              "initValue": [ 0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "useMetallicRoughnessTexture",
-              "type": "int",
-              "initValue": [ 0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "useNormalTexture",
-              "type": "int",
-              "initValue": [ 0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "materialType",
-              "type": "float",
-              "initValue": [ 1 ],
-              "input": {
-              }
-            }
-          ]
-        },
-        {
           "name": "baseColorTexture",
           "viewBinding": 3,
           "samplerBinding": 4,
@@ -207,6 +223,14 @@
           "name": "normalTexture",
           "viewBinding": 7,
           "samplerBinding": 8,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "2d"
+        },
+        {
+          "name": "emissiveTexture",
+          "viewBinding": 9,
+          "samplerBinding": 10,
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "2d"

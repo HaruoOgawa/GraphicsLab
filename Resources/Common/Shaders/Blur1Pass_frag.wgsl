@@ -13,24 +13,25 @@ struct FragUniformBuffer {
 var texImage: texture_2d<f32>;
 @group(0) @binding(1) 
 var texSampler: sampler;
-var<private> fUV_1: vec2<f32>;
+var<private> v2f_UV_1: vec2<f32>;
 @group(0) @binding(2) 
 var<uniform> frag_ubo: FragUniformBuffer;
 var<private> outColor: vec4<f32>;
 var<private> v2f_ProjPos_1: vec4<f32>;
+var<private> v2f_WorldPos_1: vec4<f32>;
 
-fn GetTexColorvf2_(texcoord: ptr<function, vec2<f32>>) -> vec3<f32> {
+fn GetTexColor_u0028_vf2_u003b(texcoord: ptr<function, vec2<f32>>) -> vec3<f32> {
     var col: vec4<f32>;
 
     col = vec4<f32>(0f, 0f, 0f, 0f);
-    let _e26 = (*texcoord);
-    let _e27 = textureSample(texImage, texSampler, _e26);
-    let _e28 = _e27.xyz;
-    col[0u] = _e28.x;
-    col[1u] = _e28.y;
-    col[2u] = _e28.z;
-    let _e35 = col;
-    return _e35.xyz;
+    let _e27 = (*texcoord);
+    let _e28 = textureSample(texImage, texSampler, _e27);
+    let _e29 = _e28.xyz;
+    col[0u] = _e29.x;
+    col[1u] = _e29.y;
+    col[2u] = _e29.z;
+    let _e36 = col;
+    return _e36.xyz;
 }
 
 fn main_1() {
@@ -43,47 +44,48 @@ fn main_1() {
     var param: vec2<f32>;
 
     col_1 = vec3<f32>(0f, 0f, 0f);
-    let _e31 = fUV_1;
-    st = _e31;
-    let _e32 = textureDimensions(texImage, 0i);
-    texelSize = (vec2(1f) / vec2<f32>(vec2<i32>(_e32)));
+    let _e32 = v2f_UV_1;
+    st = _e32;
+    let _e33 = textureDimensions(texImage, 0i);
+    texelSize = (vec2(1f) / vec2<f32>(vec2<i32>(_e33)));
     weights = array<f32, 5>(0.227027f, 0.316216f, 0.07027f, 0.002216f, 0.000167f);
-    let _e38 = frag_ubo.IsXBlur;
-    let _e42 = frag_ubo.IsXBlur;
-    BlurDir = vec2<f32>(select(0f, 1f, (_e38 == 1i)), select(1f, 0f, (_e42 == 1i)));
+    let _e39 = frag_ubo.IsXBlur;
+    let _e43 = frag_ubo.IsXBlur;
+    BlurDir = vec2<f32>(select(0f, 1f, (_e39 == 1i)), select(1f, 0f, (_e43 == 1i)));
     i = -4i;
     loop {
-        let _e46 = i;
-        if (_e46 <= 4i) {
-            let _e48 = st;
-            let _e49 = texelSize;
-            let _e50 = i;
-            let _e53 = BlurDir;
-            param = (_e48 + ((_e49 * f32(_e50)) * _e53));
-            let _e56 = GetTexColorvf2_((&param));
-            let _e57 = i;
-            let _e60 = weights[abs(_e57)];
-            let _e62 = col_1;
-            col_1 = (_e62 + (_e56 * _e60));
+        let _e47 = i;
+        if (_e47 <= 4i) {
+            let _e49 = st;
+            let _e50 = texelSize;
+            let _e51 = i;
+            let _e54 = BlurDir;
+            param = (_e49 + ((_e50 * f32(_e51)) * _e54));
+            let _e57 = GetTexColor_u0028_vf2_u003b((&param));
+            let _e58 = i;
+            let _e61 = weights[abs(_e58)];
+            let _e63 = col_1;
+            col_1 = (_e63 + (_e57 * _e61));
             continue;
         } else {
             break;
         }
         continuing {
-            let _e64 = i;
-            i = (_e64 + 1i);
+            let _e65 = i;
+            i = (_e65 + 1i);
         }
     }
-    let _e66 = col_1;
-    outColor = vec4<f32>(_e66.x, _e66.y, _e66.z, 1f);
+    let _e67 = col_1;
+    outColor = vec4<f32>(_e67.x, _e67.y, _e67.z, 1f);
     return;
 }
 
 @fragment 
-fn main(@location(0) fUV: vec2<f32>, @location(1) v2f_ProjPos: vec4<f32>) -> @location(0) vec4<f32> {
-    fUV_1 = fUV;
+fn main(@location(0) v2f_UV: vec2<f32>, @location(1) v2f_ProjPos: vec4<f32>, @location(2) v2f_WorldPos: vec4<f32>) -> @location(0) vec4<f32> {
+    v2f_UV_1 = v2f_UV;
     v2f_ProjPos_1 = v2f_ProjPos;
+    v2f_WorldPos_1 = v2f_WorldPos;
     main_1();
-    let _e5 = outColor;
-    return _e5;
+    let _e7 = outColor;
+    return _e7;
 }

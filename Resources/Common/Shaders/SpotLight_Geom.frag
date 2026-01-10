@@ -58,6 +58,17 @@ float GetDepth(vec2 ScreenUV)
     return Depth;
 }
 
+vec3 GetWorldPos(vec2 ScreenUV)
+{
+#ifdef USE_OPENGL
+    vec3 WorldPos = texture(gPositionTexture, ScreenUV).rgb;
+#else
+    vec3 WorldPos = texture(sampler2D(gPositionTexture, gPositionTextureSampler), ScreenUV).rgb;
+#endif
+
+    return WorldPos;
+}
+
 void main()
 {
     // デファードレンダリングにおいて半透明オブジェクトをうまく取り扱うことはできないので諦めましょう
@@ -77,11 +88,19 @@ void main()
     else*/
     {
         vec3 col = l_ubo.color.rgb * l_ubo.intensity;
-        float alpha = 1.0 * 0.75;
+        float alpha = l_ubo.color.a;
+        alpha = min(0.20, alpha);
+
+        //
+        vec2 ScreenUV = v2f_ProjPos.xy / v2f_ProjPos.w;
+        ScreenUV = ScreenUV * 0.5 + 0.5;
+
+        // ワールド座標を取得
+        vec3 worldPos = GetWorldPos(ScreenUV);
 
         // Spot Light
         vec3 baseDir = normalize(l_ubo.dir.xyz);
-        vec3 l2g = v2f_WorldPos.xyz - l_ubo.pos.xyz;
+        vec3 l2g = worldPos.xyz - l_ubo.pos.xyz;
         vec3 l2g_norm = normalize(l2g);
 
         // スポットライトの範囲内であれば描画可能
@@ -98,6 +117,12 @@ void main()
         float len = length(l2g) * cos(l2g_angle);
 
         alpha *= (1.0 - clamp(len, 0.0, height) / height);
+
+		// bool ValidAngle = (l2g_angle >= 0.0 && l2g_angle <= coneAngle);
+        // if(!ValidAngle)
+        // {
+        //     discard;
+        // }
 
         outColor = vec4(col, alpha);
     }

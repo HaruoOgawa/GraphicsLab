@@ -16,6 +16,7 @@ struct VertexOutput {
     @builtin(position) gl_Position: vec4<f32>,
     @location(0) member: vec2<f32>,
     @location(1) member_1: vec4<f32>,
+    @location(2) member_2: vec4<f32>,
 }
 
 @group(0) @binding(0) 
@@ -25,6 +26,7 @@ var<private> unnamed: gl_PerVertex = gl_PerVertex(vec4<f32>(0f, 0f, 0f, 1f), 1f,
 var<private> v2f_UV: vec2<f32>;
 var<private> inTexcoord_1: vec2<f32>;
 var<private> v2f_ProjPos: vec4<f32>;
+var<private> v2f_WorldPos: vec4<f32>;
 var<private> inNormal_1: vec3<f32>;
 var<private> inTangent_1: vec4<f32>;
 var<private> inBone0_1: vec4<u32>;
@@ -33,17 +35,20 @@ var<private> inWeights0_1: vec4<f32>;
 fn main_1() {
     var ProjPos: vec4<f32>;
 
-    let _e17 = v_ubo.proj;
-    let _e19 = v_ubo.view;
-    let _e22 = v_ubo.model;
-    let _e24 = inPosition_1;
-    ProjPos = (((_e17 * _e19) * _e22) * vec4<f32>(_e24.x, _e24.y, _e24.z, 1f));
-    let _e30 = ProjPos;
-    unnamed.gl_Position = _e30;
-    let _e32 = inTexcoord_1;
-    v2f_UV = _e32;
-    let _e33 = ProjPos;
-    v2f_ProjPos = _e33;
+    let _e18 = v_ubo.proj;
+    let _e20 = v_ubo.view;
+    let _e23 = v_ubo.model;
+    let _e25 = inPosition_1;
+    ProjPos = (((_e18 * _e20) * _e23) * vec4<f32>(_e25.x, _e25.y, _e25.z, 1f));
+    let _e31 = ProjPos;
+    unnamed.gl_Position = _e31;
+    let _e33 = inTexcoord_1;
+    v2f_UV = _e33;
+    let _e34 = ProjPos;
+    v2f_ProjPos = _e34;
+    let _e36 = v_ubo.model;
+    let _e37 = inPosition_1;
+    v2f_WorldPos = (_e36 * vec4<f32>(_e37.x, _e37.y, _e37.z, 1f));
     return;
 }
 
@@ -56,10 +61,11 @@ fn main(@location(0) inPosition: vec3<f32>, @location(2) inTexcoord: vec2<f32>, 
     inBone0_1 = inBone0_;
     inWeights0_1 = inWeights0_;
     main_1();
-    let _e17 = unnamed.gl_Position.y;
-    unnamed.gl_Position.y = -(_e17);
-    let _e19 = unnamed.gl_Position;
-    let _e20 = v2f_UV;
-    let _e21 = v2f_ProjPos;
-    return VertexOutput(_e19, _e20, _e21);
+    let _e18 = unnamed.gl_Position.y;
+    unnamed.gl_Position.y = -(_e18);
+    let _e20 = unnamed.gl_Position;
+    let _e21 = v2f_UV;
+    let _e22 = v2f_ProjPos;
+    let _e23 = v2f_WorldPos;
+    return VertexOutput(_e20, _e21, _e22, _e23);
 }

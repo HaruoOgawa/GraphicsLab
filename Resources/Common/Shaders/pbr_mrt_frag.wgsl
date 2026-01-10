@@ -44,7 +44,7 @@ var<private> gAlbedo: vec4<f32>;
 var<private> gDepth: vec4<f32>;
 var<private> gCustomParam0_: vec4<f32>;
 
-fn GetMetallicRoughness() -> vec2<f32> {
+fn GetMetallicRoughness_u0028_() -> vec2<f32> {
     var perceptualRoughness: f32;
     var metallic: f32;
     var metallicRoughnessColor: vec4<f32>;
@@ -68,7 +68,7 @@ fn GetMetallicRoughness() -> vec2<f32> {
     return vec2<f32>(_e48, _e49);
 }
 
-fn getNormal() -> vec3<f32> {
+fn getNormal_u0028_() -> vec3<f32> {
     var nomral: vec3<f32>;
     var t: vec3<f32>;
     var b: vec3<f32>;
@@ -102,7 +102,7 @@ fn getNormal() -> vec3<f32> {
     return _e73;
 }
 
-fn GetBaseColor() -> vec4<f32> {
+fn GetBaseColor_u0028_() -> vec4<f32> {
     var baseColor: vec4<f32>;
 
     let _e34 = f_ubo.useBaseColorTexture;
@@ -124,13 +124,13 @@ fn main_1() {
     var depth: f32;
     var metallicRoughness: vec2<f32>;
 
-    let _e36 = GetBaseColor();
+    let _e36 = GetBaseColor_u0028_();
     baseColor_1 = _e36;
-    let _e37 = getNormal();
+    let _e37 = getNormal_u0028_();
     normal = _e37;
     let _e39 = gl_FragCoord_1[2u];
     depth = _e39;
-    let _e40 = GetMetallicRoughness();
+    let _e40 = GetMetallicRoughness_u0028_();
     metallicRoughness = _e40;
     let _e41 = f_WorldPos_1;
     gPosition = _e41;

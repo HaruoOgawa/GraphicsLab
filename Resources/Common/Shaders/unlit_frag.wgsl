@@ -49,20 +49,17 @@ fn main_1() {
         }
         let _e45 = st;
         let _e46 = textureSample(texImage, texSampler, _e45);
-        let _e48 = col;
-        let _e50 = (_e48.xyz * _e46.xyz);
-        col[0u] = _e50.x;
-        col[1u] = _e50.y;
-        col[2u] = _e50.z;
+        let _e47 = col;
+        col = (_e47 * _e46);
     }
-    let _e58 = fbo_0_.baseColor;
-    let _e60 = col;
-    let _e62 = (_e60.xyz * _e58.xyz);
-    col[0u] = _e62.x;
-    col[1u] = _e62.y;
-    col[2u] = _e62.z;
-    let _e69 = col;
-    outColor = _e69;
+    let _e50 = fbo_0_.baseColor;
+    let _e52 = col;
+    let _e54 = (_e52.xyz * _e50.xyz);
+    col[0u] = _e54.x;
+    col[1u] = _e54.y;
+    col[2u] = _e54.z;
+    let _e61 = col;
+    outColor = _e61;
     return;
 }
 

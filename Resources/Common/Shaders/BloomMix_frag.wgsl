@@ -9,6 +9,7 @@ var bloomImage: texture_2d<f32>;
 var bloomSampler: sampler;
 var<private> outColor: vec4<f32>;
 var<private> v2f_ProjPos_1: vec4<f32>;
+var<private> v2f_WorldPos_1: vec4<f32>;
 
 fn main_1() {
     var col: vec3<f32>;
@@ -17,27 +18,28 @@ fn main_1() {
     var bloomCol: vec3<f32>;
 
     col = vec3<f32>(0f, 0f, 0f);
-    let _e14 = fUV_1;
-    st = _e14;
-    let _e15 = st;
-    let _e16 = textureSample(texImage, texSampler, _e15);
-    mainCol = _e16.xyz;
-    let _e18 = st;
-    let _e19 = textureSample(bloomImage, bloomSampler, _e18);
-    bloomCol = _e19.xyz;
-    let _e21 = mainCol;
-    let _e22 = bloomCol;
-    col = (_e21 + _e22);
-    let _e24 = col;
-    outColor = vec4<f32>(_e24.x, _e24.y, _e24.z, 1f);
+    let _e15 = fUV_1;
+    st = _e15;
+    let _e16 = st;
+    let _e17 = textureSample(texImage, texSampler, _e16);
+    mainCol = _e17.xyz;
+    let _e19 = st;
+    let _e20 = textureSample(bloomImage, bloomSampler, _e19);
+    bloomCol = _e20.xyz;
+    let _e22 = mainCol;
+    let _e23 = bloomCol;
+    col = (_e22 + _e23);
+    let _e25 = col;
+    outColor = vec4<f32>(_e25.x, _e25.y, _e25.z, 1f);
     return;
 }
 
 @fragment 
-fn main(@location(0) fUV: vec2<f32>, @location(1) v2f_ProjPos: vec4<f32>) -> @location(0) vec4<f32> {
+fn main(@location(0) fUV: vec2<f32>, @location(1) v2f_ProjPos: vec4<f32>, @location(2) v2f_WorldPos: vec4<f32>) -> @location(0) vec4<f32> {
     fUV_1 = fUV;
     v2f_ProjPos_1 = v2f_ProjPos;
+    v2f_WorldPos_1 = v2f_WorldPos;
     main_1();
-    let _e5 = outColor;
-    return _e5;
+    let _e7 = outColor;
+    return _e7;
 }
