@@ -49,19 +49,13 @@ namespace app
 #ifdef USE_GUIENGINE
 		m_GraphicsEditingWindow(std::make_shared<gui::CGraphicsEditingWindow>()),
 #endif // USE_GUIENGINE
-#ifdef USE_NETWORK
-		m_UDPSocket(std::make_shared<network::CUDPSocket>("192.168.0.252", 6454)),
-		m_DMXHandler(std::make_shared<network::CDMXDataHandler>()),
-		m_NDIReceiver(std::make_shared<network::CNDIReceiver>()),
-#endif // USE_NETWORK
-
 		m_FileModifier(std::make_shared<CFileModifier>()),
 		m_TimelineController(std::make_shared<timeline::CTimelineController>()),
 		m_PostProcess(std::make_shared<graphics::CPostProcess>("MainResultPass"))
 	{
 		//
 		m_ViewCamera->SetCenter(glm::vec3(0.0f, 1.0f, 0.0f));
-		m_ViewCamera->SetPos(glm::vec3(0.0f, 1.0f, 5.0f));
+		m_ViewCamera->SetPos(glm::vec3(0.0f, 1.0f, -5.0f));
 		m_MainCamera = m_ViewCamera;
 
 		//
@@ -86,49 +80,7 @@ namespace app
 
 	bool CChurchGraphicsApp::Initialize(api::IGraphicsAPI* pGraphicsAPI, physics::IPhysicsEngine* pPhysicsEngine, resource::CLoadWorker* pLoadWorker)
 	{
-#ifdef USE_NETWORK
-		if (!m_UDPSocket->Initialize(shared_from_this(), true)) return false;
-
-		// DMX準備
-		{
-			// ライト
-			network::SDMXFixture Fixture{};
-			Fixture.DeviceName = "DefaultSpotLight";
-			Fixture.ChannelNameList = { "R", "G", "B", "Dimmer", "Pan", "Tilt", "Angle", "Height" };
-
-			m_DMXHandler->RegistDeviceFixture(1, 0, 0, Fixture);
-		}
-
-		{
-			// CameraSwitcher
-			network::SDMXFixture Fixture{};
-			Fixture.DeviceName = "CameraSwitcher";
-			Fixture.ChannelNameList = {
-				"ID",
-
-				// CameraA
-				"CameraA_PosX_Byte_0", "CameraA_PosX_Byte_1", "CameraA_PosX_Byte_2", "CameraA_PosX_Byte_3",
-				"CameraA_PosY_Byte_0", "CameraA_PosY_Byte_1", "CameraA_PosY_Byte_2", "CameraA_PosY_Byte_3",
-				"CameraA_PosZ_Byte_0", "CameraA_PosZ_Byte_1", "CameraA_PosZ_Byte_2", "CameraA_PosZ_Byte_3",
-				"CameraA_ZAngle_Byte_0", "CameraA_ZAngle_Byte_1", "CameraA_ZAngle_Byte_2", "CameraA_ZAngle_Byte_3",
-
-				// CameraB
-				"CameraB_PosX_Byte_0", "CameraB_PosX_Byte_1", "CameraB_PosX_Byte_2", "CameraB_PosX_Byte_3",
-				"CameraB_PosY_Byte_0", "CameraB_PosY_Byte_1", "CameraB_PosY_Byte_2", "CameraB_PosY_Byte_3",
-				"CameraB_PosZ_Byte_0", "CameraB_PosZ_Byte_1", "CameraB_PosZ_Byte_2", "CameraB_PosZ_Byte_3",
-				"CameraB_ZAngle_Byte_0", "CameraB_ZAngle_Byte_1", "CameraB_ZAngle_Byte_2", "CameraB_ZAngle_Byte_3",
-			};
-
-			m_DMXHandler->RegistDeviceFixture(2, 0, 0, Fixture);
-		}
-
-		// NDIレシーバー初期化
-		if (!m_NDIReceiver->Initialize()) return false;
-#endif
-
-		pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\User\\Scene\\DMXTest.json", m_SceneController));
-		//pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\User\\Scene\\Sample.json", m_SceneController));
-		//pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\User\\Scene\\rtxgi.json", m_SceneController));
+		pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\User\\Scene\\ChurchGraphics.json", m_SceneController));
 
 		// オフスクリーンレンダリング
 		// GBufferを組み込んだレンダリングパイプラインではフレームバッファコピー周りがややこしく非効率なことになるのでMSAAは使わない
@@ -188,14 +140,6 @@ namespace app
 
 	bool CChurchGraphicsApp::Update(api::IGraphicsAPI* pGraphicsAPI, physics::IPhysicsEngine* pPhysicsEngine, resource::CLoadWorker* pLoadWorker, const std::shared_ptr<input::CInputState>& InputState)
 	{
-#ifdef USE_NETWORK
-		if (pLoadWorker->IsLoaded())
-		{
-			if (!m_UDPSocket->Update(this)) return false;
-			if (!m_NDIReceiver->Update(this)) return false;
-		}
-#endif
-
 		if (!m_FileModifier->Update(pLoadWorker)) return false;
 
 		if (pLoadWorker->IsLoaded())
@@ -244,40 +188,11 @@ namespace app
 	bool CChurchGraphicsApp::Draw(api::IGraphicsAPI* pGraphicsAPI, physics::IPhysicsEngine* pPhysicsEngine, resource::CLoadWorker* pLoadWorker, const std::shared_ptr<input::CInputState>& InputState,
 		const std::shared_ptr<gui::IGUIEngine>& GUIEngine)
 	{
-		// GBufferGenPass
-		{
-			if (!pGraphicsAPI->BeginRender("GBufferGenPass")) return false;
-			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
-			if (!pGraphicsAPI->EndRender()) return false;
-		}
-
-		// GBufferLightPass
-		{
-			// フォアグラウンドパス(GBufferLightPass)にデファードパスの深度をコピーする
-			if (!pGraphicsAPI->CopyDepthBuffer("GBufferGenPass", "GBufferLightPass")) return false;
-
-			if (!pGraphicsAPI->BeginRender("GBufferLightPass")) return false;
-			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
-			if (!pGraphicsAPI->EndRender()) return false;
-		}
-
-		// MainGeometryPass
-		{
-			// フォアグラウンドパス(MainGeometryPass)にGBufferLightPassのカラー・深度をコピーする
-			if (!pGraphicsAPI->CopyRenderPass("GBufferLightPass", "MainGeometryPass", true, true)) return false;
-
-			if (!pGraphicsAPI->BeginRender("MainGeometryPass")) return false;
-			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
-			if (!pGraphicsAPI->EndRender()) return false;
-		}
-
 		// MainResultPass 
 		{
-			// ポストプロセスに渡すためにここではコピーだけを行う
-			// パスを始めてしまうとせっかくコピーした内容がリセットされてしまう
-			// MainGeometryPassとMainResultPassを分離したのはMainGeometryPassではカラー・デプスを初期化しないようにしているため、
-			// その影響でうまくポストプロセスが効かなくなるから
-			if (!pGraphicsAPI->CopyRenderPass("MainGeometryPass", "MainResultPass", true, true)) return false;
+			if (!pGraphicsAPI->BeginRender("MainResultPass")) return false;
+			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+			if (!pGraphicsAPI->EndRender()) return false;
 		}
 
 		// ポストプロセス
@@ -397,42 +312,6 @@ namespace app
 			if (!m_GraphicsEditingWindow->OnLoaded(pGraphicsAPI, GUIParams, GUIEngine)) return false;
 		}
 #endif
-
-		// DMXに照明灯体を渡す
-		{
-			const auto& Object = m_SceneController->FindObjectByName("LightList");
-			if (Object)
-			{
-				for (int i = 0; i < 6; i++)
-				{
-					std::string Name = "SpotLight_" + std::to_string(i);
-					const auto& SpotLight = Object->FindNodeByName(Name);
-
-					for (const auto& Component : SpotLight->GetComponentList())
-					{
-						if (Component->GetComponentName() != "SpotLight") continue;
-
-						m_DMXHandler->AddDevice("DefaultSpotLight", Component);
-					}
-				}
-			}
-		}
-
-		// DMXにカメラスイッチャーを渡す
-		{
-			const auto& Object = m_SceneController->FindObjectByName("CameraSwitcher");
-			if (Object)
-			{
-				const auto& ComponentList = Object->GetComponentList();
-				if (!ComponentList.empty())
-				{
-					const auto& Component = ComponentList[0];
-
-					m_DMXHandler->AddDevice("CameraSwitcher", Component);
-				}
-			}
-		}
-
 		return true;
 	}
 
@@ -469,31 +348,6 @@ namespace app
 	std::shared_ptr<scene::CSceneController> CChurchGraphicsApp::GetSceneController() const
 	{
 		return m_SceneController;
-	}
-
-	// DMXデータ受信イベント
-	void CChurchGraphicsApp::OnReceiveArtNetDMX(unsigned short Net, unsigned short SubNet, unsigned short Universe, const std::vector<unsigned char>& DataBuffer)
-	{
-		if (!m_DMXHandler) return;
-
-		m_DMXHandler->DispatchDMXData(Net, SubNet, Universe, DataBuffer);
-	}
-
-	// NDIデータ受信イベント
-	void CChurchGraphicsApp::OnReceiveNDIImage(const std::vector<unsigned char>& pixelData, int Width, int Height, api::ERenderPassFormat RenderPassFormat)
-	{
-		if (!m_SceneController->IsLoaded()) return;
-
-		const auto& NDIObj = m_SceneController->FindObjectByName("NDIObj");
-		if (NDIObj)
-		{
-			const auto& TextureList = NDIObj->GetTextureSet()->Get2DTextureList();
-
-			if (!TextureList.empty())
-			{
-				TextureList[0]->ReplacePixelData(pixelData, Width, Height, RenderPassFormat);
-			}
-		}
 	}
 
 	// カスタムイベント発火

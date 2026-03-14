@@ -1,0 +1,57 @@
+{
+    "materialframes": [
+        {
+            "name": "GBuffer_Gen",
+            "filename": "Resources\\Common\\MaterialFrame\\GBuffer_Gen_MF.json"
+        },
+        {
+            "name": "pbr_mat",
+            "filename": "Resources\\Common\\MaterialFrame\\PBR_MF.json"
+        }
+    ],
+    "objects": [
+        {
+            "name": "SampleObj",
+            "filename": "",
+            "renderpasslist": [
+                "MainResultPass"
+            ],
+            "rootnodes": [ 0 ],
+            "nodes": [
+                {
+                    "name": "testnode",
+                    "enable": true,
+                    "meshindex": 0
+                }
+            ],
+            "meshs": [
+                {
+                    "primitives": [
+                        {
+                            "type": "cube"
+                        }
+                    ]
+                }
+            ],
+            "materials": [
+                {
+                    "meshindex": 0,
+                    "primitiveindex": 0,
+                    "materialframe": "pbr_mat",
+                    "cull": "back"
+                }
+            ]
+        },
+
+        {
+            "name": "CCDIKTest",
+            "filename": "Resources/User/Models/CCDIKTest/CCDIKTest.glb",
+            "defaultmaterialframes": [
+                "pbr_mat"
+            ],
+            "renderpasslist": [
+                "MainResultPass"
+            ]
+        }
+    ]
+}

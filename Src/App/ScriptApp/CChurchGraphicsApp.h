@@ -49,13 +49,6 @@ namespace app
 
 		std::shared_ptr<graphics::CPostProcess> m_PostProcess;
 
-#ifdef USE_NETWORK
-		std::shared_ptr<network::CUDPSocket> m_UDPSocket;
-		std::shared_ptr<network::CDMXDataHandler> m_DMXHandler;
-
-		std::shared_ptr<network::CNDIReceiver> m_NDIReceiver;
-#endif
-
 	public:
 		CChurchGraphicsApp();
 		virtual ~CChurchGraphicsApp() = default;
@@ -92,12 +85,6 @@ namespace app
 		// Getter
 		virtual std::vector<std::shared_ptr<object::C3DObject>> GetObjectList() const override;
 		virtual std::shared_ptr<scene::CSceneController> GetSceneController() const override;
-
-		// DMXデータ受信イベント
-		virtual void OnReceiveArtNetDMX(unsigned short Net, unsigned short SubNet, unsigned short Universe, const std::vector<unsigned char>& DataBuffer) override;
-
-		// NDIデータ受信イベント
-		virtual void OnReceiveNDIImage(const std::vector<unsigned char>& pixelData, int Width, int Height, api::ERenderPassFormat RenderPassFormat) override;
 
 		// カスタムイベント発火
 		virtual void OnRaisedEvent(const std::string& Type, const std::string& Params) override;
