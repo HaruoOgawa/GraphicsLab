@@ -2,9 +2,7 @@
 #include <memory>
 #include <AppCore/CApp.h>
 
-namespace graphics { 
-	class CFrameRenderer; 
-}
+namespace graphics { class CFrameRenderer; }
 namespace gui { class CGraphicsEditingWindow; }
 namespace timeline { class CTimelineController; }
 namespace scene { class CSceneController; }
