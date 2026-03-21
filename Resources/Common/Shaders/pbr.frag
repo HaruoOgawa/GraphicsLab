@@ -286,6 +286,67 @@ vec3 ComputeDirectLight(PBRData pbr, LightData light)
     return ResultCol;
 }
 
+vec2 CastDirToSt(vec3 Dir)
+{
+	float theta = acos(Dir.y);
+	float phi = atan(Dir.z, Dir.x);
+
+	vec2 st = vec2(phi / (2.0 * PI), theta / PI);
+
+	return st;
+}
+
+vec3 CalcReflectionProbe(PBRData pbr)
+{
+    vec3 v = normalize(pbr.ViewDir);
+    vec3 reflectV = reflect(v, pbr.WorldNormal);
+    
+    vec3 reflectColor = vec3(0.0);
+    if(ubo.useCubeMap != 0)
+	{
+		float mipCount = ubo.mipCount;
+		float lod = mipCount * pbr.Roughness;
+		#ifdef USE_OPENGL
+		reflectColor = SRGBtoLINEAR(textureLod(cubemapTexture, reflectV, lod).rgb);
+		#else
+		reflectColor = SRGBtoLINEAR(textureLod(samplerCube(cubemapTexture, cubemapTextureSampler), reflectV, lod).rgb);
+		#endif
+	}
+	else if(ubo.useDirCubemap != 0)
+	{
+		vec2 st = CastDirToSt(reflectV);
+		
+		float mipCount = ubo.mipCount;
+		float lod = mipCount * pbr.Roughness;
+		#ifdef USE_OPENGL
+		reflectColor = SRGBtoLINEAR(textureLod(cubeMap2DTexture, st, lod).rgb);
+		#else
+		reflectColor = SRGBtoLINEAR(textureLod(sampler2D(cubeMap2DTexture, cubeMap2DTextureSampler), st, lod).rgb);
+		#endif
+	}
+
+	return reflectColor;
+}
+
+// 間接光のPBR
+vec3 ComputeIndirectLight(PBRData pbr)
+{
+    vec3 ResultCol = vec3(0.0, 0.0, 0.0);
+    
+    // リフレクションプローブによる間接照明
+    ResultCol += CalcReflectionProbe(pbr);
+    
+    // フレネル反射
+    vec3 v = normalize(-pbr.ViewDir);
+    vec3 n = normalize(pbr.WorldNormal);
+    
+    float NdV = clamp(dot(n, v), 0.0, 1.0);
+    
+    ResultCol *= CalcFrenelReflection(pbr.Albedo, pbr.Metallic, NdV);
+    
+    return ResultCol;
+}
+
 vec4 CalcBaseColor()
 {
 	// ベースカラーの取得. ベースカラーは単純な表面色
@@ -307,6 +368,21 @@ vec4 CalcBaseColor()
 	}
 
 	return baseColor;
+}
+
+vec3 CalcEmissive()
+{
+    vec3 emissive = ubo.emissiveFactor.rgb * ubo.emissiveStrength;
+	if(ubo.useEmissiveTexture != 0)
+	{
+		#ifdef USE_OPENGL
+		emissive *= SRGBtoLINEAR(texture(emissiveTexture, f_Texcoord).rgb);
+		#else
+		emissive *= SRGBtoLINEAR(texture(sampler2D(emissiveTexture, emissiveTextureSampler), f_Texcoord).rgb);
+		#endif
+	}
+
+    return emissive;
 }
 
 void main()
@@ -332,6 +408,12 @@ void main()
 
     // Direct Light
     col.rgb += ComputeDirectLight(pbr, light);
+
+    // Indirect Light
+    col.rgb += ComputeIndirectLight(pbr);
+
+    // Emissive(自己発光)
+	col.rgb += CalcEmissive();
 
     // ガンマ補正(リニア空間からガンマ空間に戻す)
     col.rgb = LINEARtoSRGB(col.rgb);
