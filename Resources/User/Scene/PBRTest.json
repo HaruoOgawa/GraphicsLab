@@ -1,0 +1,37 @@
+{
+    "materialframes": [
+        {
+            "name": "pbr_mat",
+            "filename": "Resources\\Common\\MaterialFrame\\PBR_MF.json"
+        }
+    ],
+    "objects": [
+        {
+            "name": "MetalRoughSpheresNoTextures",
+            "filename": "Resources/User/Models/MetalRoughSpheresNoTextures/glTF-Binary/MetalRoughSpheresNoTextures.glb",
+            "defaultmaterialframes": [
+                "pbr_mat"
+            ],
+            "renderpasslist": [
+                "MainResultPass"
+            ],
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1000.0,
+                    1000.0,
+                    1000.0
+                ]
+            }
+        }
+    ]
+}
