@@ -152,6 +152,16 @@ vec3 LINEARtoSRGB(vec3 srgbIn)
 	return pow(srgbIn.xyz, vec3(1.0 / 2.2));
 }
 
+vec2 GetSphericalTexcoord(vec3 Dir)
+{
+	float theta = acos(Dir.y);
+	float phi = atan(Dir.z, Dir.x);
+
+	vec2 st = vec2(phi / (2.0 * PI), theta / PI);
+
+	return st;
+}
+
 PBRParam CreatePBRParam(PBRData pbr, LightData light)
 {
     // PBRParamを構築
@@ -328,13 +338,62 @@ vec3 CalcReflectionProbe(PBRData pbr)
 	return reflectColor;
 }
 
+// IBL
+vec3 ComputeIBL(PBRData pbr) 
+{
+    vec3 v = normalize(pbr.ViewDir);
+    vec3 n = normalize(pbr.WorldNormal);
+    vec3 reflectV = reflect(v, n);
+
+    float NdV = clamp(dot(n, v), 0.0, 1.0);
+
+	float mipCount = ubo.mipCount;
+	float lod = mipCount * pbr.Roughness;
+
+	// テクスチャ計算
+	#ifdef USE_OPENGL
+	vec3 brdf = SRGBtoLINEAR(texture(IBL_GGXLUT_Texture, vec2(NdV, 1.0 - pbr.Roughness)).rgb);
+	vec3 diffuseLight = SRGBtoLINEAR(texture(IBL_Diffuse_Texture, GetSphericalTexcoord(n)).rgb);
+	vec3 specularLight = SRGBtoLINEAR(textureLod(IBL_Specular_Texture, GetSphericalTexcoord(reflectV), lod).rgb);
+	#else
+	vec3 brdf = SRGBtoLINEAR(texture(sampler2D(IBL_GGXLUT_Texture, IBL_GGXLUT_TextureSampler), vec2(NdV, 1.0 - pbr.Roughness)).rgb);
+	vec3 diffuseLight = SRGBtoLINEAR(texture(sampler2D(IBL_Diffuse_Texture, IBL_Diffuse_TextureSampler), GetSphericalTexcoord(n)).rgb);
+	vec3 specularLight = SRGBtoLINEAR(textureLod(sampler2D(IBL_Specular_Texture, IBL_Specular_TextureSampler), GetSphericalTexcoord(reflectV), lod).rgb);
+	#endif
+
+    //
+    vec3 diffuseColor = pbr.Albedo.rgb * (vec3(1.0) - vec3(MIN_REFLECTIVITY));
+	vec3 specularColor = mix(vec3(MIN_REFLECTIVITY), pbr.Albedo.rgb, ubo.metallicFactor);
+
+	// 
+	vec3 diffuse = diffuseLight * diffuseColor;
+	vec3 specular = specularLight * (specularColor * brdf.x + brdf.y);
+
+	return diffuse + specular;
+}
+
 // 間接光のPBR
 vec3 ComputeIndirectLight(PBRData pbr)
 {
     vec3 ResultCol = vec3(0.0, 0.0, 0.0);
-    
-    // リフレクションプローブによる間接照明
-    ResultCol += CalcReflectionProbe(pbr);
+
+    if(ubo.useIBL != 0)
+	{
+		// IBL
+		ResultCol += ComputeIBL(pbr);
+	}
+	else if(ubo.useCubeMap != 0 || ubo.useDirCubemap != 0)
+	{
+		// リフレクションプローブによる間接照明
+        ResultCol += CalcReflectionProbe(pbr);
+	}
+	else
+	{
+		// IBLやリフレクションプローブが有効な時はそれらが間接光の役割を果たすが、そうでない時はAmbientLight(単純な色の加算)を使用する
+		// https://cgworld.jp/terms/%E3%82%A2%E3%83%B3%E3%83%93%E3%82%A8%E3%83%B3%E3%83%88.html
+		vec3 gi_diffuse = ubo.ambientColor.rgb;
+		ResultCol += gi_diffuse;
+	}
     
     // フレネル反射
     vec3 v = normalize(-pbr.ViewDir);
