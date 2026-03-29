@@ -55,7 +55,7 @@ namespace app
 	{
 		//
 		m_ViewCamera->SetCenter(glm::vec3(2.5f, 3.0f, 0.0f));
-		m_ViewCamera->SetPos(glm::vec3(2.5f, 3.0f, -12.0f));
+		m_ViewCamera->SetPos(glm::vec3(2.5f, 3.0f, 12.0f));
 		////
 		//m_ViewCamera->SetCenter(glm::vec3(0.0f, 1.0f, 0.0f));
 		//m_ViewCamera->SetPos(glm::vec3(0.0f, 1.0f, -5.0f));
@@ -83,8 +83,8 @@ namespace app
 
 	bool CChurchGraphicsApp::Initialize(api::IGraphicsAPI* pGraphicsAPI, physics::IPhysicsEngine* pPhysicsEngine, resource::CLoadWorker* pLoadWorker)
 	{
-		//pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\User\\Scene\\PBRTest.json", m_SceneController));
-		pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\User\\Scene\\ChurchGraphics.json", m_SceneController));
+		pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\User\\Scene\\PBRTest.json", m_SceneController));
+		//pLoadWorker->AddScene(std::make_shared<resource::CSceneLoader>("Resources\\User\\Scene\\ChurchGraphics.json", m_SceneController));
 
 		// オフスクリーンレンダリング
 		// GBufferを組み込んだレンダリングパイプラインではフレームバッファコピー周りがややこしく非効率なことになるのでMSAAは使わない

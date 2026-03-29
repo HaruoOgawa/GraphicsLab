@@ -338,38 +338,73 @@ vec3 CalcReflectionProbe(PBRData pbr)
 	return reflectColor;
 }
 
+vec3 GetIndirectDiffuse(vec3 n)
+{
+    #ifdef USE_OPENGL
+    vec3 diffuseLight = (texture(IBL_Diffuse_Texture, GetSphericalTexcoord(n)).rgb);
+    #else
+    vec3 diffuseLight = (texture(sampler2D(IBL_Diffuse_Texture, IBL_Diffuse_TextureSampler), GetSphericalTexcoord(n)).rgb);
+    #endif
+
+    return diffuseLight;
+}
+
+vec3 GetGGXRadiance(vec3 n, vec3 v, float roughenss, float mipCount)
+{
+	float lod = mipCount * roughenss;
+
+    #ifdef USE_OPENGL
+    vec3 specularLight = (textureLod(IBL_Specular_Texture, GetSphericalTexcoord(reflect(v, n)), lod).rgb);
+    #else
+    vec3 specularLight = (textureLod(sampler2D(IBL_Specular_Texture, IBL_Specular_TextureSampler), GetSphericalTexcoord(reflect(v, n)), lod).rgb);
+    #endif
+
+    return specularLight;
+}
+
+vec3 GetSpecularBRDF(float NdV, float roughenss, vec3 F0)
+{
+    vec2 uv = vec2(NdV, roughenss);
+
+    #ifdef USE_OPENGL
+	vec3 brdf = (texture(IBL_GGXLUT_Texture, uv).rgb);
+	#else
+	vec3 brdf = (texture(sampler2D(IBL_GGXLUT_Texture, IBL_GGXLUT_TextureSampler), uv).rgb);
+	#endif
+
+    vec3 F = F0 + (1.0 - F0) * pow(1.0 - NdV, 5.0);
+
+    return (F * brdf.x + brdf.y);
+}
+
 // IBL
 vec3 ComputeIBL(PBRData pbr) 
 {
-    vec3 v = normalize(pbr.ViewDir);
     vec3 n = normalize(pbr.WorldNormal);
-    vec3 reflectV = reflect(v, n);
-
+    vec3 v = normalize(-pbr.ViewDir);
     float NdV = clamp(dot(n, v), 0.0, 1.0);
+    
+    // 金属材質
+    vec3 metal_fresnel = GetSpecularBRDF(NdV, pbr.Roughness, pbr.Albedo);
+    vec3 metal_specularBRDF = GetGGXRadiance(n, v, pbr.Roughness, ubo.mipCount);
+    vec3 metal_specular_color = metal_fresnel * metal_specularBRDF;
+    // 金属材質では拡散反射分が不要.
+    
+    // 非金属
+    vec3 dielectric_fresnel = GetSpecularBRDF(NdV, pbr.Roughness, vec3(MIN_REFLECTIVITY, MIN_REFLECTIVITY, MIN_REFLECTIVITY));
+    vec3 dielectric_diffuse = GetIndirectDiffuse(n) * pbr.Albedo;
+    vec3 dielectric_specularBRDF = GetGGXRadiance(n, v, pbr.Roughness, ubo.mipCount);
 
-	float mipCount = ubo.mipCount;
-	float lod = mipCount * pbr.Roughness;
+    // フレネルパラメータにより2つの成分を合成.
+    vec3 dielectric_color = mix(dielectric_diffuse, dielectric_specularBRDF, dielectric_fresnel);
 
-	// テクスチャ計算
-	#ifdef USE_OPENGL
-	vec3 brdf = SRGBtoLINEAR(texture(IBL_GGXLUT_Texture, vec2(NdV, 1.0 - pbr.Roughness)).rgb);
-	vec3 diffuseLight = SRGBtoLINEAR(texture(IBL_Diffuse_Texture, GetSphericalTexcoord(n)).rgb);
-	vec3 specularLight = SRGBtoLINEAR(textureLod(IBL_Specular_Texture, GetSphericalTexcoord(reflectV), lod).rgb);
-	#else
-	vec3 brdf = SRGBtoLINEAR(texture(sampler2D(IBL_GGXLUT_Texture, IBL_GGXLUT_TextureSampler), vec2(NdV, 1.0 - pbr.Roughness)).rgb);
-	vec3 diffuseLight = SRGBtoLINEAR(texture(sampler2D(IBL_Diffuse_Texture, IBL_Diffuse_TextureSampler), GetSphericalTexcoord(n)).rgb);
-	vec3 specularLight = SRGBtoLINEAR(textureLod(sampler2D(IBL_Specular_Texture, IBL_Specular_TextureSampler), GetSphericalTexcoord(reflectV), lod).rgb);
-	#endif
+    // 求められた2つの結果をメタリックパラメータで合成する.
+    vec3 finalColor = mix(dielectric_color, metal_specular_color, pbr.Metallic);
+    
+    // Bloomで爆発するのである程度で抑える
+    finalColor = clamp(finalColor, vec3(0.0), vec3(3.0));
 
-    //
-    vec3 diffuseColor = pbr.Albedo.rgb * (vec3(1.0) - vec3(MIN_REFLECTIVITY));
-	vec3 specularColor = mix(vec3(MIN_REFLECTIVITY), pbr.Albedo.rgb, ubo.metallicFactor);
-
-	// 
-	vec3 diffuse = diffuseLight * diffuseColor;
-	vec3 specular = specularLight * (specularColor * brdf.x + brdf.y);
-
-	return diffuse + specular;
+    return finalColor;
 }
 
 // 間接光のPBR
@@ -396,12 +431,12 @@ vec3 ComputeIndirectLight(PBRData pbr)
 	}
     
     // フレネル反射
-    vec3 v = normalize(-pbr.ViewDir);
     vec3 n = normalize(pbr.WorldNormal);
+    vec3 v = normalize(-pbr.ViewDir);
     
     float NdV = clamp(dot(n, v), 0.0, 1.0);
     
-    ResultCol *= CalcFrenelReflection(pbr.Albedo, pbr.Metallic, NdV);
+    //ResultCol *= CalcFrenelReflection(pbr.Albedo, pbr.Metallic, NdV);
     
     return ResultCol;
 }
@@ -429,6 +464,71 @@ vec4 CalcBaseColor()
 	return baseColor;
 }
 
+vec2 CalcMetallicRoughness()
+{
+	float metallic = ubo.metallicFactor;
+    float roughness = ubo.roughnessFactor;
+
+	if(ubo.useMetallicRoughnessTexture != 0)
+	{
+		// G Channel: Roughness Map, B Channel: Metallic Map 
+		#ifdef USE_OPENGL
+		vec4 metallicRoughnessColor = texture(metallicRoughnessTexture, f_Texcoord);
+		#else
+		vec4 metallicRoughnessColor = texture(sampler2D(metallicRoughnessTexture, metallicRoughnessTextureSampler), f_Texcoord);
+		#endif
+		
+		roughness = roughness * metallicRoughnessColor.g;
+		metallic  = metallic  * metallicRoughnessColor.b;
+	}
+
+    return vec2(metallic, roughness);
+}
+
+// 法線の取得(ノーマルマップを使うことがある. → ついでに勉強する)
+vec3 CalcNormal()
+{
+	vec3 nomral = vec3(0.0);
+
+	if(ubo.useNormalTexture != 0)
+	{
+		// Tangent, SubTangent, Normalで構成される座標変換ベクトルを作成する
+		// このような変換行列のことを頭文字をとって TBN Matrix と呼ぶ
+		// 法線マップの示す法線方向は常に定数であり、オブジェクトを回転させるとワールド座標上の向きが合わなくなるので、座標変換して正しいものにする必要がある
+		// 例えばZ軸正を示す法線マップを持つPlaneオブジェクトをX軸を基準に90度回転させると、法線方向はY軸正になるのが正しいはずなのに、法線マップの値が定数であるため、
+		// そのままZ軸正を示しライティングがおかしなことになる
+		// https://learnopengl.com/Advanced-Lighting/Normal-Mapping#:~:text=tangent%20space.-,Tangent%20space,-Normal%20vectors%20in
+		// TBN Matrixの計算手法
+		// 法線は良しなに.
+		// 接点と複接線のベクトル方向がサーフェイスのテクスチャ座標の方向と一致しているということを利用して計算する(上記の接線空間の項目より)
+		// 三角形の頂点とそのテクスチャ座標から接線と複接線を計算することができる
+		// ※ これはメモだが接線空間記事のE1・E2が表すのは面積ではなく、P1・P2・P3を使った『ベクトル』
+		// ※ なのでベクトルで三角形が作れれば計算はできるので、実質Planeではなくポリゴン単位で接線の計算を行うことができる
+		// Shaderベースの頂点算出はパフォーマンス悪いので、ひとまず計算はCPUで行っている
+		// 数式はこれ(https://drive.google.com/file/d/1A4WK5GLRzWRD9yt9_yxSjyz8Yrmb5Is8/view?usp=sharing)
+
+		vec3 t = normalize(f_WorldTangent.xyz);
+		vec3 b = normalize(f_WorldBioTangent.xyz);
+		vec3 n = normalize(f_WorldNormal.xyz);
+
+		mat3 tbn = mat3(t, b, n);
+
+		#ifdef USE_OPENGL
+		nomral = texture(normalTexture, f_Texcoord).rgb;
+		#else
+		nomral = texture(sampler2D(normalTexture, normalTextureSampler), f_Texcoord).rgb;
+		#endif
+		
+		nomral = normalize( tbn * ((2.0 * nomral - 1.0) * vec3(ubo.normalMapScale, ubo.normalMapScale, 1.0)) );
+	}
+	else
+	{
+		nomral = f_WorldNormal;
+	}
+
+	return nomral;
+}
+
 vec3 CalcEmissive()
 {
     vec3 emissive = ubo.emissiveFactor.rgb * ubo.emissiveStrength;
@@ -448,15 +548,21 @@ void main()
 {
     vec4 col = vec4(0.0, 0.0, 0.0, 1.0);
 
-    //
+    // ベースカラーを取得
 	vec4 baseColor = CalcBaseColor();
+
+    // ラフネスとメタリックを取得。テクスチャにパッキングされていることもある
+	vec2 MetallicRoughness = CalcMetallicRoughness();
+
+    // 法線を取得
+    vec3 Normal = CalcNormal();
 
     // PBRData準備
 	PBRData pbr;
 	pbr.Albedo = baseColor.rgb;
-	pbr.Metallic = ubo.metallicFactor;
-	pbr.Roughness = ubo.roughnessFactor;
-	pbr.WorldNormal = f_WorldNormal;
+	pbr.Metallic = MetallicRoughness.r;
+	pbr.Roughness = MetallicRoughness.g;
+	pbr.WorldNormal = Normal;
 	pbr.ViewDir = normalize(f_WorldPos.xyz - ubo.cameraPos.xyz);
 
     // LightData準備
@@ -476,6 +582,8 @@ void main()
 
     // ガンマ補正(リニア空間からガンマ空間に戻す)
     col.rgb = LINEARtoSRGB(col.rgb);
+
+    //col.rgb = f_WorldNormal * 0.5 + 0.5;
 
 	outColor = col;
 }

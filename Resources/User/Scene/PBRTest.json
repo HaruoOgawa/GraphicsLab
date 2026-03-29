@@ -15,7 +15,12 @@
                 "right": "Resources/User/Cubemaps/environment/environment_back_0.jpg",
                 "top": "Resources/User/Cubemaps/environment/environment_front_0.jpg"
             }
-        ]
+        ],
+        "ibl": {
+            "diffuse": "Resources/User/IBL/output_iem.hdr",
+            "specular": "Resources/User/IBL/output_pmrem.hdr",
+            "ggx": "Resources/User/IBL/ggx_lut.jpg"
+        }
     },
     "objects": [
         {
@@ -42,6 +47,33 @@
                     1000.0,
                     1000.0,
                     1000.0
+                ]
+            }
+        },
+        {
+            "name": "DamagedHelmet",
+            "filename": "Resources/User/Models/DamagedHelmet/glTF-Binary/DamagedHelmet.glb",
+            "defaultmaterialframes": [
+                "pbr_mat"
+            ],
+            "renderpasslist": [
+                "MainResultPass"
+            ],
+            "transform": {
+                "pos": [
+                    -2.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             }
         }
