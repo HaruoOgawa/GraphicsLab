@@ -1,0 +1,81 @@
+{
+    "materialframes": [
+        {
+            "name": "pbr_mat",
+            "filename": "Resources\\Common\\MaterialFrame\\PBR_MF.json"
+        }
+    ],
+    "scenetextureset": {
+        "cubemaps": [
+            {
+                "back": "Resources/User/Cubemaps/environment/environment_top_0.jpg",
+                "bottom": "Resources/User/Cubemaps/environment/environment_left_0.jpg",
+                "front": "Resources/User/Cubemaps/environment/environment_right_0.jpg",
+                "left": "Resources/User/Cubemaps/environment/environment_bottom_0.jpg",
+                "right": "Resources/User/Cubemaps/environment/environment_back_0.jpg",
+                "top": "Resources/User/Cubemaps/environment/environment_front_0.jpg"
+            }
+        ],
+        "ibl": {
+            "diffuse": "Resources/User/IBL/output_iem.hdr",
+            "specular": "Resources/User/IBL/output_pmrem.hdr",
+            "ggx": "Resources/User/IBL/ggx_lut.jpg"
+        }
+    },
+    "objects": [
+        {
+            "name": "MetalRoughSpheresNoTextures",
+            "filename": "Resources/User/Models/MetalRoughSpheresNoTextures/glTF-Binary/MetalRoughSpheresNoTextures.glb",
+            "defaultmaterialframes": [
+                "pbr_mat"
+            ],
+            "renderpasslist": [
+                "MainGeometryPass"
+            ],
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1000.0,
+                    1000.0,
+                    1000.0
+                ]
+            }
+        },
+        {
+            "name": "DamagedHelmet",
+            "filename": "Resources/User/Models/DamagedHelmet/glTF-Binary/DamagedHelmet.glb",
+            "defaultmaterialframes": [
+                "pbr_mat"
+            ],
+            "renderpasslist": [
+                "MainGeometryPass"
+            ],
+            "transform": {
+                "pos": [
+                    -2.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        }
+    ]
+}
