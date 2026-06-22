@@ -1,89 +1,14 @@
 {
-  "name": "SpotLight",
+  "name": "IndirectLight",
   "outputcolorcount": 1,
   "shaderList": [
     {
-      "name": "SpotLight_vert",
-      "shaderFile": "Resources\\Common\\Shaders\\SpotLight",
+      "name": "renderboard_vert",
+      "shaderFile": "Resources\\Common\\Shaders\\renderboard",
       "autoShaderExtension": true,
       "shadercode": "",
       "shaderType": "vertex",
-      "uniformBlockList": [
-         {
-          "name": "VertUniformBuffer",
-          "binding": 0,
-          "isWritable": false,
-          "type": "ubo",
-          "bufferUpdateType": "cpu",
-          "values": [
-            {
-              "name": "model",
-              "type": "mat4",
-              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "view",
-              "type": "mat4",
-              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "proj",
-              "type": "mat4",
-              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "lightVPMat",
-              "type": "mat4",
-              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-
-            {
-              "name": "angle",
-              "type": "float",
-              "initValue": [ 1.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "height",
-              "type": "float",
-              "initValue": [ 1.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "pan",
-              "type": "float",
-              "initValue": [ 0.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "tilt",
-              "type": "float",
-              "initValue": [ 1.0 ],
-              "input": {
-                "hide": true
-              }
-            }
-          ]
-        }
-      ]
+      "uniformBlockList": []
     },
     {
       "name": "GBuffer_Light_frag",
@@ -100,7 +25,7 @@
           "bufferUpdateType": "cpu",
           "values": [
             {
-              "name": "lightVPMat",
+              "name": "mPad0",
               "type": "mat4",
               "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
               "input": {
@@ -132,40 +57,33 @@
               }
             },
             {
-              "name": "type",
-              "type": "float",
-              "initValue": [ 3.0 ],
+              "name": "useIBL",
+              "type": "int",
+              "initValue": [ 0 ],
               "input": {
                 "hide": true
               }
             },
             {
-              "name": "radius",
-              "type": "float",
-              "initValue": [ 1.0 ],
+              "name": "useCubeMap",
+              "type": "int",
+              "initValue": [ 0 ],
               "input": {
                 "hide": true
               }
             },
             {
-              "name": "intensity",
-              "type": "float",
-              "initValue": [ 1.0 ],
-              "input": {
-              }
-            },
-            {
-              "name": "angle",
-              "type": "float",
-              "initValue": [ 1.0 ],
+              "name": "useDirCubemap",
+              "type": "int",
+              "initValue": [ 0 ],
               "input": {
                 "hide": true
               }
             },
             {
-              "name": "height",
-              "type": "float",
-              "initValue": [ 1.0 ],
+              "name": "iPad2",
+              "type": "int",
+              "initValue": [ 0 ],
               "input": {
                 "hide": true
               }
@@ -179,7 +97,7 @@
               }
             },
             {
-              "name": "ShadowMapX",
+              "name": "fPad0",
               "type": "float",
               "initValue": [ 1.0 ],
               "input": {
@@ -187,7 +105,7 @@
               }
             },
             {
-              "name": "ShadowMapY",
+              "name": "fPad1",
               "type": "float",
               "initValue": [ 1.0 ],
               "input": {
@@ -195,54 +113,15 @@
               }
             },
             {
-              "name": "useIBL",
-              "type": "int",
-              "initValue": [ 0 ],
+              "name": "fPad2",
+              "type": "float",
+              "initValue": [ 1.0 ],
               "input": {
                 "hide": true
               }
             },
             {
-              "name": "useShadowMap",
-              "type": "int",
-              "initValue": [ 0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "ForceLighting",
-              "type": "int",
-              "initValue": [ 0 ],
-              "input": {
-              }
-            },
-            {
-              "name": "iPad2",
-              "type": "int",
-              "initValue": [ 0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "dir",
-              "type": "vec4",
-              "initValue": [ 1.0, 1.0, 1.0, 0.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "pos",
-              "type": "vec4",
-              "initValue": [ 0.0, 0.0, 0.0, 0.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "color",
+              "name": "ambientColor",
               "type": "vec4",
               "initValue": [ 1.0, 1.0, 1.0, 1.0 ],
               "input": {
@@ -308,12 +187,28 @@
           "textureUsage": "frame"
         },
         {
-          "name": "shadowmapTexture",
+          "name": "IBL_Diffuse_Texture",
           "viewBinding": 14,
           "samplerBinding": 15,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame"
+          "textureUsage": "diffuse"
+        },
+        {
+          "name": "IBL_Specular_Texture",
+          "viewBinding": 16,
+          "samplerBinding": 17,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "specular"
+        },
+        {
+          "name": "IBL_GGXLUT_Texture",
+          "viewBinding": 18,
+          "samplerBinding": 19,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "ggx"
         }
       ]
     }

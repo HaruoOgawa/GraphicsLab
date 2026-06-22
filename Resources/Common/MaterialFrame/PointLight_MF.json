@@ -275,33 +275,9 @@
           "textureUsage": "frame"
         },
         {
-          "name": "IBL_Diffuse_Texture",
+          "name": "shadowmapTexture",
           "viewBinding": 14,
           "samplerBinding": 15,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "diffuse"
-        },
-        {
-          "name": "IBL_Specular_Texture",
-          "viewBinding": 16,
-          "samplerBinding": 17,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "specular"
-        },
-        {
-          "name": "IBL_GGXLUT_Texture",
-          "viewBinding": 18,
-          "samplerBinding": 19,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "ggx"
-        },
-        {
-          "name": "shadowmapTexture",
-          "viewBinding": 20,
-          "samplerBinding": 21,
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "frame"
