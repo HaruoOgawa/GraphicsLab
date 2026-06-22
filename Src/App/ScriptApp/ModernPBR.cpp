@@ -85,6 +85,17 @@ namespace app
 
 			if (!pGraphicsAPI->CreateRenderPass("GBufferLightPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
 		}
+		
+		{
+			graphics::SRenderPassState State = graphics::SRenderPassState(1);
+			State.Stencil = true;
+
+			// GBufferパスの深度をフォアグラウンドパスにコピーするので深度は初期化しない
+			State.ClearDepth = false;
+			State.ClearStencil = false;
+
+			if (!pGraphicsAPI->CreateRenderPass("GBufferIndirectLightPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
+		}
 
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(1);
@@ -214,19 +225,28 @@ namespace app
 		}
 
 		// GBufferLightPass
+		// GBufferのDirectLight(直接光)
 		{
-			// フォアグラウンドパス(GBufferLightPass)にデファードパスの深度をコピーする
+			// 深度をコピーする
 			if (!pGraphicsAPI->CopyDepthBuffer("GBufferGenPass", "GBufferLightPass")) return false;
 
 			if (!pGraphicsAPI->BeginRender("GBufferLightPass")) return false;
 			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 			if (!pGraphicsAPI->EndRender()) return false;
 		}
+		
+		// GBufferIndirectLightPass
+		// GBufferのIndirectLight(間接光)
+		{
+			if (!pGraphicsAPI->BeginRender("GBufferIndirectLightPass")) return false;
+			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+			if (!pGraphicsAPI->EndRender()) return false;
+		}
 
 		// MainGeometryPass
 		{
-			// フォアグラウンドパス(MainGeometryPass)にGBufferLightPassのカラー・深度をコピーする
-			if (!pGraphicsAPI->CopyRenderPass("GBufferLightPass", "MainGeometryPass", true, true)) return false;
+			// フォアグラウンドパス(MainGeometryPass)にGBufferのカラー・深度をコピーする
+			if (!pGraphicsAPI->CopyRenderPass("GBufferIndirectLightPass", "MainGeometryPass", true, true)) return false;
 
 			if (!pGraphicsAPI->BeginRender("MainGeometryPass")) return false;
 			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
