@@ -36,6 +36,7 @@ layout(binding = 12) uniform sampler2D gEmissionTexture;
 layout(binding = 14) uniform sampler2D IBL_Diffuse_Texture;
 layout(binding = 16) uniform sampler2D IBL_Specular_Texture;
 layout(binding = 18) uniform sampler2D IBL_GGXLUT_Texture;
+layout(binding = 20) uniform sampler2D gDirectLightTexture;
 #else
 layout(binding = 2) uniform texture2D gPositionTexture;
 layout(binding = 3) uniform sampler gPositionTextureSampler;
@@ -55,6 +56,8 @@ layout(binding = 16) uniform texture2D IBL_Specular_Texture;
 layout(binding = 17) uniform sampler IBL_Specular_TextureSampler;
 layout(binding = 18) uniform texture2D IBL_GGXLUT_Texture;
 layout(binding = 19) uniform sampler IBL_GGXLUT_TextureSampler;
+layout(binding = 20) uniform texture2D gDirectLightTexture;
+layout(binding = 21) uniform sampler gDirectLightTextureSampler;
 #endif
 
 // 最低反射率
@@ -150,6 +153,17 @@ vec4 GetEmission(vec2 ScreenUV)
     return Emission;
 }
 
+vec3 GetDirectLight(vec2 ScreenUV)
+{
+#ifdef USE_OPENGL
+    vec3 DirectLight = texture(gDirectLightTexture, ScreenUV).rgb;
+#else
+    vec3 DirectLight = texture(sampler2D(gDirectLightTexture, gDirectLightTextureSampler), ScreenUV).rgb;
+#endif
+
+    return DirectLight;
+}
+
 GBufferResult GetGBuffer(vec2 ScreenUV)
 {
     GBufferResult gResult;
@@ -192,36 +206,14 @@ vec2 CastDirToSt(vec3 Dir)
 	return st;
 }
 
-vec3 CalcReflectionProbe(PBRData pbr)
+vec2 GetSphericalTexcoord(vec3 Dir)
 {
-    vec3 v = normalize(pbr.ViewDir);
-    vec3 reflectV = reflect(v, pbr.WorldNormal);
-    
-    vec3 reflectColor = vec3(0.0);
-    if(l_ubo.useCubeMap != 0)
-	{
-		float mipCount = l_ubo.mipCount;
-		float lod = mipCount * pbr.Roughness;
-		#ifdef USE_OPENGL
-		reflectColor = SRGBtoLINEAR(textureLod(cubemapTexture, reflectV, lod).rgb);
-		#else
-		reflectColor = SRGBtoLINEAR(textureLod(samplerCube(cubemapTexture, cubemapTextureSampler), reflectV, lod).rgb);
-		#endif
-	}
-	else if(l_ubo.useDirCubemap != 0)
-	{
-		vec2 st = CastDirToSt(reflectV);
-		
-		float mipCount = l_ubo.mipCount;
-		float lod = mipCount * pbr.Roughness;
-		#ifdef USE_OPENGL
-		reflectColor = SRGBtoLINEAR(textureLod(cubeMap2DTexture, st, lod).rgb);
-		#else
-		reflectColor = SRGBtoLINEAR(textureLod(sampler2D(cubeMap2DTexture, cubeMap2DTextureSampler), st, lod).rgb);
-		#endif
-	}
+	float theta = acos(Dir.y);
+	float phi = atan(Dir.z, Dir.x);
 
-	return reflectColor;
+	vec2 st = vec2(phi / (2.0 * PI), theta / PI);
+
+	return st;
 }
 
 vec3 GetIndirectDiffuse(vec3 n)
@@ -314,7 +306,6 @@ vec3 ComputeIndirectLight(GBufferResult gResult)
 	else if(l_ubo.useCubeMap != 0 || l_ubo.useDirCubemap != 0)
 	{
 		// リフレクションプローブによる間接照明
-        ResultCol += CalcReflectionProbe(pbr);
 	}
 	else
 	{
@@ -348,11 +339,23 @@ void main()
     // Compute Color
     vec3 col = vec3(0.0);
     
-    // Indirect Light
-    col.rgb += ComputeIndirectLight(gResult);
+    if(gResult.materialType == 1.0)
+    {
+        // Indirect Light
+        col.rgb += ComputeIndirectLight(gResult);
 
-    // ガンマ補正(リニア空間からガンマ空間に戻す)
-    col.rgb = LINEARtoSRGB(col.rgb);
+        // ガンマ補正(リニア空間からガンマ空間に戻す)
+        col.rgb = LINEARtoSRGB(col.rgb);
 
+        // Direct Light
+        col.rgb += GetDirectLight(ScreenUV);
+    }
+    else
+    {
+        // 何も描画しない
+        // ライトは加算描画なので黒でいい
+        col = vec3(0.0, 0.0, 0.0);
+    }
+    
     outColor = vec4(col, 1.0);
 }

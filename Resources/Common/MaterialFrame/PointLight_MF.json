@@ -232,7 +232,9 @@
           "samplerBinding": 3,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame"
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 0
         },
         {
           "name": "gNormalTexture",
@@ -240,7 +242,9 @@
           "samplerBinding": 5,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame"
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 1
         },
         {
           "name": "gAlbedoTexture",
@@ -248,7 +252,9 @@
           "samplerBinding": 7,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame"
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 2
         },
         {
           "name": "gDepthTexture",
@@ -256,7 +262,9 @@
           "samplerBinding": 9,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame"
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 3
         },
         {
           "name": "gCustomParam0Texture",
@@ -264,7 +272,9 @@
           "samplerBinding": 11,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame"
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 4
         },
         {
           "name": "gEmissionTexture",
@@ -272,7 +282,9 @@
           "samplerBinding": 13,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame"
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 5
         },
         {
           "name": "shadowmapTexture",
@@ -281,6 +293,9 @@
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "frame"
+          ,
+          "frameName" : "ShadowPass",
+          "frameIndex" : 0
         }
       ]
     }

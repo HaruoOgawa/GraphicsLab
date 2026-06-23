@@ -370,10 +370,10 @@ namespace gui
 							}
 							break;
 						case graphics::ETextureUsage::TEXTURE_USAGE_FRAME:
-							if (TextureIndex >= -1 && TextureIndex < static_cast<int>(TextureSet->GetFrameTextureList().size()))
+							/*if (TextureIndex >= -1 && TextureIndex < static_cast<int>(TextureSet->GetFrameTextureList().size()))
 							{
 								Material->SetTextureBindingLayoutTextureIndex(BindingLayoutIndex, TextureIndex, TextureSet);
-							}
+							}*/
 							break;
 						case graphics::ETextureUsage::TEXTURE_USAGE_IBL_Diffuse:
 							if ((TextureIndex == 0 || TextureIndex == -1) && TextureSet->GetDiffuse_Tex())

@@ -134,12 +134,22 @@ namespace app
 
 		m_MainFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "", pGraphicsAPI->FindOffScreenRenderPass("MainResultPass")->GetFrameTextureList());
 		if (!m_MainFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\FrameTexture_MF.json")) return false;
-
+		
 		// ShadowPass Texture
 		const auto& ShadowPass = pGraphicsAPI->FindOffScreenRenderPass("ShadowPass");
 		if (ShadowPass)
 		{
-			m_SceneController->AddFrameTexture(ShadowPass->GetDepthTexture());
+			m_SceneController->AddFrameTexture("ShadowPass", ShadowPass->GetDepthTexture());
+		}
+
+		// GBuffer Texture
+		const auto& GBufferGenPass = pGraphicsAPI->FindOffScreenRenderPass("GBufferGenPass");
+		if (GBufferGenPass)
+		{
+			for (const auto& Texture : GBufferGenPass->GetFrameTextureList())
+			{
+				m_SceneController->AddFrameTexture("GBufferGenPass", Texture);
+			}
 		}
 
 		return true;
@@ -238,6 +248,9 @@ namespace app
 		// GBufferIndirectLightPass
 		// GBufferのIndirectLight(間接光)
 		{
+			// 深度をコピーする
+			if (!pGraphicsAPI->CopyDepthBuffer("GBufferLightPass", "GBufferIndirectLightPass")) return false;
+
 			if (!pGraphicsAPI->BeginRender("GBufferIndirectLightPass")) return false;
 			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 			if (!pGraphicsAPI->EndRender()) return false;
