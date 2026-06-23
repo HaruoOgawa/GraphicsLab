@@ -1,6 +1,8 @@
 {
   "name": "DirectionalLight",
   "outputcolorcount": 1,
+  "zwrite" : false,
+  "depthfunc" : "always",
   "shaderList": [
     {
       "name": "renderboard_vert",
@@ -189,7 +191,9 @@
           "samplerBinding": 3,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame"
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 0
         },
         {
           "name": "gNormalTexture",
@@ -197,7 +201,9 @@
           "samplerBinding": 5,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame"
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 1
         },
         {
           "name": "gAlbedoTexture",
@@ -205,7 +211,9 @@
           "samplerBinding": 7,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame"
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 2
         },
         {
           "name": "gDepthTexture",
@@ -213,7 +221,9 @@
           "samplerBinding": 9,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame"
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 3
         },
         {
           "name": "gCustomParam0Texture",
@@ -221,7 +231,9 @@
           "samplerBinding": 11,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame"
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 4
         },
         {
           "name": "gEmissionTexture",
@@ -229,39 +241,20 @@
           "samplerBinding": 13,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame"
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 5
         },
         {
-          "name": "IBL_Diffuse_Texture",
+          "name": "shadowmapTexture",
           "viewBinding": 14,
           "samplerBinding": 15,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "diffuse"
-        },
-        {
-          "name": "IBL_Specular_Texture",
-          "viewBinding": 16,
-          "samplerBinding": 17,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "specular"
-        },
-        {
-          "name": "IBL_GGXLUT_Texture",
-          "viewBinding": 18,
-          "samplerBinding": 19,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "ggx"
-        },
-        {
-          "name": "shadowmapTexture",
-          "viewBinding": 20,
-          "samplerBinding": 21,
-          "textureIndex": -1,
-          "type": "texture",
           "textureUsage": "frame"
+          ,
+          "frameName" : "ShadowPass",
+          "frameIndex" : 0
         }
       ]
     }

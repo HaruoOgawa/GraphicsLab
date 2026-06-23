@@ -81,6 +81,9 @@
     <ClCompile Include="Src\App\ScriptApp\CChurchGraphicsApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\App\ScriptApp\ModernPBR.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\GUIApp\GUI\CGraphicsEditingWindow.h">
@@ -147,6 +150,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\App\ScriptApp\CChurchGraphicsApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\App\ScriptApp\ModernPBR.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

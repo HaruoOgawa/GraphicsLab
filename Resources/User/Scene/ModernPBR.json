@@ -1,0 +1,163 @@
+{
+    "materialframes": [
+        {
+            "name": "GBuffer_Gen",
+            "filename": "Resources\\Common\\MaterialFrame\\GBuffer_Gen_MF.json"
+        }
+    ],
+    "scenetextureset": {
+        "cubemaps": [
+            {
+                "back": "Resources/User/Cubemaps/environment/environment_top_0.jpg",
+                "bottom": "Resources/User/Cubemaps/environment/environment_left_0.jpg",
+                "front": "Resources/User/Cubemaps/environment/environment_right_0.jpg",
+                "left": "Resources/User/Cubemaps/environment/environment_bottom_0.jpg",
+                "right": "Resources/User/Cubemaps/environment/environment_back_0.jpg",
+                "top": "Resources/User/Cubemaps/environment/environment_front_0.jpg"
+            }
+        ],
+        "ibl": {
+            "diffuse": "Resources/User/IBL/output_iem.hdr",
+            "specular": "Resources/User/IBL/output_pmrem.hdr",
+            "ggx": "Resources/User/IBL/ggx_lut.jpg"
+        }
+    },
+    "objects": [
+        {
+            "name": "MetalRoughSpheresNoTextures",
+            "filename": "Resources/User/Models/MetalRoughSpheresNoTextures/glTF-Binary/MetalRoughSpheresNoTextures.glb",
+            "defaultmaterialframes": [
+                "GBuffer_Gen"
+            ],
+            "renderpasslist": [
+                "GBufferGenPass"
+            ],
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1000.0,
+                    1000.0,
+                    1000.0
+                ]
+            }
+        },
+        {
+            "name": "DamagedHelmet",
+            "filename": "Resources/User/Models/DamagedHelmet/glTF-Binary/DamagedHelmet.glb",
+            "defaultmaterialframes": [
+                "GBuffer_Gen"
+            ],
+            "renderpasslist": [
+                "GBufferGenPass"
+            ],
+            "transform": {
+                "pos": [
+                    -2.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+
+        {
+            "name": "LightList",
+            "filename": "",
+            "renderpasslist": [
+                "GBufferLightPass"
+            ],
+            "enable": true,
+            "rootnodes": [
+                0
+            ],
+            "nodes": [
+                {
+                    "name": "DirectionalLight",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            -0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": -1,
+                    "components": [
+                        {
+                            "type": "DirectionalLight"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        {
+            "name": "IndirectLight",
+            "filename": "",
+            "renderpasslist": [
+                "GBufferIndirectLightPass"
+            ],
+            "enable": true,
+            "rootnodes": [
+                0
+            ],
+            "nodes": [
+                {
+                    "name": "IndirectLight",
+                    "transform": {
+                        "pos": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "enable": true,
+                    "meshindex": -1,
+                    "components": [
+                        {
+                            "type": "IndirectLight"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
