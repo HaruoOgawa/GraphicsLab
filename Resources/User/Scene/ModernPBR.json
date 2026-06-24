@@ -51,8 +51,8 @@
             }
         },
         {
-            "name": "DamagedHelmet",
-            "filename": "Resources/User/Models/DamagedHelmet/glTF-Binary/DamagedHelmet.glb",
+            "name": "happy_buddha_stanford",
+            "filename": "Resources/User/Models/happy_buddha_stanford.glb",
             "defaultmaterialframes": [
                 "GBuffer_Gen"
             ],
@@ -67,7 +67,7 @@
                 ],
                 "rotate": [
                     0.0,
-                    0.0,
+                    180.0,
                     0.0
                 ],
                 "scale": [

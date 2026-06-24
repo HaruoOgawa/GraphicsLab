@@ -154,7 +154,7 @@ namespace app
 
 		// ポストプロセス
 		m_PostProcess->SetUseFXAA(true);
-		m_PostProcess->SetUseBloom(true);
+		m_PostProcess->SetUseBloom(false);
 		if (!m_PostProcess->Initialize(pGraphicsAPI, pLoadWorker)) return false;
 
 		m_MainFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "", pGraphicsAPI->FindOffScreenRenderPass("MainResultPass")->GetFrameTextureList());
