@@ -230,6 +230,16 @@
           "textureUsage": "frame",
           "frameName" : "GBufferLightPass",
           "frameIndex" : 0
+        },
+        {
+          "name": "gSSAOBlurTexture",
+          "viewBinding": 22,
+          "samplerBinding": 23,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame",
+          "frameName" : "GBufferSSAOBlurPass",
+          "frameIndex" : 0
         }
       ]
     }

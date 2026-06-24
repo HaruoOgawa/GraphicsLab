@@ -92,6 +92,12 @@ namespace app
 
 			if (!pGraphicsAPI->CreateRenderPass("GBufferSSAOPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
 		}
+		
+		{
+			graphics::SRenderPassState State = graphics::SRenderPassState(1);
+
+			if (!pGraphicsAPI->CreateRenderPass("GBufferSSAOBlurPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
+		}
 
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(1);
@@ -157,6 +163,9 @@ namespace app
 		m_SSAOFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "GBufferSSAOPass", "GBufferGenPass");
 		if (!m_SSAOFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\GBufferSSAO_MF.json")) return false;
 		
+		m_SSAOBlurFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "GBufferSSAOBlurPass", pGraphicsAPI->FindOffScreenRenderPass("GBufferSSAOPass")->GetFrameTextureList());
+		if (!m_SSAOBlurFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\Blur1Pass_MF.json")) return false;
+		
 		// ShadowPass Texture
 		const auto& ShadowPass = pGraphicsAPI->FindOffScreenRenderPass("ShadowPass");
 		if (ShadowPass)
@@ -221,6 +230,7 @@ namespace app
 		if (!m_PostProcess->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_MainFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_SSAOFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
+		if (!m_SSAOBlurFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 
 		return true;
 	}
@@ -263,6 +273,13 @@ namespace app
 			{
 				if (!pGraphicsAPI->BeginRender("GBufferSSAOPass")) return false;
 				if (!m_SSAOFrameRenderer->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+				if (!pGraphicsAPI->EndRender()) return false;
+			}
+			
+			// GBufferSSAOBlurPass
+			{
+				if (!pGraphicsAPI->BeginRender("GBufferSSAOBlurPass")) return false;
+				if (!m_SSAOBlurFrameRenderer->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 				if (!pGraphicsAPI->EndRender()) return false;
 			}
 

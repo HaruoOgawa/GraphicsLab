@@ -190,6 +190,7 @@ float ComputeSSAO(GBufferResult gResult)
 
     float resultAO = 0.0;
     float loop = 32.0;
+    float numOf = 0.0;
 
     float aoRadius = 0.1;
 
@@ -214,13 +215,20 @@ float ComputeSSAO(GBufferResult gResult)
         vec2 projUV = projSSPhPos.xy / projSSPhPos.w;
         projUV = projUV * 0.5 + 0.5;
 
+        // UVの範囲外はスキップする
+        if(projUV.x < 0.0 || projUV.x > 1.0 || projUV.y < 0.0 || projUV.y > 1.0) continue;
+
         float actualDepth = GetDepth(projUV);
 
         // 実際の深度が理想的な深度よりも小さければ遮蔽されていると判断して暗い色を加算する
-        resultAO += (actualDepth < idealDepth) ? 0.1 : 1.0;
+        resultAO += (actualDepth < idealDepth) ? 0.0 : 1.0;
+
+        numOf++;
     }
 
-    resultAO /= loop;
+    resultAO /= numOf;
+
+    resultAO = pow(resultAO, 2.0);    
 
     return resultAO;
 }

@@ -37,6 +37,7 @@ layout(binding = 14) uniform sampler2D IBL_Diffuse_Texture;
 layout(binding = 16) uniform sampler2D IBL_Specular_Texture;
 layout(binding = 18) uniform sampler2D IBL_GGXLUT_Texture;
 layout(binding = 20) uniform sampler2D gDirectLightTexture;
+layout(binding = 22) uniform sampler2D gSSAOBlurTexture;
 #else
 layout(binding = 2) uniform texture2D gPositionTexture;
 layout(binding = 3) uniform sampler gPositionTextureSampler;
@@ -58,6 +59,8 @@ layout(binding = 18) uniform texture2D IBL_GGXLUT_Texture;
 layout(binding = 19) uniform sampler IBL_GGXLUT_TextureSampler;
 layout(binding = 20) uniform texture2D gDirectLightTexture;
 layout(binding = 21) uniform sampler gDirectLightTextureSampler;
+layout(binding = 22) uniform texture2D gSSAOBlurTexture;
+layout(binding = 23) uniform sampler gSSAOBlurTextureSampler;
 #endif
 
 // 最低反射率
@@ -162,6 +165,17 @@ vec3 GetDirectLight(vec2 ScreenUV)
 #endif
 
     return DirectLight;
+}
+
+float GetSSAOBlur(vec2 ScreenUV)
+{
+#ifdef USE_OPENGL
+    float SSAOBlur = texture(gSSAOBlurTexture, ScreenUV).r;
+#else
+    float SSAOBlur = texture(sampler2D(gSSAOBlurTexture, gSSAOBlurTextureSampler), ScreenUV).r;
+#endif
+
+    return SSAOBlur;
 }
 
 GBufferResult GetGBuffer(vec2 ScreenUV)
@@ -286,7 +300,7 @@ vec3 ComputeIBL(PBRData pbr)
 }
 
 // 間接光のPBR
-vec3 ComputeIndirectLight(GBufferResult gResult)
+vec3 ComputeIndirectLight(GBufferResult gResult, vec2 ScreenUV)
 {
     // PBRData準備
 	PBRData pbr;
@@ -322,6 +336,10 @@ vec3 ComputeIndirectLight(GBufferResult gResult)
     float NdV = clamp(dot(n, v), 0.0, 1.0);
     
     //ResultCol *= CalcFrenelReflection(pbr.Albedo, pbr.Metallic, NdV);
+
+    // AO
+    float ao = GetSSAOBlur(ScreenUV);
+    ResultCol *= ao;
     
     return ResultCol;
 }
@@ -342,7 +360,7 @@ void main()
     if(gResult.materialType == 1.0)
     {
         // Indirect Light
-        col.rgb += ComputeIndirectLight(gResult);
+        col.rgb += ComputeIndirectLight(gResult, ScreenUV);
 
         // ガンマ補正(リニア空間からガンマ空間に戻す)
         col.rgb = LINEARtoSRGB(col.rgb);
