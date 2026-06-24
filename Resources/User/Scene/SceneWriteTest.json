@@ -698,13 +698,6 @@
             "name": "biglove_expression"
         }
     ],
-    "sound": {
-        "bgm": {
-            "filename": "Resources\\Audio\\biglove_audio.wav",
-            "autoplay": false,
-            "loop": false
-        }
-    },
     "timeline": {
         "filename": "Resources\\Scene\\SceneWriteTest.tl"
     },
