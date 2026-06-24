@@ -7,9 +7,9 @@ layout(location = 2) in vec4 v2f_WorldPos;
 layout(location = 0) out vec4 outColor;
 
 layout(binding = 1) uniform LightUniformBuffer{
-	mat4 mPad0;
-	mat4 mPad1;
-	mat4 mPad2;
+	mat4 model;
+    mat4 view;
+    mat4 proj;
 	mat4 mPad3;
 } l_ubo;
 
@@ -58,6 +58,11 @@ struct PBRData
     vec3 WorldPos;
     vec3 ViewDir;
 };
+
+float rand(vec2 st)
+{
+    return fract(sin(dot(st ,vec2(12.9898,78.233))) * 43758.5453);
+}
 
 vec3 GetWorldPos(vec2 ScreenUV)
 {
@@ -143,9 +148,81 @@ GBufferResult GetGBuffer(vec2 ScreenUV)
     return gResult;
 }
 
-vec3 ComputeSSAO(GBufferResult gResult)
+mat3 calcTBNMatrix(vec3 normal)
 {
-    return vec3(0.25);
+    vec3 T, B;
+    vec3 N = normalize(normal);
+
+    vec3 up = vec3(0.0, 1.0, 0.0);
+    vec3 side = vec3(1.0, 0.0, 0.0);
+
+    vec3 dir = (abs(dot(N, up)) < 0.9)? up : side;
+
+    vec3 tmpT = normalize(cross(dir, N));
+    B = normalize(cross(N, tmpT));
+
+    T = normalize(cross(B, N));
+
+    mat3 TBM = mat3(T, B, N);
+
+    return TBM;
+}
+
+vec3 GetRandomSemiSpherePos(float radius, float i)
+{
+    float theta = rand(vec2(i, 129.645)) * (PI * 0.5); // 0 ~ PI/2
+    float phi = rand(vec2(85.222, i)) * (2.0 * PI); // 0 ~ 2PI
+
+    float x = radius * sin(theta) * cos(phi);
+    float y = radius * sin(theta) * sin(phi);
+    float z = radius * cos(theta);
+
+    return vec3(x, y, z);
+}
+
+float ComputeSSAO(GBufferResult gResult)
+{
+    vec3 worldPos = gResult.worldPos;
+    vec3 worldNormal = gResult.worldNormal;
+
+    mat3 TBM = calcTBNMatrix(worldNormal);
+    mat4 VPMat = l_ubo.proj * l_ubo.view;
+
+    float resultAO = 0.0;
+    float loop = 32.0;
+
+    float aoRadius = 0.1;
+
+    // SSAOのサンプリング
+    for(float i = 0.0; i < loop; i++)
+    {
+        // Z軸正方向を向いた半球内のランダムオフセットを取得
+        vec3 ssphPos = GetRandomSemiSpherePos(aoRadius, i);
+
+        // TBN座標系に変換
+        vec3 tbn_ssphPos = TBM * ssphPos;
+
+        // 空間内のランダムな位置を算出
+        vec3 worldSSPhPos = worldPos + tbn_ssphPos;
+
+        // プロジェクション座標系にして理想的な深度を計算
+        vec4 projSSPhPos = VPMat * vec4(worldSSPhPos, 1.0);
+        float idealDepth = projSSPhPos.z / projSSPhPos.w;
+        idealDepth = idealDepth * 0.5 + 0.5;
+
+        // そのピクセルにおける実際の深度を取得
+        vec2 projUV = projSSPhPos.xy / projSSPhPos.w;
+        projUV = projUV * 0.5 + 0.5;
+
+        float actualDepth = GetDepth(projUV);
+
+        // 実際の深度が理想的な深度よりも小さければ遮蔽されていると判断して暗い色を加算する
+        resultAO += (actualDepth < idealDepth) ? 0.1 : 1.0;
+    }
+
+    resultAO /= loop;
+
+    return resultAO;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -163,7 +240,7 @@ void main()
     if(gResult.materialType == 1.0)
     {
         // SSAO
-        col.rgb = ComputeSSAO(gResult);
+        col.rgb = vec3(ComputeSSAO(gResult));
     }
     
     outColor = vec4(col, 1.0);
