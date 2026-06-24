@@ -24,8 +24,8 @@
     },
     "objects": [
         {
-            "name": "MetalRoughSpheresNoTextures",
-            "filename": "Resources/User/Models/MetalRoughSpheresNoTextures/glTF-Binary/MetalRoughSpheresNoTextures.glb",
+            "name": "cornell",
+            "filename": "Resources/User/Models/cornell.glb",
             "defaultmaterialframes": [
                 "GBuffer_Gen"
             ],
@@ -44,9 +44,9 @@
                     0.0
                 ],
                 "scale": [
-                    1000.0,
-                    1000.0,
-                    1000.0
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             }
         },
@@ -61,9 +61,9 @@
             ],
             "transform": {
                 "pos": [
-                    -2.0,
-                    0.0,
-                    0.0
+                    -0.70,
+                    0.475,
+                    0.5
                 ],
                 "rotate": [
                     0.0,
@@ -75,7 +75,328 @@
                     1.0,
                     1.0
                 ]
-            }
+            },
+            "materials": [
+                {
+                    "meshindex": 0,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "emissiveStrength",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "metallicFactor",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.8999999761581421
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "meshindex": 1,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "emissiveStrength",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "metallicFactor",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.8999999761581421
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "meshindex": 2,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "emissiveStrength",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "metallicFactor",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.8999999761581421
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "meshindex": 3,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "emissiveStrength",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "metallicFactor",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.8999999761581421
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "meshindex": 4,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "emissiveStrength",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "metallicFactor",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.8999999761581421
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "meshindex": 5,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "emissiveStrength",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "metallicFactor",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.8999999761581421
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "meshindex": 6,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "emissiveStrength",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "metallicFactor",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.8999999761581421
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "meshindex": 7,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "emissiveStrength",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "metallicFactor",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.8999999761581421
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "meshindex": 8,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "emissiveStrength",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "metallicFactor",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.8999999761581421
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "meshindex": 9,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "emissiveStrength",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "metallicFactor",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.8999999761581421
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "meshindex": 10,
+                    "primitiveindex": 0,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "emissiveStrength",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "metallicFactor",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.8999999761581421
+                            ]
+                        }
+                    ]
+                }
+            ]
         },
 
         {

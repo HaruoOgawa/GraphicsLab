@@ -41,8 +41,8 @@ namespace app
 		m_TimelineController(std::make_shared<timeline::CTimelineController>()),
 		m_PostProcess(std::make_shared<graphics::CPostProcess>("MainResultPass"))
 	{
-		m_ViewCamera->SetCenter(glm::vec3(2.5f, 3.0f, 0.0f));
-		m_ViewCamera->SetPos(glm::vec3(2.5f, 3.0f, 12.0f));
+		m_ViewCamera->SetCenter(glm::vec3(0.0f, 0.0f, 0.0f));
+		m_ViewCamera->SetPos(glm::vec3(0.0f, 1.0f, 2.0f));
 		m_MainCamera = m_ViewCamera;
 
 		m_DrawInfo->GetLightCamera()->SetPos(glm::vec3(-2.358f, 15.6f, -0.59f));
