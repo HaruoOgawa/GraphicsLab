@@ -85,6 +85,31 @@ namespace app
 
 			if (!pGraphicsAPI->CreateRenderPass("GBufferLightPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
 		}
+
+		{
+			graphics::SRenderPassState State = graphics::SRenderPassState(1);
+			State.InitColorList[0] = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+			if (!pGraphicsAPI->CreateRenderPass("GBufferSSAOPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
+		}
+		
+		{
+			graphics::SRenderPassState State = graphics::SRenderPassState(1);
+
+			if (!pGraphicsAPI->CreateRenderPass("GBufferSSAOBlurPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
+		}
+
+		{
+			graphics::SRenderPassState State = graphics::SRenderPassState(1);
+
+			if (!pGraphicsAPI->CreateRenderPass("GBufferSSGIPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
+		}
+
+		{
+			graphics::SRenderPassState State = graphics::SRenderPassState(1);
+
+			if (!pGraphicsAPI->CreateRenderPass("GBufferSSRPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
+		}
 		
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(1);
@@ -134,6 +159,12 @@ namespace app
 
 		m_MainFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "", pGraphicsAPI->FindOffScreenRenderPass("MainResultPass")->GetFrameTextureList());
 		if (!m_MainFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\FrameTexture_MF.json")) return false;
+		
+		m_SSAOFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "GBufferSSAOPass", "GBufferGenPass");
+		if (!m_SSAOFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\GBufferSSAO_MF.json")) return false;
+		
+		m_SSAOBlurFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "GBufferSSAOBlurPass", pGraphicsAPI->FindOffScreenRenderPass("GBufferSSAOPass")->GetFrameTextureList());
+		if (!m_SSAOBlurFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\Blur1Pass_MF.json")) return false;
 		
 		// ShadowPass Texture
 		const auto& ShadowPass = pGraphicsAPI->FindOffScreenRenderPass("ShadowPass");
@@ -198,6 +229,8 @@ namespace app
 
 		if (!m_PostProcess->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_MainFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
+		if (!m_SSAOFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
+		if (!m_SSAOBlurFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 
 		return true;
 	}
@@ -227,43 +260,63 @@ namespace app
 			if (!pGraphicsAPI->EndRender()) return false;
 		}
 
-		// GBufferGenPass
+		// デファードレンダリング
 		{
-			if (!pGraphicsAPI->BeginRender("GBufferGenPass")) return false;
-			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
-			if (!pGraphicsAPI->EndRender()) return false;
+			// GBufferGenPass
+			{
+				if (!pGraphicsAPI->BeginRender("GBufferGenPass")) return false;
+				if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+				if (!pGraphicsAPI->EndRender()) return false;
+			}
+
+			// GBufferSSAOPass
+			{
+				if (!pGraphicsAPI->BeginRender("GBufferSSAOPass")) return false;
+				if (!m_SSAOFrameRenderer->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+				if (!pGraphicsAPI->EndRender()) return false;
+			}
+			
+			// GBufferSSAOBlurPass
+			{
+				if (!pGraphicsAPI->BeginRender("GBufferSSAOBlurPass")) return false;
+				if (!m_SSAOBlurFrameRenderer->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+				if (!pGraphicsAPI->EndRender()) return false;
+			}
+
+			// GBufferLightPass
+			// GBufferのDirectLight(直接光)
+			{
+				// 深度をコピーする
+				if (!pGraphicsAPI->CopyDepthBuffer("GBufferGenPass", "GBufferLightPass")) return false;
+
+				if (!pGraphicsAPI->BeginRender("GBufferLightPass")) return false;
+				if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+				if (!pGraphicsAPI->EndRender()) return false;
+			}
+
+			// GBufferIndirectLightPass
+			// GBufferのIndirectLight(間接光)
+			{
+				// 深度をコピーする
+				if (!pGraphicsAPI->CopyDepthBuffer("GBufferLightPass", "GBufferIndirectLightPass")) return false;
+
+				if (!pGraphicsAPI->BeginRender("GBufferIndirectLightPass")) return false;
+				if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+				if (!pGraphicsAPI->EndRender()) return false;
+			}
 		}
 
-		// GBufferLightPass
-		// GBufferのDirectLight(直接光)
+		// フォアグラウンドレンダリング
 		{
-			// 深度をコピーする
-			if (!pGraphicsAPI->CopyDepthBuffer("GBufferGenPass", "GBufferLightPass")) return false;
+			// MainGeometryPass
+			{
+				// フォアグラウンドパス(MainGeometryPass)にGBufferのカラー・深度をコピーする
+				if (!pGraphicsAPI->CopyRenderPass("GBufferIndirectLightPass", "MainGeometryPass", true, true)) return false;
 
-			if (!pGraphicsAPI->BeginRender("GBufferLightPass")) return false;
-			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
-			if (!pGraphicsAPI->EndRender()) return false;
-		}
-		
-		// GBufferIndirectLightPass
-		// GBufferのIndirectLight(間接光)
-		{
-			// 深度をコピーする
-			if (!pGraphicsAPI->CopyDepthBuffer("GBufferLightPass", "GBufferIndirectLightPass")) return false;
-
-			if (!pGraphicsAPI->BeginRender("GBufferIndirectLightPass")) return false;
-			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
-			if (!pGraphicsAPI->EndRender()) return false;
-		}
-
-		// MainGeometryPass
-		{
-			// フォアグラウンドパス(MainGeometryPass)にGBufferのカラー・深度をコピーする
-			if (!pGraphicsAPI->CopyRenderPass("GBufferIndirectLightPass", "MainGeometryPass", true, true)) return false;
-
-			if (!pGraphicsAPI->BeginRender("MainGeometryPass")) return false;
-			if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
-			if (!pGraphicsAPI->EndRender()) return false;
+				if (!pGraphicsAPI->BeginRender("MainGeometryPass")) return false;
+				if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+				if (!pGraphicsAPI->EndRender()) return false;
+			}
 		}
 
 		// MainResultPass 

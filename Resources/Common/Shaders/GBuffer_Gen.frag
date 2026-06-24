@@ -175,6 +175,8 @@ void main(){
 	float depth = v2f_ProjPos.z / v2f_ProjPos.w;
 	depth = depth * 0.5 + 0.5;
 
+	// depth = 0.5;
+
 	vec2 metallicRoughness = GetMetallicRoughness();
 
 	vec3 emissive = GetEmissive();
@@ -182,7 +184,7 @@ void main(){
 	gPosition = f_WorldPos;
 	gNormal = vec4(normal, 0.0);
 	gAlbedo = baseColor;
-	gDepth = vec4(depth);
+	gDepth = vec4(depth, depth, depth, 1.0);
 	gCustomParam0 = vec4(ubo.materialType, metallicRoughness.r, metallicRoughness.g, 0.0);
 	gEmission = vec4(emissive, 1.0);
 }

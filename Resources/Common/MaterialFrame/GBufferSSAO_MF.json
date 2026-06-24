@@ -1,0 +1,126 @@
+{
+  "name": "DirectionalLight",
+  "outputcolorcount": 1,
+  "zwrite" : false,
+  "depthfunc" : "always",
+  "shaderList": [
+    {
+      "name": "renderboard_vert",
+      "shaderFile": "Resources\\Common\\Shaders\\renderboard",
+      "autoShaderExtension": true,
+      "shadercode": "",
+      "shaderType": "vertex",
+      "uniformBlockList": []
+    },
+    {
+      "name": "GBufferSSAO_frag",
+      "shaderFile": "Resources\\Common\\Shaders\\GBufferSSAO",
+      "autoShaderExtension": true,
+      "shadercode": "",
+      "shaderType": "fragment",
+      "uniformBlockList": [
+        {
+          "name": "LightUniformBuffer",
+          "binding": 1,
+          "isWritable": false,
+          "type": "ubo",
+          "bufferUpdateType": "cpu",
+          "values": [
+            {
+              "name": "model",
+              "type": "mat4",
+              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "view",
+              "type": "mat4",
+              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "proj",
+              "type": "mat4",
+              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "mPad3",
+              "type": "mat4",
+              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+              "input": {
+                "hide": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "gPositionTexture",
+          "viewBinding": 2,
+          "samplerBinding": 3,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 0
+        },
+        {
+          "name": "gNormalTexture",
+          "viewBinding": 4,
+          "samplerBinding": 5,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 1
+        },
+        {
+          "name": "gAlbedoTexture",
+          "viewBinding": 6,
+          "samplerBinding": 7,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 2
+        },
+        {
+          "name": "gDepthTexture",
+          "viewBinding": 8,
+          "samplerBinding": 9,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 3
+        },
+        {
+          "name": "gCustomParam0Texture",
+          "viewBinding": 10,
+          "samplerBinding": 11,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 4
+        },
+        {
+          "name": "gEmissionTexture",
+          "viewBinding": 12,
+          "samplerBinding": 13,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 5
+        }
+      ]
+    }
+  ]
+}

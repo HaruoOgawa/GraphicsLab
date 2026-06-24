@@ -27,7 +27,7 @@
           "bufferUpdateType": "cpu",
           "values": [
             {
-              "name": "mPad0",
+              "name": "model",
               "type": "mat4",
               "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
               "input": {
@@ -35,7 +35,7 @@
               }
             },
             {
-              "name": "mPad1",
+              "name": "view",
               "type": "mat4",
               "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
               "input": {
@@ -43,7 +43,7 @@
               }
             },
             {
-              "name": "mPad2",
+              "name": "proj",
               "type": "mat4",
               "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
               "input": {
@@ -229,6 +229,16 @@
           "type": "texture",
           "textureUsage": "frame",
           "frameName" : "GBufferLightPass",
+          "frameIndex" : 0
+        },
+        {
+          "name": "gSSAOBlurTexture",
+          "viewBinding": 22,
+          "samplerBinding": 23,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame",
+          "frameName" : "GBufferSSAOBlurPass",
           "frameIndex" : 0
         }
       ]
