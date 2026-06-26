@@ -24,12 +24,42 @@
     },
     "objects": [
         {
-            "name": "cornell",
-            "filename": "Resources/User/Models/cornell.glb",
+            "name": "Sponza",
+            "filename": "Resources/User/Models/Sponza/glTF/Sponza.glb",
             "defaultmaterialframes": [
                 "GBuffer_Gen"
             ],
             "renderpasslist": [
+                "ShadowPass",
+                "GBufferGenPass"
+            ],
+            "transform": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotate": [
+                    0.0,
+                    90.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "name": "cornell",
+            "filename": "Resources/User/Models/cornell.glb",
+            "enable":false,
+            "defaultmaterialframes": [
+                "GBuffer_Gen"
+            ],
+            "renderpasslist": [
+                "ShadowPass",
                 "GBufferGenPass"
             ],
             "transform": {
@@ -53,10 +83,12 @@
         {
             "name": "happy_buddha_stanford",
             "filename": "Resources/User/Models/happy_buddha_stanford.glb",
+            "enable":false,
             "defaultmaterialframes": [
                 "GBuffer_Gen"
             ],
             "renderpasslist": [
+                "ShadowPass",
                 "GBufferGenPass"
             ],
             "transform": {

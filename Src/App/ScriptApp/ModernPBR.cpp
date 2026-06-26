@@ -45,7 +45,8 @@ namespace app
 		m_ViewCamera->SetPos(glm::vec3(0.0f, 1.0f, 2.0f));
 		m_MainCamera = m_ViewCamera;
 
-		m_DrawInfo->GetLightCamera()->SetPos(glm::vec3(-2.358f, 15.6f, -0.59f));
+		m_DrawInfo->GetLightCamera()->SetPos(glm::vec3(17.891218f, 24.110640f, 0.976367));
+		m_DrawInfo->GetLightCamera()->SetCenter(glm::vec3(-2.672039f, 2.537330f, 0.606328f));
 		m_DrawInfo->GetLightProjection()->SetNear(2.0f);
 		m_DrawInfo->GetLightProjection()->SetFar(100.0f);
 
@@ -303,6 +304,14 @@ namespace app
 				if (!pGraphicsAPI->BeginRender("GBufferIndirectLightPass")) return false;
 				if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 				if (!pGraphicsAPI->EndRender()) return false;
+			}
+
+			// ToDo : デファードレンダリングにおけるSSGI・SSR
+			// 本当はフォアグラウンドレンダリングを終わったポストプロセスの段階でやるものではあるが、
+			// フォアグラウンドとの法線や深度との統合を考える必要があるので、今は仮でデファードレンダリングでのみ実行することにする
+			
+			{
+
 			}
 		}
 
