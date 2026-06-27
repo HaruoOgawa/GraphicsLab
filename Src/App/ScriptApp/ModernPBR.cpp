@@ -103,7 +103,7 @@ namespace app
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(1);
 
-			if (!pGraphicsAPI->CreateRenderPass("GBufferSSGIPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
+			if (!pGraphicsAPI->CreateRenderPass("GBufferSSGIMainPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
 		}
 
 		{
@@ -158,14 +158,42 @@ namespace app
 		m_PostProcess->SetUseBloom(false);
 		if (!m_PostProcess->Initialize(pGraphicsAPI, pLoadWorker)) return false;
 
-		m_MainFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "", pGraphicsAPI->FindOffScreenRenderPass("MainResultPass")->GetFrameTextureList());
-		if (!m_MainFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\FrameTexture_MF.json")) return false;
-		
-		m_SSAOFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "GBufferSSAOPass", "GBufferGenPass");
-		if (!m_SSAOFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\GBufferSSAO_MF.json")) return false;
-		
-		m_SSAOBlurFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "GBufferSSAOBlurPass", pGraphicsAPI->FindOffScreenRenderPass("GBufferSSAOPass")->GetFrameTextureList());
-		if (!m_SSAOBlurFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\Blur1Pass_MF.json")) return false;
+		{
+			m_MainFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "", pGraphicsAPI->FindOffScreenRenderPass("MainResultPass")->GetFrameTextureList());
+			if (!m_MainFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\FrameTexture_MF.json")) return false;
+		}
+
+		{
+			m_SSAOFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "GBufferSSAOPass", "GBufferGenPass");
+			if (!m_SSAOFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\GBufferSSAO_MF.json")) return false;
+		}
+
+		{
+			m_SSAOBlurFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "GBufferSSAOBlurPass", pGraphicsAPI->FindOffScreenRenderPass("GBufferSSAOPass")->GetFrameTextureList());
+			if (!m_SSAOBlurFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\Blur1Pass_MF.json")) return false;
+		}
+
+		{
+			std::vector<std::shared_ptr<graphics::CTexture>> TextureList;
+
+			auto GBufferGenPass = pGraphicsAPI->FindOffScreenRenderPass("GBufferGenPass");
+			if (GBufferGenPass)
+			{
+				for (const auto& Texture : GBufferGenPass->GetFrameTextureList())
+				{
+					TextureList.push_back(Texture);
+				}
+			}
+
+			auto GBufferIndirectLightPass = pGraphicsAPI->FindOffScreenRenderPass("GBufferIndirectLightPass");
+			if (GBufferIndirectLightPass)
+			{
+				TextureList.push_back(GBufferIndirectLightPass->GetFrameTexture());
+			}
+
+			m_SSGIFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "GBufferSSGIMainPass", TextureList);
+			if (!m_SSGIFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\GBufferSSGIMain_MF.json")) return false;
+		}
 		
 		// ShadowPass Texture
 		const auto& ShadowPass = pGraphicsAPI->FindOffScreenRenderPass("ShadowPass");
@@ -232,6 +260,7 @@ namespace app
 		if (!m_MainFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_SSAOFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_SSAOBlurFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
+		if (!m_SSGIFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 
 		return true;
 	}
@@ -309,9 +338,11 @@ namespace app
 			// ToDo : デファードレンダリングにおけるSSGI・SSR
 			// 本当はフォアグラウンドレンダリングを終わったポストプロセスの段階でやるものではあるが、
 			// フォアグラウンドとの法線や深度との統合を考える必要があるので、今は仮でデファードレンダリングでのみ実行することにする
-			
+			// GBufferSSGIMainPass
 			{
-
+				if (!pGraphicsAPI->BeginRender("GBufferSSGIMainPass")) return false;
+				if (!m_SSGIFrameRenderer->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+				if (!pGraphicsAPI->EndRender()) return false;
 			}
 		}
 
@@ -374,6 +405,9 @@ namespace app
 
 			if (!pGraphicsAPI->EndRender(DrawGUIEngine)) return false;
 		}
+
+		// フレームカウントを増やす
+		m_DrawInfo->DoNextFrame();
 
 		return true;
 	}

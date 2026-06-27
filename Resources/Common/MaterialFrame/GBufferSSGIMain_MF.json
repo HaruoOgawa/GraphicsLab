@@ -1,5 +1,5 @@
 {
-  "name": "GBufferSSAO",
+  "name": "GBufferSSGIMain",
   "outputcolorcount": 1,
   "zwrite" : false,
   "depthfunc" : "always",
@@ -13,8 +13,8 @@
       "uniformBlockList": []
     },
     {
-      "name": "GBufferSSAO_frag",
-      "shaderFile": "Resources\\Common\\Shaders\\GBufferSSAO",
+      "name": "GBufferSSGIMain_frag",
+      "shaderFile": "Resources\\Common\\Shaders\\GBufferSSGIMain",
       "autoShaderExtension": true,
       "shadercode": "",
       "shaderType": "fragment",
@@ -57,6 +57,38 @@
               "input": {
                 "hide": true
               }
+            },
+            {
+              "name": "frame",
+              "type": "int",
+              "initValue": [ 0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "iPad0",
+              "type": "int",
+              "initValue": [ 0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "iPad1",
+              "type": "int",
+              "initValue": [ 0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "iPad2",
+              "type": "int",
+              "initValue": [ 0 ],
+              "input": {
+                "hide": true
+              }
             }
           ]
         },
@@ -66,9 +98,7 @@
           "samplerBinding": 3,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame",
-          "frameName" : "GBufferGenPass",
-          "frameIndex" : 0
+          "textureUsage": "2d"
         },
         {
           "name": "gNormalTexture",
@@ -76,9 +106,7 @@
           "samplerBinding": 5,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame",
-          "frameName" : "GBufferGenPass",
-          "frameIndex" : 1
+          "textureUsage": "2d"
         },
         {
           "name": "gAlbedoTexture",
@@ -86,9 +114,7 @@
           "samplerBinding": 7,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame",
-          "frameName" : "GBufferGenPass",
-          "frameIndex" : 2
+          "textureUsage": "2d"
         },
         {
           "name": "gDepthTexture",
@@ -96,9 +122,7 @@
           "samplerBinding": 9,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame",
-          "frameName" : "GBufferGenPass",
-          "frameIndex" : 3
+          "textureUsage": "2d"
         },
         {
           "name": "gCustomParam0Texture",
@@ -106,9 +130,7 @@
           "samplerBinding": 11,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame",
-          "frameName" : "GBufferGenPass",
-          "frameIndex" : 4
+          "textureUsage": "2d"
         },
         {
           "name": "gEmissionTexture",
@@ -116,9 +138,15 @@
           "samplerBinding": 13,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame",
-          "frameName" : "GBufferGenPass",
-          "frameIndex" : 5
+          "textureUsage": "2d"
+        },
+        {
+          "name": "gIndirectLightTexture",
+          "viewBinding": 14,
+          "samplerBinding": 15,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "2d"
         }
       ]
     }
