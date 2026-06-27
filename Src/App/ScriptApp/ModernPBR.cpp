@@ -3,6 +3,7 @@
 #include <Graphics/CDrawInfo.h>
 #include <Graphics/CFrameRenderer.h>
 #include <Graphics/PostProcess/CPostProcess.h>
+#include <Graphics/PostProcess/CPostProcessSSGI.h>
 
 #include <Camera/CCamera.h>
 #include <Camera/CTraceCamera.h>
@@ -39,7 +40,8 @@ namespace app
 #endif // USE_GUIENGINE
 		m_FileModifier(std::make_shared<CFileModifier>()),
 		m_TimelineController(std::make_shared<timeline::CTimelineController>()),
-		m_PostProcess(std::make_shared<graphics::CPostProcess>("MainResultPass"))
+		m_PostProcess(std::make_shared<graphics::CPostProcess>("MainResultPass")),
+		m_PostProcessSSGIFilter(std::make_shared<graphics::CPostProcessSSGI>("GBufferIndirectLightPass"))
 	{
 		m_ViewCamera->SetCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 		m_ViewCamera->SetPos(glm::vec3(0.0f, 1.0f, 2.0f));
@@ -103,20 +105,14 @@ namespace app
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(1);
 
-			if (!pGraphicsAPI->CreateRenderPass("GBufferSSGIMainPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
-		}
-
-		{
-			graphics::SRenderPassState State = graphics::SRenderPassState(1);
-
 			if (!pGraphicsAPI->CreateRenderPass("GBufferSSRPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
 		}
-		
+
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(1);
 			State.Stencil = true;
 
-			// GBufferパスの深度をフォアグラウンドパスにコピーするので深度は初期化しない
+			// GBufferパスの深度をコピーするので深度は初期化しない
 			State.ClearDepth = false;
 			State.ClearStencil = false;
 
@@ -125,9 +121,15 @@ namespace app
 
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(1);
+
+			if (!pGraphicsAPI->CreateRenderPass("GBufferResultPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
+		}
+
+		{
+			graphics::SRenderPassState State = graphics::SRenderPassState(1);
 			State.Stencil = true;
 
-			// GBufferパスの深度をフォアグラウンドパスにコピーするので深度は初期化しない
+			// GBufferパスの深度をコピーするので深度は初期化しない
 			State.ClearColor = false;
 			State.ClearDepth = false;
 			State.ClearStencil = false;
@@ -158,6 +160,8 @@ namespace app
 		m_PostProcess->SetUseBloom(false);
 		if (!m_PostProcess->Initialize(pGraphicsAPI, pLoadWorker)) return false;
 
+		if (!m_PostProcessSSGIFilter->Initialize(pGraphicsAPI, pLoadWorker)) return false;
+
 		{
 			m_MainFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "", pGraphicsAPI->FindOffScreenRenderPass("MainResultPass")->GetFrameTextureList());
 			if (!m_MainFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\FrameTexture_MF.json")) return false;
@@ -173,28 +177,6 @@ namespace app
 			if (!m_SSAOBlurFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\Blur1Pass_MF.json")) return false;
 		}
 
-		{
-			std::vector<std::shared_ptr<graphics::CTexture>> TextureList;
-
-			auto GBufferGenPass = pGraphicsAPI->FindOffScreenRenderPass("GBufferGenPass");
-			if (GBufferGenPass)
-			{
-				for (const auto& Texture : GBufferGenPass->GetFrameTextureList())
-				{
-					TextureList.push_back(Texture);
-				}
-			}
-
-			auto GBufferIndirectLightPass = pGraphicsAPI->FindOffScreenRenderPass("GBufferIndirectLightPass");
-			if (GBufferIndirectLightPass)
-			{
-				TextureList.push_back(GBufferIndirectLightPass->GetFrameTexture());
-			}
-
-			m_SSGIFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "GBufferSSGIMainPass", TextureList);
-			if (!m_SSGIFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\GBufferSSGIMain_MF.json")) return false;
-		}
-		
 		// ShadowPass Texture
 		const auto& ShadowPass = pGraphicsAPI->FindOffScreenRenderPass("ShadowPass");
 		if (ShadowPass)
@@ -257,11 +239,11 @@ namespace app
 		}
 
 		if (!m_PostProcess->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
+		if (!m_PostProcessSSGIFilter->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_MainFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_SSAOFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_SSAOBlurFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
-		if (!m_SSGIFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
-
+		
 		return true;
 	}
 
@@ -333,17 +315,15 @@ namespace app
 				if (!pGraphicsAPI->BeginRender("GBufferIndirectLightPass")) return false;
 				if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 				if (!pGraphicsAPI->EndRender()) return false;
+
+				// 描画結果をGBufferの最終結果にコピー
+				//if (!pGraphicsAPI->CopyRenderPass("GBufferIndirectLightPass", "GBufferResultPass", true, true)) return false;
 			}
 
 			// ToDo : デファードレンダリングにおけるSSGI・SSR
 			// 本当はフォアグラウンドレンダリングを終わったポストプロセスの段階でやるものではあるが、
 			// フォアグラウンドとの法線や深度との統合を考える必要があるので、今は仮でデファードレンダリングでのみ実行することにする
-			// GBufferSSGIMainPass
-			{
-				if (!pGraphicsAPI->BeginRender("GBufferSSGIMainPass")) return false;
-				if (!m_SSGIFrameRenderer->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
-				if (!pGraphicsAPI->EndRender()) return false;
-			}
+			if (!m_PostProcessSSGIFilter->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 		}
 
 		// フォアグラウンドレンダリング
@@ -352,6 +332,7 @@ namespace app
 			{
 				// フォアグラウンドパス(MainGeometryPass)にGBufferのカラー・深度をコピーする
 				if (!pGraphicsAPI->CopyRenderPass("GBufferIndirectLightPass", "MainGeometryPass", true, true)) return false;
+				//if (!pGraphicsAPI->CopyRenderPass("GBufferResultPass", "MainGeometryPass", true, true)) return false;
 
 				if (!pGraphicsAPI->BeginRender("MainGeometryPass")) return false;
 				if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
@@ -370,7 +351,7 @@ namespace app
 
 		// ポストプロセス
 		if (!m_PostProcess->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
-
+		
 		// Main FrameBuffer
 		{
 			if (!pGraphicsAPI->BeginRender()) return false;

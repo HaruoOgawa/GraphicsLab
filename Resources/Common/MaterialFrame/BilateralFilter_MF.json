@@ -1,0 +1,128 @@
+{
+  "name": "bilateralblur",
+  "outputcolorcount": 1,
+  "shaderList": [
+    {
+      "name": "renderboard_vert",
+      "shaderFile": "Resources\\Common\\Shaders\\renderboard",
+      "autoShaderExtension": true,
+      "shadercode": "",
+      "shaderType": "vertex",
+      "uniformBlockList": []
+    },
+    {
+      "name": "bilateralblur_frag",
+      "shaderFile": "Resources\\Common\\Shaders\\bilateralblur",
+      "autoShaderExtension": true,
+      "shadercode": "",
+      "shaderType": "fragment",
+      "uniformBlockList": [
+        {
+          "name": "FragUniformBuffer",
+          "binding": 2,
+          "isWritable": false,
+          "type": "ubo",
+          "bufferUpdateType": "cpu",
+          "values": [
+            {
+              "name": "mPad0",
+              "type": "mat4",
+              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "mPad1",
+              "type": "mat4",
+              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "mPad2",
+              "type": "mat4",
+              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "mPad3",
+              "type": "mat4",
+              "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "g_InvResolutionDirection",
+              "type": "vec2",
+              "initValue": [ 0.0, 0.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "v2Pad",
+              "type": "vec2",
+              "initValue": [ 0.0, 0.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "g_Sharpness",
+              "type": "float",
+              "initValue": [ 1.5 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "near",
+              "type": "float",
+              "initValue": [ 0.1 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "far",
+              "type": "float",
+              "initValue": [ 1000.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "fPad2",
+              "type": "float",
+              "initValue": [ 0.0 ],
+              "input": {
+                "hide": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "texSource",
+          "viewBinding": 3,
+          "samplerBinding": 4,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "2d"
+        },
+        {
+          "name": "texDepth",
+          "viewBinding": 5,
+          "samplerBinding": 6,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "2d"
+        }
+      ]
+    }
+  ]
+}
