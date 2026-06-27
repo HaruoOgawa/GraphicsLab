@@ -72,6 +72,17 @@ float rand(vec2 st)
     return fract(sin(dot(st ,vec2(12.9898,78.233))) * 43758.5453);
 }
 
+vec2 GetTextureSize()
+{
+    #ifdef USE_OPENGL
+	vec2 texSize = textureSize(gPositionTexture, 0);
+	#else
+	vec2 texSize = textureSize(sampler2D(gPositionTexture, gPositionTextureSampler), 0);
+	#endif
+
+    return texSize;
+}
+
 vec3 GetWorldPos(vec2 ScreenUV)
 {
 #ifdef USE_OPENGL
@@ -167,12 +178,15 @@ GBufferResult GetGBuffer(vec2 ScreenUV)
     return gResult;
 }
 
+// Interleaved Gradient Noise
 // IGN : https://blog.demofox.org/2022/01/01/interleaved-gradient-noise-a-different-kind-of-low-discrepancy-sequence/
-float IGN(vec2 seed, float frame)
+// IGNはピクセル座標を受け取る前提。0 ~ 1のUV座標ではなく0 ~ 1920のようなピクセル座標
+float IGN(vec2 pixel, int frame)
 {
-    frame = mod(frame, 64.0);
-    float x = seed.x + 5.588238 * frame;
-    float y = seed.y + 5.588238 * frame;
+    int newFrame = frame % 64;
+
+    float x = pixel.x + 5.588238 * float(newFrame);
+    float y = pixel.y + 5.588238 * float(newFrame);
 
     return mod(52.9829189 * mod(0.06711056 * x + 0.00583715 * y, 1.0), 1.0);
 }
@@ -202,20 +216,21 @@ vec3 GetCosGemisphereSample(float rand1, float rand2, vec3 normal)
 
     return tangent * (r * cos(phi)) +
            bioTangent * (r * sin(phi)) +
-           normal * sqrt(max(0.0, 1.0 - r * r));
+           normal * sqrt(max(0.0, 1.0 - randVal.x));
 }
 
-vec3 GetRandomVector(vec2 ScreenUV, vec3 worldNormal)
+vec3 GetRandomVector(vec2 ScreenUV, vec3 worldNormal, vec2 texSize)
 {
-    vec2 st = ScreenUV;
+    vec2 pixel = ScreenUV * texSize;
 
-    float noise = IGN(st, float(l_ubo.frame));
+    float noise1 = IGN(pixel, l_ubo.frame);
+    float noise2 = IGN(pixel + vec2(0.5), l_ubo.frame);
 
-    vec3 randNormal = GetCosGemisphereSample(noise, noise, worldNormal);
+    vec3 randNormal = GetCosGemisphereSample(noise1, noise2, worldNormal);
     return normalize(randNormal);
 }
 
-vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos)
+vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos, vec2 texSize)
 {
     mat4 VMat = l_ubo.view;
     mat4 PMat = l_ubo.proj;
@@ -227,13 +242,23 @@ vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos)
     vec3 ro = viewPos.xyz;
     vec3 rd = normalize(viewDir.xyz);
     
-    float step = 0.1;
+    float stepCount = 32.0;
+
+    float stepSize = 1.0 / stepCount;
     float stepSum = 0.0;
+
+    // ステップサイズをノイズでずらす
+    // ステップサイズが一定だとカメラから遠い場所で縞模様が発生するのでその対策
+    vec2 pixel = ScreenUV * texSize;
+    float jitter = IGN(pixel + vec2(0.125, 9.651), l_ubo.frame + 5);
+
+    // 初期位置を0 ~ 1ステップ分ずらす
+    stepSum = stepSize * jitter;
 
     vec2 resultUV = vec2(0.0);
     float collided = 0.0;
 
-    for(int i = 0; i < 32; i++)
+    for(float i = 0.0; i < stepCount; i++)
     {
         vec3 p = ro + rd * stepSum;
 
@@ -252,7 +277,7 @@ vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos)
             break;
         }
 
-        stepSum += step;
+        stepSum += stepSize;
     }
 
     return vec3(resultUV, collided);
@@ -262,12 +287,13 @@ vec3 ComputeSSGI(GBufferResult gResult, vec2 ScreenUV)
 {
     vec3 worldPos = gResult.worldPos;
     vec3 worldNormal = gResult.worldNormal;
+    vec2 texSize = GetTextureSize();
 
     // コサイン加重ランダムベクトルの計算
-    vec3 randVec = GetRandomVector(ScreenUV, worldNormal);
+    vec3 randVec = GetRandomVector(ScreenUV, worldNormal, texSize);
 
     // ランダムベクトルをもとにレイマーチ( vec3(ScreenUV, collided) )
-    vec3 rayResult = Raymarch(ScreenUV, randVec, worldPos);
+    vec3 rayResult = Raymarch(ScreenUV, randVec, worldPos, texSize);
 
     // 衝突していればそのピクセルにおける光をDiffuseLightとして返す
     vec3 resultSSGI = vec3(0.0);
@@ -290,6 +316,7 @@ void main()
     // Get Param
     GBufferResult gResult = GetGBuffer(ScreenUV);
 	
+
     vec3 col = vec3(0.0);
 
     if(gResult.materialType == 1.0)
@@ -297,6 +324,10 @@ void main()
         // SSGI
         col.rgb = ComputeSSGI(gResult, ScreenUV);
     }
+
+    // vec2 texSize = GetTextureSize();
+    // vec2 pixel = ScreenUV * texSize;
+    // col = vec3(IGN(pixel, l_ubo.frame));
     
     outColor = vec4(col, 1.0);
 }

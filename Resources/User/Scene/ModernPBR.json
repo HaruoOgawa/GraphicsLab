@@ -83,7 +83,7 @@
         {
             "name": "happy_buddha_stanford",
             "filename": "Resources/User/Models/happy_buddha_stanford.glb",
-            "enable":false,
+            "enable":true,
             "defaultmaterialframes": [
                 "GBuffer_Gen"
             ],
@@ -93,7 +93,7 @@
             ],
             "transform": {
                 "pos": [
-                    -0.70,
+                    -1.70,
                     0.475,
                     0.5
                 ],
