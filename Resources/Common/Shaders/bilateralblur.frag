@@ -1,3 +1,5 @@
+#version 450
+
 /*
  * Copyright (c) 2014-2021, NVIDIA CORPORATION.  All rights reserved.
  *
@@ -17,18 +19,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#version 450
 
 layout(location = 0) in vec2 v2f_UV;
 layout(location = 1) in vec4 v2f_ProjPos;
 layout(location = 2) in vec4 v2f_WorldPos;
-
-#ifdef USE_OPENGL
-layout(binding = 0) uniform sampler2D texImage;
-#else
-layout(binding = 0) uniform texture2D texImage;
-layout(binding = 1) uniform sampler texSampler;
-#endif
 
 const float KERNEL_RADIUS = 3;
   
@@ -60,17 +54,17 @@ layout(binding = 6) uniform sampler texDepthSampler;
 
 layout(location = 0) out vec4 outColor;
 
-vec3 GetTexSource(vec2 uv)
+vec4 GetTexSource(vec2 uv)
 {
 	vec4 col = vec4(0.0);
 
 	#ifdef USE_OPENGL
-	col.rgb = texture(texSource, uv).rgb;
+	col = texture(texSource, uv);
 	#else
-	col.rgb = texture(sampler2D(texSource, texSourceSampler), uv).rgb;
+	col = texture(sampler2D(texSource, texSourceSampler), uv);
 	#endif
 
-	return col.rgb;
+	return col;
 }
 
 float GetTexLinearDepth(vec2 uv)
@@ -81,9 +75,20 @@ float GetTexLinearDepth(vec2 uv)
 	float depth = texture(sampler2D(texDepth, texDepthSampler), uv).r;
 	#endif
 
-    // LinearDepth(つまりNDC)に戻す
-    float z = depth * 2.0 - 1.0;
-    return (2.0 * near * far) / (far + near - z * (far - near));
+  // NDCのデプスだと差が小さすぎるのでカメラからの実際の距離に戻す
+  float z = depth * 2.0 - 1.0;
+  return (2.0 * frag_ubo.near * frag_ubo.far) / (frag_ubo.far + frag_ubo.near - z * (frag_ubo.far - frag_ubo.near));
+}
+
+vec2 GetTextureSize()
+{
+  #ifdef USE_OPENGL
+  vec2 texSize = textureSize(texSource, 0);
+  #else
+  vec2 texSize = textureSize(sampler2D(texSource, texSourceSampler), 0);
+  #endif
+
+  return texSize;
 }
 
 //-------------------------------------------------------------------------
@@ -111,18 +116,23 @@ void main()
   
   vec4  c_total = center_c;
   float w_total = 1.0;
+
+  vec2 texSize = GetTextureSize();
+  vec2 dir = frag_ubo.g_InvResolutionDirection;
+  dir.x = dir.x / texSize.x;
+  dir.y = dir.y / texSize.y;
   
   for (float r = 1; r <= KERNEL_RADIUS; ++r)
   {
-    vec2 uv = v2f_UV + frag_ubo.g_InvResolutionDirection * r;
+    vec2 uv = v2f_UV + dir * r;
     c_total += BlurFunction(uv, r, center_c, center_d, w_total);  
   }
   
   for (float r = 1; r <= KERNEL_RADIUS; ++r)
   {
-    vec2 uv = v2f_UV - g_InvResolutionDirection * r;
+    vec2 uv = v2f_UV - dir * r;
     c_total += BlurFunction(uv, r, center_c, center_d, w_total);  
   }
 
-  out_Color = c_total/w_total;
+  outColor = c_total/w_total;
 }

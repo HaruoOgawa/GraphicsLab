@@ -267,10 +267,16 @@ vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos, vec2 texSize)
         vec2 currentUV = (projPos.xy / projPos.w) * 0.5 + 0.5;
         float currentDepth = (projPos.z / projPos.w) * 0.5 + 0.5;
 
-        float realDepth = GetDepth(currentUV);    
+        float realDepth = GetDepth(currentUV);
+
+        // ノイズ対策で範囲外なら抜ける
+        if(currentUV.x < 0.0 || currentUV.x > 1.0 || currentUV.y < 0.0 || currentUV.y > 1.0)
+        {
+            break;
+        }
 
         // 実際の深度の方が小さい場合は衝突したとして判定する
-        if(realDepth < currentDepth)
+        if(realDepth < currentDepth && realDepth < 0.999)
         {
             resultUV = currentUV;
             collided = 1.0;
