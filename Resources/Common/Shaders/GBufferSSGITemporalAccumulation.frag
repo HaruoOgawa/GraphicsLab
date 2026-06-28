@@ -57,7 +57,7 @@ void main()
   vec4 newSSGI = GetNewSSGI(v2f_UV);
   vec4 ta = GetTemporalTexture(v2f_UV);
 
-  vec3 col = mix(newSSGI.rgb, ta.rgb, 0.9);
+  vec4 col = mix(newSSGI, ta, 0.9);
 
-  outColor = vec4(col, 1.0);
+  outColor = col;
 }

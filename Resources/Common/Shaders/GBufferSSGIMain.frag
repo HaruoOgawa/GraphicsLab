@@ -5,6 +5,7 @@ layout(location = 1) in vec4 v2f_ProjPos;
 layout(location = 2) in vec4 v2f_WorldPos;
 
 layout(location = 0) out vec4 outColor;
+layout(location = 1) out vec4 outBackupMain;
 
 layout(binding = 1) uniform LightUniformBuffer{
 	mat4 model;
@@ -292,7 +293,7 @@ vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos, vec2 texSize)
     return vec3(resultUV, collided);
 }
 
-vec3 ComputeSSGI(GBufferResult gResult, vec2 ScreenUV)
+vec4 ComputeSSGI(GBufferResult gResult, vec2 ScreenUV)
 {
     vec3 worldPos = gResult.worldPos;
     vec3 worldNormal = gResult.worldNormal;
@@ -312,7 +313,7 @@ vec3 ComputeSSGI(GBufferResult gResult, vec2 ScreenUV)
         resultSSGI = GetIndirectLight(rayResult.xy);
     }
 
-    return resultSSGI;
+    return vec4(resultSSGI, rayResult.z);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -324,14 +325,13 @@ void main()
 
     // Get Param
     GBufferResult gResult = GetGBuffer(ScreenUV);
-	
 
-    vec3 col = vec3(0.0);
+    vec4 col = vec4(0.0);
 
     if(gResult.materialType == 1.0)
     {
         // SSGI
-        col.rgb = ComputeSSGI(gResult, ScreenUV);
+        col = ComputeSSGI(gResult, ScreenUV);
     }
 
     // vec2 texSize = GetTextureSize();
@@ -339,10 +339,11 @@ void main()
     // col = vec3(IGN(pixel, l_ubo.frame));
 
     // NaNガード
-    if(isnan(col.r) || isnan(col.g) || isnan(col.b))
+    if(isnan(col.r) || isnan(col.g) || isnan(col.b) || isnan(col.a))
     {
-        col = vec3(0.0);
+        col = vec4(0.0);
     }
     
-    outColor = vec4(col, 1.0);
+    outColor = col;
+    outBackupMain = vec4(GetIndirectLight(ScreenUV), 1.0);
 }

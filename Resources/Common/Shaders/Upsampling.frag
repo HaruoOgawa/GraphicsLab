@@ -26,17 +26,17 @@ layout(binding = 2) uniform FragUniformBuffer
 
 layout(location = 0) out vec4 outColor;
 
-vec3 GetTexColor(vec2 texcoord)
+vec4 GetTexColor(vec2 texcoord)
 {
 	vec4 col = vec4(0.0);
 
 	#ifdef USE_OPENGL
-	col.rgb = texture(texImage, texcoord).rgb;
+	col = texture(texImage, texcoord);
 	#else
-	col.rgb = texture(sampler2D(texImage, texSampler), texcoord).rgb;
+	col = texture(sampler2D(texImage, texSampler), texcoord);
 	#endif
 
-	return col.rgb;
+	return col;
 }
 
 void main()
@@ -44,24 +44,24 @@ void main()
     float x = frag_ubo.filterRadius;
     float y = frag_ubo.filterRadius;
 
-    vec3 a = GetTexColor(vec2(v2f_UV.x - x, v2f_UV.y + y)).rgb;
-    vec3 b = GetTexColor(vec2(v2f_UV.x,     v2f_UV.y + y)).rgb;
-    vec3 c = GetTexColor(vec2(v2f_UV.x + x, v2f_UV.y + y)).rgb;
+    vec4 a = GetTexColor(vec2(v2f_UV.x - x, v2f_UV.y + y));
+    vec4 b = GetTexColor(vec2(v2f_UV.x,     v2f_UV.y + y));
+    vec4 c = GetTexColor(vec2(v2f_UV.x + x, v2f_UV.y + y));
 
-    vec3 d = GetTexColor(vec2(v2f_UV.x - x, v2f_UV.y)).rgb;
-    vec3 e = GetTexColor(vec2(v2f_UV.x,     v2f_UV.y)).rgb;
-    vec3 f = GetTexColor(vec2(v2f_UV.x + x, v2f_UV.y)).rgb;
+    vec4 d = GetTexColor(vec2(v2f_UV.x - x, v2f_UV.y));
+    vec4 e = GetTexColor(vec2(v2f_UV.x,     v2f_UV.y));
+    vec4 f = GetTexColor(vec2(v2f_UV.x + x, v2f_UV.y));
 
-    vec3 g = GetTexColor(vec2(v2f_UV.x - x, v2f_UV.y - y)).rgb;
-    vec3 h = GetTexColor(vec2(v2f_UV.x,     v2f_UV.y - y)).rgb;
-    vec3 i = GetTexColor(vec2(v2f_UV.x + x, v2f_UV.y - y)).rgb;
+    vec4 g = GetTexColor(vec2(v2f_UV.x - x, v2f_UV.y - y));
+    vec4 h = GetTexColor(vec2(v2f_UV.x,     v2f_UV.y - y));
+    vec4 i = GetTexColor(vec2(v2f_UV.x + x, v2f_UV.y - y));
 
     // 3x3 tent filter
-	vec3 upsample = vec3(0.0);
+	vec4 upsample = vec4(0.0);
     upsample = e*4.0;
     upsample += (b+d+f+h)*2.0;
     upsample += (a+c+g+i);
     upsample *= 1.0 / 16.0;
 
-	outColor = vec4(upsample, 1.0);
+	outColor = upsample;
 }

@@ -41,7 +41,7 @@ namespace app
 		m_FileModifier(std::make_shared<CFileModifier>()),
 		m_TimelineController(std::make_shared<timeline::CTimelineController>()),
 		m_PostProcess(std::make_shared<graphics::CPostProcess>("MainResultPass")),
-		m_PostProcessSSGIFilter(std::make_shared<graphics::CPostProcessSSGI>("GBufferIndirectLightPass"))
+		m_PostProcessSSGIFilter(std::make_shared<graphics::CPostProcessSSGI>("GBufferResultPass"))
 	{
 		m_ViewCamera->SetCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 		m_ViewCamera->SetPos(glm::vec3(0.0f, 1.0f, 2.0f));
@@ -104,12 +104,6 @@ namespace app
 
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(1);
-
-			if (!pGraphicsAPI->CreateRenderPass("GBufferSSRPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
-		}
-
-		{
-			graphics::SRenderPassState State = graphics::SRenderPassState(1);
 			State.Stencil = true;
 
 			// GBufferパスの深度をコピーするので深度は初期化しない
@@ -121,6 +115,7 @@ namespace app
 
 		{
 			graphics::SRenderPassState State = graphics::SRenderPassState(1);
+			State.Stencil = true;
 
 			if (!pGraphicsAPI->CreateRenderPass("GBufferResultPass", api::ERenderPassFormat::COLOR_FLOAT_RENDERPASS, -1, -1, State)) return false;
 		}
@@ -156,7 +151,7 @@ namespace app
 		}
 
 		// ポストプロセス
-		m_PostProcess->SetUseFXAA(true);
+		m_PostProcess->SetUseFXAA(false);
 		m_PostProcess->SetUseBloom(false);
 		if (!m_PostProcess->Initialize(pGraphicsAPI, pLoadWorker)) return false;
 
@@ -317,7 +312,7 @@ namespace app
 				if (!pGraphicsAPI->EndRender()) return false;
 
 				// 描画結果をGBufferの最終結果にコピー
-				//if (!pGraphicsAPI->CopyRenderPass("GBufferIndirectLightPass", "GBufferResultPass", true, true)) return false;
+				if (!pGraphicsAPI->CopyRenderPass("GBufferIndirectLightPass", "GBufferResultPass", true, true)) return false;
 			}
 
 			// ToDo : デファードレンダリングにおけるSSGI・SSR
@@ -331,8 +326,7 @@ namespace app
 			// MainGeometryPass
 			{
 				// フォアグラウンドパス(MainGeometryPass)にGBufferのカラー・深度をコピーする
-				if (!pGraphicsAPI->CopyRenderPass("GBufferIndirectLightPass", "MainGeometryPass", true, true)) return false;
-				//if (!pGraphicsAPI->CopyRenderPass("GBufferResultPass", "MainGeometryPass", true, true)) return false;
+				if (!pGraphicsAPI->CopyRenderPass("GBufferResultPass", "MainGeometryPass", true, true)) return false;
 
 				if (!pGraphicsAPI->BeginRender("MainGeometryPass")) return false;
 				if (!m_SceneController->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
