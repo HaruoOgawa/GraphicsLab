@@ -250,13 +250,15 @@ vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos, vec2 texSize)
     // ステップサイズをノイズでずらす
     // ステップサイズが一定だとカメラから遠い場所で縞模様が発生するのでその対策
     vec2 pixel = ScreenUV * texSize;
-    float jitter = IGN(pixel + vec2(0.125, 9.651), l_ubo.frame + 5);
+    float jitter = IGN(pixel + vec2(0.125, 9.651), l_ubo.frame);
 
     // 初期位置を0 ~ 1ステップ分ずらす
     stepSum = stepSize * jitter;
 
     vec2 resultUV = vec2(0.0);
     float collided = 0.0;
+
+    float tickness = 0.1;
 
     for(float i = 0.0; i < stepCount; i++)
     {
@@ -276,7 +278,8 @@ vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos, vec2 texSize)
         }
 
         // 実際の深度の方が小さい場合は衝突したとして判定する
-        if(realDepth < currentDepth && realDepth < 0.999)
+        float diff = (currentDepth - realDepth); // 厚み判定. 突き抜けすぎを抑制
+        if(diff > 0.0 && diff < tickness && realDepth < 0.999)
         {
             resultUV = currentUV;
             collided = 1.0;
@@ -334,6 +337,12 @@ void main()
     // vec2 texSize = GetTextureSize();
     // vec2 pixel = ScreenUV * texSize;
     // col = vec3(IGN(pixel, l_ubo.frame));
+
+    // NaNガード
+    if(isnan(col.r) || isnan(col.g) || isnan(col.b))
+    {
+        col = vec3(0.0);
+    }
     
     outColor = vec4(col, 1.0);
 }
