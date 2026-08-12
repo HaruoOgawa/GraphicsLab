@@ -201,6 +201,17 @@ vec4 MixSSGI(GBufferResult gResult, vec2 ScreenUV)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// HDR Tone Mapping
+// ACES近似式（Narkowicz氏による軽量版）
+vec3 tonemapACES(vec3 color) {
+    float a = 2.51;
+    float b = 0.03;
+    float c = 2.43;
+    float d = 0.59;
+    float e = 0.14;
+    return clamp((color * (a * color + b)) / (color * (c * color + d) + e), 0.0, 1.0);
+}
+
 void main()
 {
     vec2 ScreenUV = v2f_ProjPos.xy / v2f_ProjPos.w;
@@ -215,10 +226,10 @@ void main()
     if(gResult.materialType == 1.0)
     {
         // SSGIをMix
-        vec4 ssgi = MixSSGI(gResult, ScreenUV);
-        float mask = ssgi.a;
+        col.rgb += MixSSGI(gResult, ScreenUV).rgb;
 
-        col.rgb = mix(col.rgb, ssgi.rgb, mask);
+        // HDR ToneMapping
+        col.rgb = tonemapACES(col.rgb);
     }
     
     outColor = vec4(col, 1.0);

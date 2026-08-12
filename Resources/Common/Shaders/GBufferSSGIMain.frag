@@ -17,6 +17,11 @@ layout(binding = 1) uniform LightUniformBuffer{
     int iPad0;
     int iPad1;
     int iPad2;
+
+    float maxDistance;
+    float fPad0;
+    float fPad1;
+    float fPad2;
 } l_ubo;
 
 #ifdef USE_OPENGL
@@ -27,6 +32,9 @@ layout(binding = 8) uniform sampler2D gDepthTexture;
 layout(binding = 10) uniform sampler2D gCustomParam0Texture;
 layout(binding = 12) uniform sampler2D gEmissionTexture;
 layout(binding = 14) uniform sampler2D gIndirectLightTexture;
+layout(binding = 16) uniform sampler2D blueNoiseTexture;
+layout(binding = 18) uniform sampler2D historyTexture;
+
 #else
 layout(binding = 2) uniform texture2D gPositionTexture;
 layout(binding = 3) uniform sampler gPositionTextureSampler;
@@ -42,6 +50,10 @@ layout(binding = 12) uniform texture2D gEmissionTexture;
 layout(binding = 13) uniform sampler gEmissionTextureSampler;
 layout(binding = 14) uniform texture2D gIndirectLightTexture;
 layout(binding = 15) uniform sampler gIndirectLightTextureSampler;
+layout(binding = 16) uniform texture2D blueNoiseTexture;
+layout(binding = 17) uniform sampler blueNoiseTextureSampler;
+layout(binding = 18) uniform texture2D historyTexture;
+layout(binding = 19) uniform sampler historyTextureSampler;
 #endif
 
 #define PI 3.14159265
@@ -161,6 +173,28 @@ vec3 GetIndirectLight(vec2 ScreenUV)
     return IndirectLight;
 }
 
+vec3 SampleBlueNoise(vec2 ScreenUV)
+{
+#ifdef USE_OPENGL
+    vec3 blueNoise = texture(blueNoiseTexture, ScreenUV).rgb;
+#else
+    vec3 blueNoise = texture(sampler2D(blueNoiseTexture, blueNoiseTextureSampler), ScreenUV).rgb;
+#endif
+
+    return blueNoise;
+}
+
+vec3 GetHistory(vec2 ScreenUV)
+{
+#ifdef USE_OPENGL
+    vec3 History = texture(historyTexture, ScreenUV).rgb;
+#else
+    vec3 History = texture(sampler2D(historyTexture, historyTextureSampler), ScreenUV).rgb;
+#endif
+
+    return History;
+}
+
 GBufferResult GetGBuffer(vec2 ScreenUV)
 {
     GBufferResult gResult;
@@ -225,7 +259,7 @@ vec3 GetRandomVector(vec2 ScreenUV, vec3 worldNormal, vec2 texSize)
     vec2 pixel = ScreenUV * texSize;
 
     float noise1 = IGN(pixel, l_ubo.frame);
-    float noise2 = IGN(pixel + vec2(0.5), l_ubo.frame);
+    float noise2 = IGN(pixel + vec2(197.0, 331.0), l_ubo.frame - 1);
 
     vec3 randNormal = GetCosGemisphereSample(noise1, noise2, worldNormal);
     return normalize(randNormal);
@@ -245,13 +279,14 @@ vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos, vec2 texSize)
     
     float stepCount = 32.0;
 
-    float stepSize = 1.0 / stepCount;
+    float stepSize = l_ubo.maxDistance * 1.0 / stepCount;
     float stepSum = 0.0;
 
     // ステップサイズをノイズでずらす
     // ステップサイズが一定だとカメラから遠い場所で縞模様が発生するのでその対策
     vec2 pixel = ScreenUV * texSize;
     float jitter = IGN(pixel + vec2(0.125, 9.651), l_ubo.frame);
+    //float jitter = SampleBlueNoise(ScreenUV).r;
 
     // 初期位置を0 ~ 1ステップ分ずらす
     stepSum = stepSize * jitter;
@@ -287,6 +322,8 @@ vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos, vec2 texSize)
             break;
         }
 
+        // float jitter = SampleBlueNoise(ScreenUV + vec2(i, float(l_ubo.frame))).r;
+        // stepSum += stepSize + stepSize * jitter * 0.5;
         stepSum += stepSize;
     }
 
@@ -310,9 +347,11 @@ vec4 ComputeSSGI(GBufferResult gResult, vec2 ScreenUV)
 
     if(rayResult.z == 1.0)
     {
-        resultSSGI = GetIndirectLight(rayResult.xy);
+        // フレームの最終描画結果からカラーを参照する
+        resultSSGI = GetHistory(rayResult.xy);
     }
 
+    // return vec4(resultSSGI, 1.0);
     return vec4(resultSSGI, rayResult.z);
 }
 
@@ -344,6 +383,8 @@ void main()
         col = vec4(0.0);
     }
     
+    //col = vec4(vec3(sin(float(l_ubo.frame) * 0.00001) * 0.5 + 0.5), 1.0);
+
     outColor = col;
     outBackupMain = vec4(GetIndirectLight(ScreenUV), 1.0);
 }
