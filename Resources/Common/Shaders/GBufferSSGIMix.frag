@@ -194,7 +194,14 @@ vec4 MixSSGI(GBufferResult gResult, vec2 ScreenUV)
     temporal.b = max(0.0, temporal.b);
     temporal.a = max(0.0, temporal.a);
 
+    // アルベドをかける
+    // 間接光に対して自身のジオメトリの光の吸収分を考慮
     vec3 albedo = gResult.albedo.rgb;
+    temporal.rgb *= albedo;
+
+    // メタリック
+    float metallic = gResult.metallicRoughness.r;
+    temporal.rgb *= (1.0 - metallic);
 
     return temporal;
 }
@@ -229,7 +236,11 @@ void main()
         col.rgb += MixSSGI(gResult, ScreenUV).rgb;
 
         // HDR ToneMapping
-        col.rgb = tonemapACES(col.rgb);
+        //col.rgb = tonemapACES(col.rgb);
+
+        /*vec4 ssgi = MixSSGI(gResult, ScreenUV);
+        float mask = ssgi.a;
+        col.rgb = mix(col.rgb, ssgi.rgb, mask);*/
     }
     
     outColor = vec4(col, 1.0);

@@ -99,17 +99,17 @@
               }
             },
             {
-              "name": "fPad0",
+              "name": "near",
               "type": "float",
-              "initValue": [ 0.0 ],
+              "initValue": [ 0.1 ],
               "input": {
                 "hide": true
               }
             },
             {
-              "name": "fPad1",
+              "name": "far",
               "type": "float",
-              "initValue": [ 0.0 ],
+              "initValue": [ 1000.0 ],
               "input": {
                 "hide": true
               }

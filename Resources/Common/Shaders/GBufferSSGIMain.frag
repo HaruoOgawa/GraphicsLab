@@ -19,8 +19,8 @@ layout(binding = 1) uniform LightUniformBuffer{
     int iPad2;
 
     float maxDistance;
-    float fPad0;
-    float fPad1;
+    float near;
+    float far;
     float fPad2;
 } l_ubo;
 
@@ -138,6 +138,19 @@ float GetDepth(vec2 ScreenUV)
 #endif
 
     return Depth;
+}
+
+float GetTexLinearDepth(vec2 uv)
+{
+	#ifdef USE_OPENGL
+	float depth = texture(gDepthTexture, uv).r;
+	#else
+	float depth = texture(sampler2D(gDepthTexture, gDepthTextureSampler), uv).r;
+	#endif
+
+  // NDCのデプスだと差が小さすぎるのでカメラからの実際の距離に戻す
+  float z = depth * 2.0 - 1.0;
+  return (2.0 * l_ubo.near * l_ubo.far) / (l_ubo.far + l_ubo.near - z * (l_ubo.far - l_ubo.near));
 }
 
 vec4 GetCustomParam0(vec2 ScreenUV)
@@ -259,7 +272,7 @@ vec3 GetRandomVector(vec2 ScreenUV, vec3 worldNormal, vec2 texSize)
     vec2 pixel = ScreenUV * texSize;
 
     float noise1 = IGN(pixel, l_ubo.frame);
-    float noise2 = IGN(pixel + vec2(197.0, 331.0), l_ubo.frame - 1);
+    float noise2 = IGN(pixel + vec2(197.0, 331.0), l_ubo.frame);
 
     vec3 randNormal = GetCosGemisphereSample(noise1, noise2, worldNormal);
     return normalize(randNormal);
@@ -286,9 +299,9 @@ vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos, vec2 texSize)
     // ステップサイズが一定だとカメラから遠い場所で縞模様が発生するのでその対策
     vec2 pixel = ScreenUV * texSize;
     float jitter = IGN(pixel + vec2(0.125, 9.651), l_ubo.frame);
-    //float jitter = SampleBlueNoise(ScreenUV).r;
 
     // 初期位置を0 ~ 1ステップ分ずらす
+    // 自己衝突対策
     stepSum = stepSize * jitter;
 
     vec2 resultUV = vec2(0.0);
@@ -303,9 +316,14 @@ vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos, vec2 texSize)
         vec4 projPos = PMat * vec4(p, 1.0);
 
         vec2 currentUV = (projPos.xy / projPos.w) * 0.5 + 0.5;
-        float currentDepth = (projPos.z / projPos.w) * 0.5 + 0.5;
+        // float currentDepth = (projPos.z / projPos.w) * 0.5 + 0.5;
+        // プロジェクション座標系の深度だと、透視投影によりnearに近いほど値の幅が広く、farに近いほど値が圧縮されてしまう
+        // それによってtickness=0.1をNDC座標で使い、カメラから少し離れた場所ではワールド座標換算で数mから数十mの厚みを許容してしまうことになる
+        // その対策としてカメラ座標系におけるZの値を深度とする
+        float currentDepth_View = -p.z; // View空間は-Z方向を向いている(OpenGL右手系なので)
 
-        float realDepth = GetDepth(currentUV);
+        // float realDepth = GetDepth(currentUV);
+        float realDepth_View = GetTexLinearDepth(currentUV);
 
         // ノイズ対策で範囲外なら抜ける
         if(currentUV.x < 0.0 || currentUV.x > 1.0 || currentUV.y < 0.0 || currentUV.y > 1.0)
@@ -314,16 +332,22 @@ vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos, vec2 texSize)
         }
 
         // 実際の深度の方が小さい場合は衝突したとして判定する
-        float diff = (currentDepth - realDepth); // 厚み判定. 突き抜けすぎを抑制
-        if(diff > 0.0 && diff < tickness && realDepth < 0.999)
+        // float diff = (currentDepth - realDepth); // 厚み判定. 突き抜けすぎを抑制
+        float diff = (currentDepth_View - realDepth_View); // 厚み判定. 突き抜けすぎを抑制
+        if(diff > 0.0 && diff < tickness)
         {
-            resultUV = currentUV;
-            collided = 1.0;
+            vec3 hitWorldNormal = GetWorldNormal(currentUV);
+            if(dot(rd, hitWorldNormal) < 0.0)
+            {
+                // レイ方向とヒット法線が逆方向の場合のみ衝突判定とする
+                // そうでない場合は面の裏側からの衝突なのでループは終了するが色は乗せない
+                resultUV = currentUV;
+                collided = 1.0;
+            }
+
             break;
         }
 
-        // float jitter = SampleBlueNoise(ScreenUV + vec2(i, float(l_ubo.frame))).r;
-        // stepSum += stepSize + stepSize * jitter * 0.5;
         stepSum += stepSize;
     }
 
@@ -348,10 +372,9 @@ vec4 ComputeSSGI(GBufferResult gResult, vec2 ScreenUV)
     if(rayResult.z == 1.0)
     {
         // フレームの最終描画結果からカラーを参照する
+        // resultSSGI = GetIndirectLight(rayResult.xy);
         resultSSGI = GetHistory(rayResult.xy);
     }
-
-    // return vec4(resultSSGI, 1.0);
     return vec4(resultSSGI, rayResult.z);
 }
 
@@ -373,18 +396,15 @@ void main()
         col = ComputeSSGI(gResult, ScreenUV);
     }
 
-    // vec2 texSize = GetTextureSize();
-    // vec2 pixel = ScreenUV * texSize;
-    // col = vec3(IGN(pixel, l_ubo.frame));
-
     // NaNガード
     if(isnan(col.r) || isnan(col.g) || isnan(col.b) || isnan(col.a))
     {
         col = vec4(0.0);
     }
-    
-    //col = vec4(vec3(sin(float(l_ubo.frame) * 0.00001) * 0.5 + 0.5), 1.0);
 
-    outColor = col;
+    // そこまで重要な要素ではないが、デバッグウィンドウで適切な見た目で確認できるように明示的に透明度1で描画する
+    // UI描画がアルファブレンドなので透明度0にすると背景色と混ざって適切に確認できなくなる
+    outColor = vec4(col.rgb, 1.0);
+
     outBackupMain = vec4(GetIndirectLight(ScreenUV), 1.0);
 }
