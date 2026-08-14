@@ -227,8 +227,8 @@ GBufferResult GetGBuffer(vec2 ScreenUV)
 }
 
 // Interleaved Gradient Noise
-// IGN : https://blog.demofox.org/2022/01/01/interleaved-gradient-noise-a-different-kind-of-low-discrepancy-sequence/
-// IGNはピクセル座標を受け取る前提。0 ~ 1のUV座標ではなく0 ~ 1920のようなピクセル座標
+// https://blog.demofox.org/2022/01/01/interleaved-gradient-noise-a-different-kind-of-low-discrepancy-sequence/
+// ピクセル座標を受け取る前提。0 ~ 1のUV座標ではなく0 ~ 1920のようなピクセル座標
 float IGN(vec2 pixel, int frame)
 {
     int newFrame = frame % 64;
@@ -237,6 +237,50 @@ float IGN(vec2 pixel, int frame)
     float y = pixel.y + 5.588238 * float(newFrame);
 
     return mod(52.9829189 * mod(0.06711056 * x + 0.00583715 * y, 1.0), 1.0);
+}
+
+/*
+* ハッシュベースノイズ関数
+* https://www.reedbeta.com/blog/quick-and-easy-gpu-random-numbers-in-d3d11/
+* https://jcgt.org/published/0009/03/02/
+* https://burtleburtle.net/bob/hash/doobs.html
+*/
+uint JenkinsHash(uint x)
+{
+    x += (x << 10u);
+    x ^= (x >> 6u);
+    x += (x << 3u);
+    x ^= (x >> 11u);
+    x += (x << 15u);
+    return x;
+}
+
+uint JenkinsHash(uvec2 v) { return JenkinsHash(v.x ^ JenkinsHash(v.y)); }
+uint JenkinsHash(uvec3 v) { return JenkinsHash(v.x ^ JenkinsHash(v.yz)); }
+
+// ハッシュ済みのビット列から[0,1)のfloatを組み立てる
+float ConstructFloat(uint m)
+{
+    const uint ieeeMantissa = 0x007FFFFFu; // 仮数部のビットマスク
+    const uint ieeeOne      = 0x3F800000u; // float 1.0 のビットパターン
+    m &= ieeeMantissa;                      // 仮数部だけ残す
+    m |= ieeeOne;                           // 指数部を1.0の形に固定 → 値は[1,2)
+    return uintBitsToFloat(m) - 1.0;        // [1,2) -> [0,1)
+}
+
+float GenerateHashedRandomFloat(uvec3 v)
+{
+    return ConstructFloat(JenkinsHash(v));
+}
+
+// 呼ぶたびに違う値を返すための簡易シード(グローバル変数、フラグメントごとに独立)
+float g_HashSeed = 0.0;
+
+float GenerateRandomValue(vec2 screenUV, vec2 texSize, int frame)
+{
+    g_HashSeed += 1.0;
+    uvec3 seed = uvec3(uvec2(screenUV * texSize), uint(float(frame) + g_HashSeed));
+    return GenerateHashedRandomFloat(seed);
 }
 
 // 半球上のコサイン加重ランダムベクトル(Cosine weighted randam normal)
@@ -267,12 +311,10 @@ vec3 GetCosGemisphereSample(float rand1, float rand2, vec3 normal)
            normal * sqrt(max(0.0, 1.0 - randVal.x));
 }
 
-vec3 GetRandomVector(vec2 ScreenUV, vec3 worldNormal, vec2 texSize)
+vec3 GetRandomVector(vec2 ScreenUV, vec3 worldNormal, vec2 texSize, int index)
 {
-    vec2 pixel = ScreenUV * texSize;
-
-    float noise1 = IGN(pixel, l_ubo.frame);
-    float noise2 = IGN(pixel + vec2(197.0, 331.0), l_ubo.frame);
+    float noise1 = GenerateRandomValue(ScreenUV, texSize, l_ubo.frame);
+    float noise2 = GenerateRandomValue(ScreenUV, texSize, l_ubo.frame);
 
     vec3 randNormal = GetCosGemisphereSample(noise1, noise2, worldNormal);
     return normalize(randNormal);
@@ -297,8 +339,7 @@ vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos, vec2 texSize)
 
     // ステップサイズをノイズでずらす
     // ステップサイズが一定だとカメラから遠い場所で縞模様が発生するのでその対策
-    vec2 pixel = ScreenUV * texSize;
-    float jitter = IGN(pixel + vec2(0.125, 9.651), l_ubo.frame);
+    float jitter = GenerateRandomValue(ScreenUV, texSize, l_ubo.frame);
 
     // 初期位置を0 ~ 1ステップ分ずらす
     // 自己衝突対策
@@ -354,28 +395,34 @@ vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos, vec2 texSize)
     return vec3(resultUV, collided);
 }
 
-vec4 ComputeSSGI(GBufferResult gResult, vec2 ScreenUV)
+vec3 ComputeSSGI(GBufferResult gResult, vec2 ScreenUV)
 {
     vec3 worldPos = gResult.worldPos;
     vec3 worldNormal = gResult.worldNormal;
     vec2 texSize = GetTextureSize();
 
-    // コサイン加重ランダムベクトルの計算
-    vec3 randVec = GetRandomVector(ScreenUV, worldNormal, texSize);
+    int RAY_COUNT = 4;
+    float sampleWeight = 1.0 / float(RAY_COUNT);
 
-    // ランダムベクトルをもとにレイマーチ( vec3(ScreenUV, collided) )
-    vec3 rayResult = Raymarch(ScreenUV, randVec, worldPos, texSize);
-
-    // 衝突していればそのピクセルにおける光をDiffuseLightとして返す
     vec3 resultSSGI = vec3(0.0);
 
-    if(rayResult.z == 1.0)
+    for(int i = 0; i < RAY_COUNT; i++)
     {
-        // フレームの最終描画結果からカラーを参照する
-        // resultSSGI = GetIndirectLight(rayResult.xy);
-        resultSSGI = GetHistory(rayResult.xy);
+        // コサイン加重ランダムベクトルの計算
+        vec3 randVec = GetRandomVector(ScreenUV, worldNormal, texSize, i);
+
+        // ランダムベクトルをもとにレイマーチ( vec3(ScreenUV, collided) )
+        vec3 rayResult = Raymarch(ScreenUV, randVec, worldPos, texSize);
+
+        // 衝突していればそのピクセルにおける光をDiffuseLightとして返す
+        if(rayResult.z == 1.0)
+        {
+            // フレームの最終描画結果からカラーを参照する
+            resultSSGI += GetHistory(rayResult.xy) * sampleWeight;
+        }
     }
-    return vec4(resultSSGI, rayResult.z);
+
+    return resultSSGI;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -388,18 +435,18 @@ void main()
     // Get Param
     GBufferResult gResult = GetGBuffer(ScreenUV);
 
-    vec4 col = vec4(0.0);
+    vec4 col = vec4(0.0, 0.0, 0.0, 1.0);
 
     if(gResult.materialType == 1.0)
     {
         // SSGI
-        col = ComputeSSGI(gResult, ScreenUV);
+        col.rgb = ComputeSSGI(gResult, ScreenUV);
     }
 
     // NaNガード
     if(isnan(col.r) || isnan(col.g) || isnan(col.b) || isnan(col.a))
     {
-        col = vec4(0.0);
+        col.rgb = vec3(0.0);
     }
 
     // そこまで重要な要素ではないが、デバッグウィンドウで適切な見た目で確認できるように明示的に透明度1で描画する
