@@ -268,20 +268,6 @@ LightParam GetLightParam(GBufferResult gResult)
     return light;
 }
 
-// Linearは光学に則した色空間。PBRはリニア空間で計算する
-// sRGB(ガンマ)はモニターに使われる色空間で人間の色の知覚に則している。最終的な色はガンマ空間に直す必要がある
-// https://www.willgibbons.com/linear-workflow/#:~:text=sRGB%20is%20a%20non%2Dlinear,curve%20applied%20to%20the%20brightness.
-// https://lettier.github.io/3d-game-shaders-for-beginners/gamma-correction.html
-vec3 SRGBtoLINEAR(vec3 srgbIn)
-{
-	return pow(srgbIn.xyz, vec3(2.2));
-}
-
-vec3 LINEARtoSRGB(vec3 srgbIn)
-{
-	return pow(srgbIn.xyz, vec3(1.0 / 2.2));
-}
-
 PBRParam CreatePBRParam(PBRData pbr, LightParam light)
 {
     // PBRParamを構築

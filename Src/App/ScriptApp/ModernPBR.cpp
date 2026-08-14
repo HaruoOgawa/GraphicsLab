@@ -152,6 +152,7 @@ namespace app
 
 		// ポストプロセス
 		m_PostProcess->SetUseFXAA(false);
+		m_PostProcess->SetUseToneMapping(true);
 		m_PostProcess->SetUseBloom(false);
 		if (!m_PostProcess->Initialize(pGraphicsAPI, pLoadWorker)) return false;
 

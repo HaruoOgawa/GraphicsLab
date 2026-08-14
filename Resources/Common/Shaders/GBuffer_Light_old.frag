@@ -280,11 +280,6 @@ vec4 SRGBtoLINEAR(vec4 srgbIn)
 	return vec4(pow(srgbIn.xyz, vec3(2.2)), srgbIn.a);
 }
 
-vec4 LINEARtoSRGB(vec4 srgbIn)
-{
-	return vec4(pow(srgbIn.xyz, vec3(1.0 / 2.2)), srgbIn.a);
-}
-
 float linstep(float min, float max, float v)
 {
 	return clamp((v - min) / (max - min), 0.0, 1.0);

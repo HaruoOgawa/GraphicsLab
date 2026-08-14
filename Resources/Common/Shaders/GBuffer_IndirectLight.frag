@@ -338,8 +338,8 @@ vec3 ComputeIndirectLight(GBufferResult gResult, vec2 ScreenUV)
     //ResultCol *= CalcFrenelReflection(pbr.Albedo, pbr.Metallic, NdV);
 
     // AO
-    float ao = GetSSAOBlur(ScreenUV);
-    ResultCol *= ao;
+    //float ao = GetSSAOBlur(ScreenUV);
+    //ResultCol *= ao;
     
     return ResultCol;
 }
@@ -361,9 +361,6 @@ void main()
     {
         // Indirect Light
         col.rgb += ComputeIndirectLight(gResult, ScreenUV);
-
-        // ガンマ補正(リニア空間からガンマ空間に戻す)
-        col.rgb = LINEARtoSRGB(col.rgb);
 
         // Direct Light
         col.rgb += GetDirectLight(ScreenUV);

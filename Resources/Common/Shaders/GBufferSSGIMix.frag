@@ -197,7 +197,7 @@ vec4 MixSSGI(GBufferResult gResult, vec2 ScreenUV)
     // アルベドをかける
     // 間接光に対して自身のジオメトリの光の吸収分を考慮
     vec3 albedo = gResult.albedo.rgb;
-    temporal.rgb *= albedo;
+    // temporal.rgb *= albedo;
 
     // メタリック
     float metallic = gResult.metallicRoughness.r;
@@ -207,17 +207,6 @@ vec4 MixSSGI(GBufferResult gResult, vec2 ScreenUV)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// HDR Tone Mapping
-// ACES近似式（Narkowicz氏による軽量版）
-vec3 tonemapACES(vec3 color) {
-    float a = 2.51;
-    float b = 0.03;
-    float c = 2.43;
-    float d = 0.59;
-    float e = 0.14;
-    return clamp((color * (a * color + b)) / (color * (c * color + d) + e), 0.0, 1.0);
-}
 
 void main()
 {
@@ -234,13 +223,6 @@ void main()
     {
         // SSGIをMix
         col.rgb += MixSSGI(gResult, ScreenUV).rgb;
-
-        // HDR ToneMapping
-        //col.rgb = tonemapACES(col.rgb);
-
-        /*vec4 ssgi = MixSSGI(gResult, ScreenUV);
-        float mask = ssgi.a;
-        col.rgb = mix(col.rgb, ssgi.rgb, mask);*/
     }
     
     outColor = vec4(col, 1.0);

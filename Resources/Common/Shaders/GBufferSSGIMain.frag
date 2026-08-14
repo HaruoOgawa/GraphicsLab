@@ -403,8 +403,7 @@ vec3 ComputeSSGI(GBufferResult gResult, vec2 ScreenUV)
         // 衝突していればそのピクセルにおける光をDiffuseLightとして返す
         if(rayResult.z == 1.0)
         {
-            // フレームの最終描画結果からカラーを参照する
-            resultSSGI += GetHistory(rayResult.xy) * sampleWeight;
+            resultSSGI += GetIndirectLight(rayResult.xy) * sampleWeight;
         }
     }
 

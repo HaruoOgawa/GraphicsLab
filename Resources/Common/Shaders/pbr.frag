@@ -580,10 +580,5 @@ void main()
     // Emissive(自己発光)
 	col.rgb += CalcEmissive();
 
-    // ガンマ補正(リニア空間からガンマ空間に戻す)
-    col.rgb = LINEARtoSRGB(col.rgb);
-
-    //col.rgb = f_WorldNormal * 0.5 + 0.5;
-
 	outColor = col;
 }
