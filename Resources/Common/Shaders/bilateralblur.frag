@@ -23,8 +23,6 @@
 layout(location = 0) in vec2 v2f_UV;
 layout(location = 1) in vec4 v2f_ProjPos;
 layout(location = 2) in vec4 v2f_WorldPos;
-
-const float KERNEL_RADIUS = 3;
   
 layout(binding = 2) uniform FragUniformBuffer
 {
@@ -39,17 +37,25 @@ layout(binding = 2) uniform FragUniformBuffer
   float g_Sharpness;
   float near;
   float far;
-  float fPad2;
+  float nExponent;
+
+  int kernelRadius;
+  int iPad0;
+  int iPad1;
+  int iPad2;
 } frag_ubo;
 
 #ifdef USE_OPENGL
 layout(binding = 3) uniform sampler2D texSource;
 layout(binding = 5) uniform sampler2D texDepth;
+layout(binding = 7) uniform sampler2D texNormal;
 #else
 layout(binding = 3) uniform texture2D texSource;
 layout(binding = 4) uniform sampler texSourceSampler;
 layout(binding = 5) uniform texture2D texDepth;
 layout(binding = 6) uniform sampler texDepthSampler;
+layout(binding = 7) uniform texture2D texNormal;
+layout(binding = 8) uniform sampler texNormalSampler;
 #endif
 
 layout(location = 0) out vec4 outColor;
@@ -80,6 +86,17 @@ float GetTexLinearDepth(vec2 uv)
   return (2.0 * frag_ubo.near * frag_ubo.far) / (frag_ubo.far + frag_ubo.near - z * (frag_ubo.far - frag_ubo.near));
 }
 
+vec3 GetWorldNormal(vec2 uv)
+{
+	#ifdef USE_OPENGL
+	vec3 worldNormal = normalize(texture(texNormal, uv).rgb);
+	#else
+	vec3 worldNormal = normalize(texture(sampler2D(texNormal, texNormalSampler), uv).rgb);
+	#endif
+
+	return worldNormal;
+}
+
 vec2 GetTextureSize()
 {
   #ifdef USE_OPENGL
@@ -93,17 +110,25 @@ vec2 GetTextureSize()
 
 //-------------------------------------------------------------------------
 
-vec4 BlurFunction(vec2 uv, float r, vec4 center_c, float center_d, inout float w_total)
+vec4 BlurFunction(vec2 uv, float r, vec4 center_c, float center_d, vec3 center_n, inout float w_total)
 {
-  vec4  c = GetTexSource( uv );
-  float d = GetTexLinearDepth( uv );
+  vec4  c = GetTexSource(uv);
+  float d = GetTexLinearDepth(uv);
+  vec3  n = GetWorldNormal(uv);
   
-  const float BlurSigma = float(KERNEL_RADIUS) * 0.5;
+  const float BlurSigma = float(frag_ubo.kernelRadius) * 0.5;
   const float BlurFalloff = 1.0 / (2.0*BlurSigma*BlurSigma);
   
+  // 深度が離れているほど重みを減らす
   // グラフツールで見るとよりわかりやすいが、dの違いが大きいほど、ddiff*ddiffが大きくなり、wのexp2の値が小さくなる(Weightが小さくなる)
   float ddiff = (d - center_d) * frag_ubo.g_Sharpness;
-  float w = exp2(-r*r*BlurFalloff - ddiff*ddiff);
+
+  // 法線が離れるほど重みを減らす
+  float normalDot = dot(center_n, n);
+  float normalWeight = pow(max(normalDot, 0.0), frag_ubo.nExponent); 
+
+  //
+  float w = exp2(-r*r*BlurFalloff - ddiff*ddiff) * normalWeight;
   w_total += w;
 
   return c*w;
@@ -113,6 +138,7 @@ void main()
 {
   vec4  center_c = GetTexSource( v2f_UV );
   float center_d = GetTexLinearDepth( v2f_UV );
+  vec3 center_n = GetWorldNormal( v2f_UV );
   
   vec4  c_total = center_c;
   float w_total = 1.0;
@@ -122,16 +148,16 @@ void main()
   dir.x = dir.x / texSize.x;
   dir.y = dir.y / texSize.y;
   
-  for (float r = 1; r <= KERNEL_RADIUS; ++r)
+  for (float r = 1; r <= float(frag_ubo.kernelRadius); ++r)
   {
     vec2 uv = v2f_UV + dir * r;
-    c_total += BlurFunction(uv, r, center_c, center_d, w_total);  
+    c_total += BlurFunction(uv, r, center_c, center_d, center_n, w_total);  
   }
   
-  for (float r = 1; r <= KERNEL_RADIUS; ++r)
+  for (float r = 1; r <= float(frag_ubo.kernelRadius); ++r)
   {
     vec2 uv = v2f_UV - dir * r;
-    c_total += BlurFunction(uv, r, center_c, center_d, w_total);  
+    c_total += BlurFunction(uv, r, center_c, center_d, center_n, w_total);  
   }
 
   outColor = c_total/w_total;

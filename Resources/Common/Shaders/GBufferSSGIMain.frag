@@ -32,8 +32,7 @@ layout(binding = 8) uniform sampler2D gDepthTexture;
 layout(binding = 10) uniform sampler2D gCustomParam0Texture;
 layout(binding = 12) uniform sampler2D gEmissionTexture;
 layout(binding = 14) uniform sampler2D gIndirectLightTexture;
-layout(binding = 16) uniform sampler2D blueNoiseTexture;
-layout(binding = 18) uniform sampler2D historyTexture;
+layout(binding = 16) uniform sampler2D historyTexture;
 
 #else
 layout(binding = 2) uniform texture2D gPositionTexture;
@@ -50,10 +49,8 @@ layout(binding = 12) uniform texture2D gEmissionTexture;
 layout(binding = 13) uniform sampler gEmissionTextureSampler;
 layout(binding = 14) uniform texture2D gIndirectLightTexture;
 layout(binding = 15) uniform sampler gIndirectLightTextureSampler;
-layout(binding = 16) uniform texture2D blueNoiseTexture;
-layout(binding = 17) uniform sampler blueNoiseTextureSampler;
-layout(binding = 18) uniform texture2D historyTexture;
-layout(binding = 19) uniform sampler historyTextureSampler;
+layout(binding = 16) uniform texture2D historyTexture;
+layout(binding = 17) uniform sampler historyTextureSampler;
 #endif
 
 #define PI 3.14159265
@@ -184,17 +181,6 @@ vec3 GetIndirectLight(vec2 ScreenUV)
 #endif
 
     return IndirectLight;
-}
-
-vec3 SampleBlueNoise(vec2 ScreenUV)
-{
-#ifdef USE_OPENGL
-    vec3 blueNoise = texture(blueNoiseTexture, ScreenUV).rgb;
-#else
-    vec3 blueNoise = texture(sampler2D(blueNoiseTexture, blueNoiseTextureSampler), ScreenUV).rgb;
-#endif
-
-    return blueNoise;
 }
 
 vec3 GetHistory(vec2 ScreenUV)

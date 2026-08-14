@@ -97,9 +97,41 @@
               }
             },
             {
-              "name": "fPad2",
+              "name": "nExponent",
               "type": "float",
-              "initValue": [ 0.0 ],
+              "initValue": [ 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "kernelRadius",
+              "type": "int",
+              "initValue": [ 3 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "iPad0",
+              "type": "int",
+              "initValue": [ 0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "iPad1",
+              "type": "int",
+              "initValue": [ 0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "iPad2",
+              "type": "int",
+              "initValue": [ 0 ],
               "input": {
                 "hide": true
               }
@@ -118,6 +150,14 @@
           "name": "texDepth",
           "viewBinding": 5,
           "samplerBinding": 6,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "2d"
+        },
+        {
+          "name": "texNormal",
+          "viewBinding": 7,
+          "samplerBinding": 8,
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "2d"
