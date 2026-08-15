@@ -96,12 +96,12 @@
     "scenetextureset": {
         "cubemaps": [
             {
-                "back": "Resources/User/Cubemaps/environment/environment_back_0.jpg",
-                "bottom": "Resources/User/Cubemaps/environment/environment_bottom_0.jpg",
-                "front": "Resources/User/Cubemaps/environment/environment_front_0.jpg",
-                "left": "Resources/User/Cubemaps/environment/environment_left_0.jpg",
-                "right": "Resources/User/Cubemaps/environment/environment_right_0.jpg",
-                "top": "Resources/User/Cubemaps/environment/environment_top_0.jpg"
+                "back": "Resources/User/Cubemaps/environment/environment_top_0.jpg",
+                "bottom": "Resources/User/Cubemaps/environment/environment_left_0.jpg",
+                "front": "Resources/User/Cubemaps/environment/environment_right_0.jpg",
+                "left": "Resources/User/Cubemaps/environment/environment_bottom_0.jpg",
+                "right": "Resources/User/Cubemaps/environment/environment_back_0.jpg",
+                "top": "Resources/User/Cubemaps/environment/environment_front_0.jpg"
             }
         ],
         "frametextures": null,
@@ -3717,6 +3717,13 @@
                             "type": "float",
                             "value": [
                                 1.0
+                            ]
+                        },
+                        {
+                            "name": "receiveSSR",
+                            "type": "int",
+                            "value": [
+                                1
                             ]
                         },
                         {
@@ -8088,9 +8095,9 @@
                             "name": "baseColorFactor",
                             "type": "vec4",
                             "value": [
-                                0.4852941036224365,
-                                0.4852941036224365,
-                                0.4852941036224365,
+                                0.4901960492134094,
+                                0.4901960492134094,
+                                0.4901960492134094,
                                 1.0
                             ]
                         },
@@ -8121,7 +8128,7 @@
                             "type": "vec4",
                             "value": [
                                 1.0,
-                                0.0,
+                                0.025862038135528564,
                                 0.0,
                                 1.0
                             ]
@@ -8153,7 +8160,7 @@
                             "type": "vec4",
                             "value": [
                                 0.0,
-                                0.14705896377563477,
+                                0.20588231086730957,
                                 1.0,
                                 1.0
                             ]
@@ -8170,6 +8177,52 @@
                             "type": "float",
                             "value": [
                                 1.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "meshindex": 0,
+                    "primitiveindex": 3,
+                    "materialframe": "GBuffer_Gen",
+                    "cull": "back",
+                    "uniformvalues": [
+                        {
+                            "name": "baseColorFactor",
+                            "type": "vec4",
+                            "value": [
+                                0.23529410362243652,
+                                0.23529410362243652,
+                                0.23529410362243652,
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "emissiveStrength",
+                            "type": "float",
+                            "value": [
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "metallicFactor",
+                            "type": "float",
+                            "value": [
+                                0.5
+                            ]
+                        },
+                        {
+                            "name": "receiveSSR",
+                            "type": "int",
+                            "value": [
+                                1
+                            ]
+                        },
+                        {
+                            "name": "roughnessFactor",
+                            "type": "float",
+                            "value": [
+                                0.04966887831687927
                             ]
                         }
                     ]
@@ -8193,9 +8246,9 @@
                     0.5
                 ],
                 "rotate": [
-                    180.0,
+                    -180.0,
                     -5.008956122765085e-06,
-                    180.0
+                    -180.0
                 ],
                 "scale": [
                     1.0,

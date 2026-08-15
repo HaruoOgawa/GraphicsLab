@@ -4,6 +4,7 @@
 #include <Graphics/CFrameRenderer.h>
 #include <Graphics/PostProcess/CPostProcess.h>
 #include <Graphics/PostProcess/CPostProcessSSGI.h>
+#include <Graphics/PostProcess/CPostProcessSSR.h>
 
 #include <Camera/CCamera.h>
 #include <Camera/CTraceCamera.h>
@@ -41,7 +42,8 @@ namespace app
 		m_FileModifier(std::make_shared<CFileModifier>()),
 		m_TimelineController(std::make_shared<timeline::CTimelineController>()),
 		m_PostProcess(std::make_shared<graphics::CPostProcess>("MainResultPass")),
-		m_PostProcessSSGIFilter(std::make_shared<graphics::CPostProcessSSGI>("GBufferResultPass"))
+		m_PostProcessSSGIFilter(std::make_shared<graphics::CPostProcessSSGI>("GBufferResultPass")),
+		m_PostProcessSSRFilter(std::make_shared<graphics::CPostProcessSSR>("GBufferResultPass"))
 	{
 		m_ViewCamera->SetCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 		m_ViewCamera->SetPos(glm::vec3(0.0f, 1.0f, 2.0f));
@@ -157,6 +159,7 @@ namespace app
 		if (!m_PostProcess->Initialize(pGraphicsAPI, pLoadWorker)) return false;
 
 		if (!m_PostProcessSSGIFilter->Initialize(pGraphicsAPI, pLoadWorker)) return false;
+		if (!m_PostProcessSSRFilter->Initialize(pGraphicsAPI, pLoadWorker)) return false;
 
 		{
 			m_MainFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "", pGraphicsAPI->FindOffScreenRenderPass("MainResultPass")->GetFrameTextureList());
@@ -236,6 +239,7 @@ namespace app
 
 		if (!m_PostProcess->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_PostProcessSSGIFilter->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
+		if (!m_PostProcessSSRFilter->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_MainFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_SSAOFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_SSAOBlurFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
@@ -320,6 +324,7 @@ namespace app
 			// 本当はフォアグラウンドレンダリングを終わったポストプロセスの段階でやるものではあるが、
 			// フォアグラウンドとの法線や深度との統合を考える必要があるので、今は仮でデファードレンダリングでのみ実行することにする
 			if (!m_PostProcessSSGIFilter->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+			if (!m_PostProcessSSRFilter->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 		}
 
 		// フォアグラウンドレンダリング

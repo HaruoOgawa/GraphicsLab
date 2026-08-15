@@ -23,7 +23,7 @@ layout(binding = 0) uniform UniformBufferObject{
 
     int   useSkinMeshAnimation;
     int   useSpatialCulling;
-    int   pad1;
+    int   receiveSSR;
     int   pad2;
 
     // Fragment
@@ -185,6 +185,6 @@ void main(){
 	gNormal = vec4(normal, 0.0);
 	gAlbedo = baseColor;
 	gDepth = vec4(depth, depth, depth, 1.0);
-	gCustomParam0 = vec4(ubo.materialType, metallicRoughness.r, metallicRoughness.g, 0.0);
+	gCustomParam0 = vec4(ubo.materialType, metallicRoughness.r, metallicRoughness.g, float(ubo.receiveSSR));
 	gEmission = vec4(emissive, 1.0);
 }

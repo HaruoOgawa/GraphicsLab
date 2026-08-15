@@ -16,7 +16,7 @@ layout(binding = 0) uniform UniformBufferObject{
 
     int   useSkinMeshAnimation;
     int   useSpatialCulling;
-    int   pad1;
+    int   receiveSSR;
     int   pad2;
 
     // Fragment
