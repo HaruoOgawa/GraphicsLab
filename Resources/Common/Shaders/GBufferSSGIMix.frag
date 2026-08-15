@@ -221,8 +221,10 @@ void main()
 
     if(gResult.materialType == 1.0)
     {
+        float giPower = 2.0;
+
         // SSGIをMix
-        col.rgb += MixSSGI(gResult, ScreenUV).rgb;
+        col.rgb += MixSSGI(gResult, ScreenUV).rgb * giPower;
     }
     
     outColor = vec4(col, 1.0);
