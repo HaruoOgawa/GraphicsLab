@@ -59,7 +59,7 @@
           ]
         },
         {
-          "name": "newSSGITexture",
+          "name": "newTexture",
           "viewBinding": 3,
           "samplerBinding": 4,
           "textureIndex": -1,

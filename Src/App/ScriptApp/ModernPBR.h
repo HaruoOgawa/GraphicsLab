@@ -7,6 +7,7 @@ namespace graphics {
 	class CPostProcess;
 	class CPostProcessSSGI;
 	class CPostProcessSSR;
+	class CPostProcessSSAO;
 }
 namespace gui { class CGraphicsEditingWindow; }
 namespace timeline { class CTimelineController; }
@@ -29,8 +30,6 @@ namespace app
 		std::shared_ptr<graphics::CDrawInfo> m_DrawInfo;
 
 		std::shared_ptr<graphics::CFrameRenderer> m_MainFrameRenderer;
-		std::shared_ptr<graphics::CFrameRenderer> m_SSAOFrameRenderer;
-		std::shared_ptr<graphics::CFrameRenderer> m_SSAOBlurFrameRenderer;
 		
 		std::shared_ptr<CFileModifier> m_FileModifier;
 #ifdef USE_GUIENGINE
@@ -42,6 +41,7 @@ namespace app
 		std::shared_ptr<graphics::CPostProcess> m_PostProcess;
 		std::shared_ptr<graphics::CPostProcessSSGI> m_PostProcessSSGIFilter;
 		std::shared_ptr<graphics::CPostProcessSSR> m_PostProcessSSRFilter;
+		std::shared_ptr<graphics::CPostProcessSSAO> m_PostProcessSSAOFilter;
 
 		bool m_CameraSwitchToggle;
 	public:

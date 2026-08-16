@@ -5,6 +5,7 @@ layout(location = 1) in vec4 v2f_ProjPos;
 layout(location = 2) in vec4 v2f_WorldPos;
 
 layout(location = 0) out vec4 outColor;
+layout(location = 1) out vec4 outBackupMain;
 
 layout(binding = 1) uniform LightUniformBuffer{
 	mat4 model;
@@ -19,7 +20,7 @@ layout(binding = 1) uniform LightUniformBuffer{
 
     float near;
     float far;
-    float fPad1;
+    float aoRadius;
     float fPad2;
 } l_ubo;
 
@@ -31,6 +32,7 @@ layout(binding = 8) uniform sampler2D gDepthTexture;
 layout(binding = 10) uniform sampler2D gCustomParam0Texture;
 layout(binding = 12) uniform sampler2D gEmissionTexture;
 layout(binding = 14) uniform sampler2D gVelocityTexture;
+layout(binding = 16) uniform sampler2D gSourceTexture;
 #else
 layout(binding = 2) uniform texture2D gPositionTexture;
 layout(binding = 3) uniform sampler gPositionTextureSampler;
@@ -46,6 +48,8 @@ layout(binding = 12) uniform texture2D gEmissionTexture;
 layout(binding = 13) uniform sampler gEmissionTextureSampler;
 layout(binding = 14) uniform texture2D gVelocityTexture;
 layout(binding = 15) uniform sampler gVelocityTextureSampler;
+layout(binding = 16) uniform texture2D gSourceTexture;
+layout(binding = 17) uniform sampler gSourceTextureSampler;
 #endif
 
 #define PI 3.14159265
@@ -160,6 +164,17 @@ vec4 GetEmission(vec2 ScreenUV)
 #endif
 
     return Emission;
+}
+
+vec3 GetSourceTexture(vec2 ScreenUV)
+{
+#ifdef USE_OPENGL
+    vec3 src = texture(gSourceTexture, ScreenUV).rgb;
+#else
+    vec3 src = texture(sampler2D(gSourceTexture, gSourceTextureSampler), ScreenUV).rgb;
+#endif
+
+    return src;
 }
 
 GBufferResult GetGBuffer(vec2 ScreenUV)
@@ -277,8 +292,7 @@ float ComputeSSAO(GBufferResult gResult, vec2 ScreenUV)
     float resultAO = 0.0;
     float loop = 4.0;
 
-    float aoRadius = 0.1;
-    float rayDist = aoRadius * GenerateRandomValue(ScreenUV, texSize, l_ubo.frame);
+    float rayDist = l_ubo.aoRadius * GenerateRandomValue(ScreenUV, texSize, l_ubo.frame);
 
     // SSAOのサンプリング
     for(int i = 0; i < int(loop); i++)
@@ -337,4 +351,6 @@ void main()
     }
     
     outColor = vec4(col, 1.0);
+
+    outBackupMain = vec4(GetSourceTexture(ScreenUV), 1.0);
 }

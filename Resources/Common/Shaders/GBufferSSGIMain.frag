@@ -32,7 +32,7 @@ layout(binding = 8) uniform sampler2D gDepthTexture;
 layout(binding = 10) uniform sampler2D gCustomParam0Texture;
 layout(binding = 12) uniform sampler2D gEmissionTexture;
 layout(binding = 14) uniform sampler2D gVelocityTexture;
-layout(binding = 16) uniform sampler2D gIndirectLightTexture;
+layout(binding = 16) uniform sampler2D gSourceTexture;
 layout(binding = 18) uniform sampler2D historyTexture;
 
 #else
@@ -50,8 +50,8 @@ layout(binding = 12) uniform texture2D gEmissionTexture;
 layout(binding = 13) uniform sampler gEmissionTextureSampler;
 layout(binding = 14) uniform texture2D gVelocityTexture;
 layout(binding = 15) uniform sampler gVelocityTextureSampler;
-layout(binding = 16) uniform texture2D gIndirectLightTexture;
-layout(binding = 17) uniform sampler gIndirectLightTextureSampler;
+layout(binding = 16) uniform texture2D gSourceTexture;
+layout(binding = 17) uniform sampler gSourceTextureSampler;
 layout(binding = 18) uniform texture2D historyTexture;
 layout(binding = 19) uniform sampler historyTextureSampler;
 #endif
@@ -175,15 +175,15 @@ vec4 GetEmission(vec2 ScreenUV)
     return Emission;
 }
 
-vec3 GetIndirectLight(vec2 ScreenUV)
+vec3 GetSourceTexture(vec2 ScreenUV)
 {
 #ifdef USE_OPENGL
-    vec3 IndirectLight = texture(gIndirectLightTexture, ScreenUV).rgb;
+    vec3 src = texture(gSourceTexture, ScreenUV).rgb;
 #else
-    vec3 IndirectLight = texture(sampler2D(gIndirectLightTexture, gIndirectLightTextureSampler), ScreenUV).rgb;
+    vec3 src = texture(sampler2D(gSourceTexture, gSourceTextureSampler), ScreenUV).rgb;
 #endif
 
-    return IndirectLight;
+    return src;
 }
 
 vec3 GetHistory(vec2 ScreenUV)
@@ -406,7 +406,7 @@ vec3 ComputeSSGI(GBufferResult gResult, vec2 ScreenUV)
         // 衝突していればそのピクセルにおける光をDiffuseLightとして返す
         if(rayResult.z == 1.0)
         {
-            resultSSGI += GetIndirectLight(rayResult.xy) * sampleWeight;
+            resultSSGI += GetSourceTexture(rayResult.xy) * sampleWeight;
         }
     }
 
@@ -441,5 +441,5 @@ void main()
     // UI描画がアルファブレンドなので透明度0にすると背景色と混ざって適切に確認できなくなる
     outColor = vec4(col.rgb, 1.0);
 
-    outBackupMain = vec4(GetIndirectLight(ScreenUV), 1.0);
+    outBackupMain = vec4(GetSourceTexture(ScreenUV), 1.0);
 }

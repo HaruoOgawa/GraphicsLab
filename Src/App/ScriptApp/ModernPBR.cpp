@@ -5,6 +5,7 @@
 #include <Graphics/PostProcess/CPostProcess.h>
 #include <Graphics/PostProcess/CPostProcessSSGI.h>
 #include <Graphics/PostProcess/CPostProcessSSR.h>
+#include <Graphics/PostProcess/CPostProcessSSAO.h>
 
 #include <Camera/CCamera.h>
 #include <Camera/CTraceCamera.h>
@@ -43,7 +44,8 @@ namespace app
 		m_TimelineController(std::make_shared<timeline::CTimelineController>()),
 		m_PostProcess(std::make_shared<graphics::CPostProcess>("MainResultPass")),
 		m_PostProcessSSGIFilter(std::make_shared<graphics::CPostProcessSSGI>("GBufferResultPass")),
-		m_PostProcessSSRFilter(std::make_shared<graphics::CPostProcessSSR>("GBufferResultPass"))
+		m_PostProcessSSRFilter(std::make_shared<graphics::CPostProcessSSR>("GBufferResultPass")),
+		m_PostProcessSSAOFilter(std::make_shared<graphics::CPostProcessSSAO>("GBufferResultPass"))
 	{
 		m_ViewCamera->SetCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 		m_ViewCamera->SetPos(glm::vec3(0.0f, 1.0f, 2.0f));
@@ -160,20 +162,11 @@ namespace app
 
 		if (!m_PostProcessSSGIFilter->Initialize(pGraphicsAPI, pLoadWorker)) return false;
 		if (!m_PostProcessSSRFilter->Initialize(pGraphicsAPI, pLoadWorker)) return false;
+		if (!m_PostProcessSSAOFilter->Initialize(pGraphicsAPI, pLoadWorker)) return false;
 
 		{
 			m_MainFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "", pGraphicsAPI->FindOffScreenRenderPass("MainResultPass")->GetFrameTextureList());
 			if (!m_MainFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\FrameTexture_MF.json")) return false;
-		}
-
-		{
-			m_SSAOFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "GBufferSSAOPass", "GBufferGenPass");
-			if (!m_SSAOFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\GBufferSSAO_MF.json")) return false;
-		}
-
-		{
-			m_SSAOBlurFrameRenderer = std::make_shared<graphics::CFrameRenderer>(pGraphicsAPI, "GBufferSSAOBlurPass", pGraphicsAPI->FindOffScreenRenderPass("GBufferSSAOPass")->GetFrameTextureList());
-			if (!m_SSAOBlurFrameRenderer->Create(pLoadWorker, "Resources\\Common\\MaterialFrame\\Blur1Pass_MF.json")) return false;
 		}
 
 		// ShadowPass Texture
@@ -240,9 +233,8 @@ namespace app
 		if (!m_PostProcess->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_PostProcessSSGIFilter->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_PostProcessSSRFilter->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
+		if (!m_PostProcessSSAOFilter->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		if (!m_MainFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
-		if (!m_SSAOFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
-		if (!m_SSAOBlurFrameRenderer->Update(pGraphicsAPI, pPhysicsEngine, pLoadWorker, m_MainCamera, m_Projection, m_DrawInfo, InputState)) return false;
 		
 		return true;
 	}
@@ -281,20 +273,6 @@ namespace app
 				if (!pGraphicsAPI->EndRender()) return false;
 			}
 
-			// GBufferSSAOPass
-			{
-				if (!pGraphicsAPI->BeginRender("GBufferSSAOPass")) return false;
-				if (!m_SSAOFrameRenderer->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
-				if (!pGraphicsAPI->EndRender()) return false;
-			}
-			
-			// GBufferSSAOBlurPass
-			{
-				if (!pGraphicsAPI->BeginRender("GBufferSSAOBlurPass")) return false;
-				if (!m_SSAOBlurFrameRenderer->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
-				if (!pGraphicsAPI->EndRender()) return false;
-			}
-
 			// GBufferLightPass
 			// GBufferのDirectLight(直接光)
 			{
@@ -320,11 +298,12 @@ namespace app
 				if (!pGraphicsAPI->CopyRenderPass("GBufferIndirectLightPass", "GBufferResultPass", true, true)) return false;
 			}
 
-			// ToDo : デファードレンダリングにおけるSSGI・SSR
+			// ToDo : デファードレンダリングにおけるSSGI・SSR・SSAO
 			// 本当はフォアグラウンドレンダリングを終わったポストプロセスの段階でやるものではあるが、
 			// フォアグラウンドとの法線や深度との統合を考える必要があるので、今は仮でデファードレンダリングでのみ実行することにする
 			if (!m_PostProcessSSGIFilter->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 			if (!m_PostProcessSSRFilter->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
+			if (!m_PostProcessSSAOFilter->Draw(pGraphicsAPI, m_MainCamera, m_Projection, m_DrawInfo)) return false;
 		}
 
 		// フォアグラウンドレンダリング

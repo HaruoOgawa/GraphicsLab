@@ -15,12 +15,12 @@ layout(binding = 2) uniform FragUniformBuffer
 } frag_ubo;
 
 #ifdef USE_OPENGL
-layout(binding = 3) uniform sampler2D newSSGITexture;
+layout(binding = 3) uniform sampler2D newTexture;
 layout(binding = 5) uniform sampler2D temporalTexture;
 layout(binding = 7) uniform sampler2D velocityTexture;
 #else
-layout(binding = 3) uniform texture2D newSSGITexture;
-layout(binding = 4) uniform sampler newSSGITextureSampler;
+layout(binding = 3) uniform texture2D newTexture;
+layout(binding = 4) uniform sampler newTextureSampler;
 layout(binding = 5) uniform texture2D temporalTexture;
 layout(binding = 6) uniform sampler temporalTextureSampler;
 layout(binding = 7) uniform texture2D velocityTexture;
@@ -29,14 +29,14 @@ layout(binding = 8) uniform sampler velocityTextureSampler;
 
 layout(location = 0) out vec4 outColor;
 
-vec4 GetNewSSGI(vec2 uv)
+vec4 GetNewTexture(vec2 uv)
 {
 	vec4 col = vec4(0.0);
 
 	#ifdef USE_OPENGL
-	col = texture(newSSGITexture, uv);
+	col = texture(newTexture, uv);
 	#else
-	col = texture(sampler2D(newSSGITexture, newSSGITextureSampler), uv);
+	col = texture(sampler2D(newTexture, newTextureSampler), uv);
 	#endif
 
 	return col;
@@ -69,9 +69,9 @@ vec2 GetVelocityTexture(vec2 uv)
 vec2 GetTextureSize()
 {
   #ifdef USE_OPENGL
-  vec2 texSize = textureSize(newSSGITexture, 0);
+  vec2 texSize = textureSize(newTexture, 0);
   #else
-  vec2 texSize = textureSize(sampler2D(newSSGITexture, newSSGITextureSampler), 0);
+  vec2 texSize = textureSize(sampler2D(newTexture, newTextureSampler), 0);
   #endif
 
   return texSize;
@@ -97,7 +97,7 @@ vec4 SampleHistory(vec2 st)
 	{
 		for(int x = -1; x <= 1; x++)
 		{
-			vec3 current = GetNewSSGI(st + vec2(float(x), float(y)) / texSize).rgb;
+			vec3 current = GetNewTexture(st + vec2(float(x), float(y)) / texSize).rgb;
 			minColor = min(minColor, current);
 			maxColor = max(maxColor, current);
 		}
@@ -110,8 +110,8 @@ vec4 SampleHistory(vec2 st)
 
 void main()
 {
-	vec4 newSSGI = GetNewSSGI(v2f_UV);
-	vec4 ta = SampleHistory(v2f_UV);
+	vec4 new = GetNewTexture(v2f_UV);
+	vec4 old = SampleHistory(v2f_UV);
 
-	outColor = mix(newSSGI, ta, 0.9);
+	outColor = mix(new, old, 0.9);
 }

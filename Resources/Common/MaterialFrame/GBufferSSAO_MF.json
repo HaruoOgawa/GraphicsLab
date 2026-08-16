@@ -1,6 +1,6 @@
 {
   "name": "GBufferSSAO",
-  "outputcolorcount": 1,
+  "outputcolorcount": 2,
   "zwrite" : false,
   "depthfunc" : "always",
   "shaderList": [
@@ -107,12 +107,9 @@
               }
             },
             {
-              "name": "fPad1",
+              "name": "aoRadius",
               "type": "float",
-              "initValue": [ 0.0 ],
-              "input": {
-                "hide": true
-              }
+              "initValue": [ 0.1 ]
             },
             {
               "name": "fPad2",
@@ -130,9 +127,7 @@
           "samplerBinding": 3,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame",
-          "frameName" : "GBufferGenPass",
-          "frameIndex" : 0
+          "textureUsage": "2d"
         },
         {
           "name": "gNormalTexture",
@@ -140,9 +135,7 @@
           "samplerBinding": 5,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame",
-          "frameName" : "GBufferGenPass",
-          "frameIndex" : 1
+          "textureUsage": "2d"
         },
         {
           "name": "gAlbedoTexture",
@@ -150,9 +143,7 @@
           "samplerBinding": 7,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame",
-          "frameName" : "GBufferGenPass",
-          "frameIndex" : 2
+          "textureUsage": "2d"
         },
         {
           "name": "gDepthTexture",
@@ -160,9 +151,7 @@
           "samplerBinding": 9,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame",
-          "frameName" : "GBufferGenPass",
-          "frameIndex" : 3
+          "textureUsage": "2d"
         },
         {
           "name": "gCustomParam0Texture",
@@ -170,9 +159,7 @@
           "samplerBinding": 11,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame",
-          "frameName" : "GBufferGenPass",
-          "frameIndex" : 4
+          "textureUsage": "2d"
         },
         {
           "name": "gEmissionTexture",
@@ -180,9 +167,7 @@
           "samplerBinding": 13,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame",
-          "frameName" : "GBufferGenPass",
-          "frameIndex" : 5
+          "textureUsage": "2d"
         },
         {
           "name": "gVelocityTexture",
@@ -190,9 +175,15 @@
           "samplerBinding": 15,
           "textureIndex": -1,
           "type": "texture",
-          "textureUsage": "frame",
-          "frameName" : "GBufferGenPass",
-          "frameIndex" : 5
+          "textureUsage": "2d"
+        },
+        {
+          "name": "gSourceTexture",
+          "viewBinding": 16,
+          "samplerBinding": 17,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "2d"
         }
       ]
     }

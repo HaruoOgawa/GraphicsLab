@@ -1,6 +1,6 @@
 {
-  "name": "GBufferSSGIMain",
-  "outputcolorcount": 2,
+  "name": "GBufferSSAOMix",
+  "outputcolorcount": 1,
   "zwrite" : false,
   "depthfunc" : "always",
   "shaderList": [
@@ -13,8 +13,8 @@
       "uniformBlockList": []
     },
     {
-      "name": "GBufferSSGIMain_frag",
-      "shaderFile": "Resources\\Common\\Shaders\\GBufferSSGIMain",
+      "name": "GBufferSSAOMix_frag",
+      "shaderFile": "Resources\\Common\\Shaders\\GBufferSSAOMix",
       "autoShaderExtension": true,
       "shadercode": "",
       "shaderType": "fragment",
@@ -27,7 +27,7 @@
           "bufferUpdateType": "cpu",
           "values": [
             {
-              "name": "model",
+              "name": "mPad0",
               "type": "mat4",
               "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
               "input": {
@@ -35,7 +35,7 @@
               }
             },
             {
-              "name": "view",
+              "name": "mPad1",
               "type": "mat4",
               "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
               "input": {
@@ -43,7 +43,7 @@
               }
             },
             {
-              "name": "proj",
+              "name": "mPad2",
               "type": "mat4",
               "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
               "input": {
@@ -54,70 +54,6 @@
               "name": "mPad3",
               "type": "mat4",
               "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "frame",
-              "type": "int",
-              "initValue": [ 0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "iPad0",
-              "type": "int",
-              "initValue": [ 0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "iPad1",
-              "type": "int",
-              "initValue": [ 0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "iPad2",
-              "type": "int",
-              "initValue": [ 0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "maxDistance",
-              "type": "float",
-              "initValue": [ 10.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "near",
-              "type": "float",
-              "initValue": [ 0.1 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "far",
-              "type": "float",
-              "initValue": [ 1000.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "fPad2",
-              "type": "float",
-              "initValue": [ 0.0 ],
               "input": {
                 "hide": true
               }
@@ -181,7 +117,7 @@
           "textureUsage": "2d"
         },
         {
-          "name": "gSourceTexture",
+          "name": "temporalTexture",
           "viewBinding": 16,
           "samplerBinding": 17,
           "textureIndex": -1,
@@ -189,7 +125,7 @@
           "textureUsage": "2d"
         },
         {
-          "name": "historyTexture",
+          "name": "mainResultTex",
           "viewBinding": 18,
           "samplerBinding": 19,
           "textureIndex": -1,
