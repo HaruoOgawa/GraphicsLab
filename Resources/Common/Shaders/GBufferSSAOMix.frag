@@ -216,7 +216,7 @@ void main()
     if(gResult.materialType == 1.0)
     {
         // SSAOをMix
-        // col.rgb *= MixAO(gResult, ScreenUV);
+        col.rgb *= MixAO(gResult, ScreenUV);
     }
     
     outColor = vec4(col, 1.0);
