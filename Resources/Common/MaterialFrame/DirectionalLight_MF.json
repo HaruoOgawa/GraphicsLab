@@ -246,9 +246,19 @@
           "frameIndex" : 5
         },
         {
-          "name": "shadowmapTexture",
+          "name": "gVelocityTexture",
           "viewBinding": 14,
           "samplerBinding": 15,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 6
+        },
+        {
+          "name": "shadowmapTexture",
+          "viewBinding": 16,
+          "samplerBinding": 17,
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "frame"

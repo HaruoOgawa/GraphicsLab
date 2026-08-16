@@ -18,10 +18,12 @@ layout(binding = 1) uniform LightUniformBuffer{
     int iPad1;
     int iPad2;
 
+    float maxDistance;
     float near;
     float far;
-    float aoRadius;
     float fPad2;
+
+    vec4 cameraPos;
 } l_ubo;
 
 #ifdef USE_OPENGL
@@ -32,7 +34,8 @@ layout(binding = 8) uniform sampler2D gDepthTexture;
 layout(binding = 10) uniform sampler2D gCustomParam0Texture;
 layout(binding = 12) uniform sampler2D gEmissionTexture;
 layout(binding = 14) uniform sampler2D gVelocityTexture;
-layout(binding = 16) uniform sampler2D gSourceTexture;
+layout(binding = 16) uniform sampler2D gSrcTexture;
+
 #else
 layout(binding = 2) uniform texture2D gPositionTexture;
 layout(binding = 3) uniform sampler gPositionTextureSampler;
@@ -48,8 +51,8 @@ layout(binding = 12) uniform texture2D gEmissionTexture;
 layout(binding = 13) uniform sampler gEmissionTextureSampler;
 layout(binding = 14) uniform texture2D gVelocityTexture;
 layout(binding = 15) uniform sampler gVelocityTextureSampler;
-layout(binding = 16) uniform texture2D gSourceTexture;
-layout(binding = 17) uniform sampler gSourceTextureSampler;
+layout(binding = 16) uniform texture2D gSrcTexture;
+layout(binding = 17) uniform sampler gSrcTextureSampler;
 #endif
 
 #define PI 3.14159265
@@ -76,15 +79,9 @@ struct PBRData
     vec3 ViewDir;
 };
 
-vec3 GetWorldPos(vec2 ScreenUV)
+float rand(vec2 st)
 {
-#ifdef USE_OPENGL
-    vec3 WorldPos = texture(gPositionTexture, ScreenUV).rgb;
-#else
-    vec3 WorldPos = texture(sampler2D(gPositionTexture, gPositionTextureSampler), ScreenUV).rgb;
-#endif
-
-    return WorldPos;
+    return fract(sin(dot(st ,vec2(12.9898,78.233))) * 43758.5453);
 }
 
 vec2 GetTextureSize()
@@ -96,6 +93,17 @@ vec2 GetTextureSize()
 	#endif
 
     return texSize;
+}
+
+vec3 GetWorldPos(vec2 ScreenUV)
+{
+#ifdef USE_OPENGL
+    vec3 WorldPos = texture(gPositionTexture, ScreenUV).rgb;
+#else
+    vec3 WorldPos = texture(sampler2D(gPositionTexture, gPositionTextureSampler), ScreenUV).rgb;
+#endif
+
+    return WorldPos;
 }
 
 vec3 GetWorldNormal(vec2 ScreenUV)
@@ -166,12 +174,12 @@ vec4 GetEmission(vec2 ScreenUV)
     return Emission;
 }
 
-vec3 GetSourceTexture(vec2 ScreenUV)
+vec3 GetSource(vec2 ScreenUV)
 {
 #ifdef USE_OPENGL
-    vec3 src = texture(gSourceTexture, ScreenUV).rgb;
+    vec3 src = texture(gSrcTexture, ScreenUV).rgb;
 #else
-    vec3 src = texture(sampler2D(gSourceTexture, gSourceTextureSampler), ScreenUV).rgb;
+    vec3 src = texture(sampler2D(gSrcTexture, gSrcTextureSampler), ScreenUV).rgb;
 #endif
 
     return src;
@@ -195,116 +203,39 @@ GBufferResult GetGBuffer(vec2 ScreenUV)
     return gResult;
 }
 
-/*
-* ハッシュベースノイズ関数
-* https://www.reedbeta.com/blog/quick-and-easy-gpu-random-numbers-in-d3d11/
-* https://jcgt.org/published/0009/03/02/
-* https://burtleburtle.net/bob/hash/doobs.html
-*/
-uint JenkinsHash(uint x)
-{
-    x += (x << 10u);
-    x ^= (x >> 6u);
-    x += (x << 3u);
-    x ^= (x >> 11u);
-    x += (x << 15u);
-    return x;
-}
-
-uint JenkinsHash(uvec2 v) { return JenkinsHash(v.x ^ JenkinsHash(v.y)); }
-uint JenkinsHash(uvec3 v) { return JenkinsHash(v.x ^ JenkinsHash(v.yz)); }
-
-// ハッシュ済みのビット列から[0,1)のfloatを組み立てる
-float ConstructFloat(uint m)
-{
-    const uint ieeeMantissa = 0x007FFFFFu; // 仮数部のビットマスク
-    const uint ieeeOne      = 0x3F800000u; // float 1.0 のビットパターン
-    m &= ieeeMantissa;                      // 仮数部だけ残す
-    m |= ieeeOne;                           // 指数部を1.0の形に固定 → 値は[1,2)
-    return uintBitsToFloat(m) - 1.0;        // [1,2) -> [0,1)
-}
-
-float GenerateHashedRandomFloat(uvec3 v)
-{
-    return ConstructFloat(JenkinsHash(v));
-}
-
-// 呼ぶたびに違う値を返すための簡易シード(グローバル変数、フラグメントごとに独立)
-float g_HashSeed = 0.0;
-
-float GenerateRandomValue(vec2 screenUV, vec2 texSize, int frame)
-{
-    g_HashSeed += 1.0;
-    uvec3 seed = uvec3(uvec2(screenUV * texSize), uint(float(frame) + g_HashSeed));
-    return GenerateHashedRandomFloat(seed);
-}
-
-// 半球上のコサイン加重ランダムベクトル(Cosine weighted randam normal)
-// パストレやモンテカルロ法でも使う面の法線を基準にランダムな反射・屈折ベクトルを生成する手法
-// これはMalley's Methodによる求め方
-// https://gamehacker1999.github.io/posts/SSGI/
-// https://cseweb.ucsd.edu/~tzli/cse272/wi2023/lectures/malley_method.pdf
-// https://pema.dev/obsidian/math/light-transport/cosine-weighted-sampling.html
-vec3 GetCosGemisphereSample(float rand1, float rand2, vec3 normal)
-{
-    // Tangent, BioTangentの計算
-    vec3 up = vec3(0.0, 1.0, 0.0);
-    vec3 side = vec3(1.0, 0.0, 0.0);
-    vec3 dir = (abs(dot(normal, up)) < 0.9)? up : side;
-
-    vec3 tmpT = normalize(cross(dir, normal));
-    vec3 bioTangent = normalize(cross(normal, tmpT));
-    vec3 tangent = normalize(cross(bioTangent, normal));
-
-    //
-    vec2 randVal = vec2(rand1, rand2);
-
-    float r = sqrt(randVal.x);
-    float phi = 2.0 * PI * randVal.y;
-
-    return tangent * (r * cos(phi)) +
-           bioTangent * (r * sin(phi)) +
-           normal * sqrt(max(0.0, 1.0 - randVal.x));
-}
-
-vec3 GetRandomVector(vec2 ScreenUV, vec3 worldNormal, vec2 texSize, int index)
-{
-    float noise1 = GenerateRandomValue(ScreenUV, texSize, l_ubo.frame);
-    float noise2 = GenerateRandomValue(ScreenUV, texSize, l_ubo.frame);
-
-    vec3 randNormal = GetCosGemisphereSample(noise1, noise2, worldNormal);
-    return normalize(randNormal);
-}
-
-float ComputeSSAO(GBufferResult gResult, vec2 ScreenUV)
+vec3 Raymarch(vec2 ScreenUV, vec3 refVec, vec3 worldPos, vec2 texSize)
 {
     mat4 VMat = l_ubo.view;
     mat4 PMat = l_ubo.proj;
 
-    vec3 worldPos = gResult.worldPos;
-    vec3 worldNormal = gResult.worldNormal;
-    vec2 texSize = GetTextureSize();
-
     // 透視投影で歪むのでカメラ座標系で計算
     vec4 viewPos = VMat * vec4(worldPos, 1.0);
+    vec4 viewDir = VMat * vec4(refVec, 0.0);
+
     vec3 ro = viewPos.xyz;
+    vec3 rd = normalize(viewDir.xyz);
+    
+    float stepCount = 32.0;
 
-    float resultAO = 0.0;
-    float loop = 4.0;
+    float stepSize = l_ubo.maxDistance * 1.0 / stepCount;
+    float stepSum = 0.0;
 
-    float rayDist = l_ubo.aoRadius * GenerateRandomValue(ScreenUV, texSize, l_ubo.frame);
+    // ステップサイズをノイズでずらす
+    // ステップサイズが一定だとカメラから遠い場所で縞模様が発生するのでその対策
+    float jitter = 0.01;
 
-    // SSAOのサンプリング
-    for(int i = 0; i < int(loop); i++)
+    // 初期位置を0 ~ 1ステップ分ずらす
+    // 自己衝突対策
+    stepSum = stepSize * jitter;
+
+    vec2 resultUV = vec2(0.0);
+    float collided = 0.0;
+
+    float tickness = 0.1;
+
+    for(float i = 0.0; i < stepCount; i++)
     {
-        // コサイン加重ランダムベクトルの計算
-        vec3 randVec = GetRandomVector(ScreenUV, worldNormal, texSize, i);
-
-        vec4 viewDir = VMat * vec4(randVec, 0.0);
-        vec3 rd = normalize(viewDir.xyz);
-
-        // 空間内のランダムな位置を算出
-        vec3 p = ro + rd * rayDist;
+        vec3 p = ro + rd * stepSum;
 
         vec4 projPos = PMat * vec4(p, 1.0);
 
@@ -319,17 +250,57 @@ float ComputeSSAO(GBufferResult gResult, vec2 ScreenUV)
         float realDepth_View = GetTexLinearDepth(currentUV);
 
         // ノイズ対策で範囲外なら抜ける
-        if(currentUV.x < 0.0 || currentUV.x > 1.0 || currentUV.y < 0.0 || currentUV.y > 1.0) continue;
+        if(currentUV.x < 0.0 || currentUV.x > 1.0 || currentUV.y < 0.0 || currentUV.y > 1.0)
+        {
+            break;
+        }
 
-        // 実際の深度が理想的な深度よりも小さければ遮蔽されていると判断して暗い色を加算する
-        resultAO += (realDepth_View < currentDepth_View) ? 0.0 : 1.0;
+        // 実際の深度の方が小さい場合は衝突したとして判定する
+        // float diff = (currentDepth - realDepth); // 厚み判定. 突き抜けすぎを抑制
+        float diff = (currentDepth_View - realDepth_View); // 厚み判定. 突き抜けすぎを抑制
+        if(diff > 0.0 && diff < tickness)
+        {
+            vec3 hitWorldNormal = GetWorldNormal(currentUV);
+            if(dot(rd, hitWorldNormal) < 0.0)
+            {
+                // レイ方向とヒット法線が逆方向の場合のみ衝突判定とする
+                // そうでない場合は面の裏側からの衝突なのでループは終了するが色は乗せない
+                resultUV = currentUV;
+                collided = 1.0;
+            }
+
+            break;
+        }
+
+        stepSum += stepSize;
     }
 
-    resultAO /= loop;
+    return vec3(resultUV, collided);
+}
 
-    resultAO = pow(resultAO, 2.0);    
+vec3 ComputeSSR(GBufferResult gResult, vec2 ScreenUV)
+{
+    vec3 worldPos = gResult.worldPos;
+    vec3 worldNormal = gResult.worldNormal;
+    vec2 texSize = GetTextureSize();
 
-    return resultAO;
+    vec3 resultSSR = vec3(0.0);
+
+    // 反射ベクトル
+    // GLSLのreflectは視線→入射点の方向でベクトルを渡す。いつものライティング計算みたいに反転させておく必要はない
+    vec3 viewDir = normalize(worldPos - l_ubo.cameraPos.xyz);
+    vec3 refVec = reflect(viewDir, worldNormal);
+
+    // 反射ベクトルをもとにレイマーチ( vec3(ScreenUV, collided) )
+    vec3 rayResult = Raymarch(ScreenUV, refVec, worldPos, texSize);
+
+    // 衝突していればそのピクセルにおける光をDiffuseLightとして返す
+    if(rayResult.z == 1.0)
+    {
+        resultSSR = GetSource(rayResult.xy);
+    }
+
+    return resultSSR;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -341,16 +312,24 @@ void main()
 
     // Get Param
     GBufferResult gResult = GetGBuffer(ScreenUV);
-	
-    vec3 col = vec3(1.0);
+
+    vec4 col = vec4(0.0, 0.0, 0.0, 1.0);
 
     if(gResult.materialType == 1.0)
     {
-        // SSAO
-        col.rgb = vec3(ComputeSSAO(gResult, ScreenUV));
+        // SSR
+        col.rgb = ComputeSSR(gResult, ScreenUV);
     }
-    
-    outColor = vec4(col, 1.0);
 
-    outBackupMain = vec4(GetSourceTexture(ScreenUV), 1.0);
+    // NaNガード
+    if(isnan(col.r) || isnan(col.g) || isnan(col.b) || isnan(col.a))
+    {
+        col.rgb = vec3(0.0);
+    }
+
+    // そこまで重要な要素ではないが、デバッグウィンドウで適切な見た目で確認できるように明示的に透明度1で描画する
+    // UI描画がアルファブレンドなので透明度0にすると背景色と混ざって適切に確認できなくなる
+    outColor = vec4(col.rgb, 1.0);
+
+    outBackupMain = vec4(GetSource(ScreenUV), 1.0);
 }

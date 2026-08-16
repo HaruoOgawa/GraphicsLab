@@ -1,8 +1,6 @@
 {
-  "name": "GBufferSSAO",
-  "outputcolorcount": 2,
-  "zwrite" : false,
-  "depthfunc" : "always",
+  "name": "bilateralblur",
+  "outputcolorcount": 1,
   "shaderList": [
     {
       "name": "renderboard_vert",
@@ -13,21 +11,21 @@
       "uniformBlockList": []
     },
     {
-      "name": "GBufferSSAO_frag",
-      "shaderFile": "Resources\\Common\\Shaders\\GBufferSSAO",
+      "name": "bilateralblur_frag",
+      "shaderFile": "Resources\\Common\\Shaders\\bilateralblur",
       "autoShaderExtension": true,
       "shadercode": "",
       "shaderType": "fragment",
       "uniformBlockList": [
         {
-          "name": "LightUniformBuffer",
-          "binding": 1,
+          "name": "FragUniformBuffer",
+          "binding": 2,
           "isWritable": false,
           "type": "ubo",
           "bufferUpdateType": "cpu",
           "values": [
             {
-              "name": "model",
+              "name": "mPad0",
               "type": "mat4",
               "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
               "input": {
@@ -35,7 +33,7 @@
               }
             },
             {
-              "name": "view",
+              "name": "mPad1",
               "type": "mat4",
               "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
               "input": {
@@ -43,7 +41,7 @@
               }
             },
             {
-              "name": "proj",
+              "name": "mPad2",
               "type": "mat4",
               "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
               "input": {
@@ -59,9 +57,57 @@
               }
             },
             {
-              "name": "frame",
+              "name": "g_InvResolutionDirection",
+              "type": "vec2",
+              "initValue": [ 0.0, 0.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "v2Pad",
+              "type": "vec2",
+              "initValue": [ 0.0, 0.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "g_Sharpness",
+              "type": "float",
+              "initValue": [ 1.5 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "near",
+              "type": "float",
+              "initValue": [ 0.1 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "far",
+              "type": "float",
+              "initValue": [ 1000.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "nExponent",
+              "type": "float",
+              "initValue": [ 1.0 ],
+              "input": {
+                "hide": true
+              }
+            },
+            {
+              "name": "kernelRadius",
               "type": "int",
-              "initValue": [ 0 ],
+              "initValue": [ 3 ],
               "input": {
                 "hide": true
               }
@@ -89,98 +135,29 @@
               "input": {
                 "hide": true
               }
-            },
-            {
-              "name": "near",
-              "type": "float",
-              "initValue": [ 0.1 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "far",
-              "type": "float",
-              "initValue": [ 1000.0 ],
-              "input": {
-                "hide": true
-              }
-            },
-            {
-              "name": "aoRadius",
-              "type": "float",
-              "initValue": [ 0.1 ]
-            },
-            {
-              "name": "fPad2",
-              "type": "float",
-              "initValue": [ 0.0 ],
-              "input": {
-                "hide": true
-              }
             }
           ]
         },
         {
-          "name": "gPositionTexture",
-          "viewBinding": 2,
-          "samplerBinding": 3,
+          "name": "texSource",
+          "viewBinding": 3,
+          "samplerBinding": 4,
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "2d"
         },
         {
-          "name": "gNormalTexture",
-          "viewBinding": 4,
-          "samplerBinding": 5,
+          "name": "texDepth",
+          "viewBinding": 5,
+          "samplerBinding": 6,
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "2d"
         },
         {
-          "name": "gAlbedoTexture",
-          "viewBinding": 6,
-          "samplerBinding": 7,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "2d"
-        },
-        {
-          "name": "gDepthTexture",
-          "viewBinding": 8,
-          "samplerBinding": 9,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "2d"
-        },
-        {
-          "name": "gCustomParam0Texture",
-          "viewBinding": 10,
-          "samplerBinding": 11,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "2d"
-        },
-        {
-          "name": "gEmissionTexture",
-          "viewBinding": 12,
-          "samplerBinding": 13,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "2d"
-        },
-        {
-          "name": "gVelocityTexture",
-          "viewBinding": 14,
-          "samplerBinding": 15,
-          "textureIndex": -1,
-          "type": "texture",
-          "textureUsage": "2d"
-        },
-        {
-          "name": "gSourceTexture",
-          "viewBinding": 16,
-          "samplerBinding": 17,
+          "name": "texNormal",
+          "viewBinding": 7,
+          "samplerBinding": 8,
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "2d"

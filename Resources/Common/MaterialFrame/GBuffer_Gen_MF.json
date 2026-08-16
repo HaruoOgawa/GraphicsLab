@@ -1,6 +1,6 @@
 {
   "name": "GBuffer_Gen",
-  "outputcolorcount": 6,
+  "outputcolorcount": 7,
   "stencil":{
     "enabled" : true,
     "value" : 0,
@@ -47,7 +47,7 @@
               }
             },
             {
-              "name": "lightVPMat",
+              "name": "prevMVP",
               "type": "mat4",
               "initValue": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
               "input": {
@@ -71,11 +71,10 @@
               }
             },
             {
-              "name": "pad1",
+              "name": "receiveSSR",
               "type": "int",
               "initValue": [ 0 ],
               "input": {
-                "hide": true
               }
             },
             {

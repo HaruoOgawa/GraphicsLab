@@ -40,7 +40,8 @@ layout(binding = 6) uniform sampler2D gAlbedoTexture;
 layout(binding = 8) uniform sampler2D gDepthTexture;
 layout(binding = 10) uniform sampler2D gCustomParam0Texture;
 layout(binding = 12) uniform sampler2D gEmissionTexture;
-layout(binding = 14) uniform sampler2D shadowmapTexture;
+layout(binding = 14) uniform sampler2D gVelocityTexture;
+layout(binding = 16) uniform sampler2D shadowmapTexture;
 #else
 layout(binding = 2) uniform texture2D gPositionTexture;
 layout(binding = 3) uniform sampler gPositionTextureSampler;
@@ -54,8 +55,10 @@ layout(binding = 10) uniform texture2D gCustomParam0Texture;
 layout(binding = 11) uniform sampler gCustomParam0TextureSampler;
 layout(binding = 12) uniform texture2D gEmissionTexture;
 layout(binding = 13) uniform sampler gEmissionTextureSampler;
-layout(binding = 14) uniform texture2D shadowmapTexture;
-layout(binding = 15) uniform sampler shadowmapTextureSampler;
+layout(binding = 14) uniform texture2D gVelocityTexture;
+layout(binding = 15) uniform sampler gVelocityTextureSampler;
+layout(binding = 16) uniform texture2D shadowmapTexture;
+layout(binding = 17) uniform sampler shadowmapTextureSampler;
 #endif
 
 // 最低反射率
@@ -266,20 +269,6 @@ LightParam GetLightParam(GBufferResult gResult)
 	}
 
     return light;
-}
-
-// Linearは光学に則した色空間。PBRはリニア空間で計算する
-// sRGB(ガンマ)はモニターに使われる色空間で人間の色の知覚に則している。最終的な色はガンマ空間に直す必要がある
-// https://www.willgibbons.com/linear-workflow/#:~:text=sRGB%20is%20a%20non%2Dlinear,curve%20applied%20to%20the%20brightness.
-// https://lettier.github.io/3d-game-shaders-for-beginners/gamma-correction.html
-vec3 SRGBtoLINEAR(vec3 srgbIn)
-{
-	return pow(srgbIn.xyz, vec3(2.2));
-}
-
-vec3 LINEARtoSRGB(vec3 srgbIn)
-{
-	return pow(srgbIn.xyz, vec3(1.0 / 2.2));
 }
 
 PBRParam CreatePBRParam(PBRData pbr, LightParam light)

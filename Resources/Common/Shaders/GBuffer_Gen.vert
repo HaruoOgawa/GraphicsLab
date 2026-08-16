@@ -12,11 +12,11 @@ layout(binding = 0) uniform UniformBufferObject{
 	mat4 model;
     mat4 view;
     mat4 proj;
-    mat4 lightVPMat;
+    mat4 prevMVP;
 
     int   useSkinMeshAnimation;
     int   useSpatialCulling;
-    int   pad1;
+    int   receiveSSR;
     int   pad2;
 
     // Fragment
@@ -48,6 +48,7 @@ layout(location = 2) out vec4 f_WorldPos;
 layout(location = 3) out vec3 f_WorldTangent;
 layout(location = 4) out vec3 f_WorldBioTangent;
 layout(location = 5) out vec4 v2f_ProjPos;
+layout(location = 6) out vec4 v2f_PrevProjPos;
 
 void main(){
     vec3 BioTangent = cross(inNormal, inTangent.xyz);
@@ -83,6 +84,7 @@ void main(){
     }
 
     vec4 ProjPos = ubo.proj * ubo.view * WorldPos;
+    vec4 PrevProjPos = ubo.prevMVP * vec4(inPosition, 1.0);
 
     gl_Position = ProjPos;
     f_WorldNormal = WorldNormal;
@@ -91,4 +93,5 @@ void main(){
     f_WorldTangent = WorldTangent;
     f_WorldBioTangent = WorldBioTangent;
     v2f_ProjPos = ProjPos;
+    v2f_PrevProjPos = PrevProjPos;
 }
