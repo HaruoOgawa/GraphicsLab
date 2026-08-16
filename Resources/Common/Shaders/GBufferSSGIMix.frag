@@ -203,8 +203,8 @@ vec4 MixSSGI(GBufferResult gResult, vec2 ScreenUV)
     // temporal.rgb *= albedo;
 
     // メタリック
-    float metallic = gResult.metallicRoughness.r;
-    temporal.rgb *= (1.0 - metallic);
+    // float metallic = gResult.metallicRoughness.r;
+    // temporal.rgb *= (1.0 - metallic);
 
     return temporal;
 }
