@@ -1,5 +1,5 @@
 {
-  "name": "GBufferSSGITemporalAccumulation",
+  "name": "TemporalAccumulation",
   "outputcolorcount": 1,
   "shaderList": [
     {
@@ -11,8 +11,8 @@
       "uniformBlockList": []
     },
     {
-      "name": "GBufferSSGITemporalAccumulation_frag",
-      "shaderFile": "Resources\\Common\\Shaders\\GBufferSSGITemporalAccumulation",
+      "name": "TemporalAccumulation_frag",
+      "shaderFile": "Resources\\Common\\Shaders\\TemporalAccumulation",
       "autoShaderExtension": true,
       "shadercode": "",
       "shaderType": "fragment",
@@ -70,6 +70,14 @@
           "name": "temporalTexture",
           "viewBinding": 5,
           "samplerBinding": 6,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "2d"
+        },
+        {
+          "name": "velocityTexture",
+          "viewBinding": 7,
+          "samplerBinding": 8,
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "2d"
