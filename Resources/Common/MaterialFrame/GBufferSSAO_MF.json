@@ -183,6 +183,16 @@
           "textureUsage": "frame",
           "frameName" : "GBufferGenPass",
           "frameIndex" : 5
+        },
+        {
+          "name": "gVelocityTexture",
+          "viewBinding": 14,
+          "samplerBinding": 15,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 5
         }
       ]
     }

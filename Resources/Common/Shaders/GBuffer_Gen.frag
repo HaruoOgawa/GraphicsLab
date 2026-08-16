@@ -6,6 +6,7 @@ layout(location = 2) in vec4 f_WorldPos;
 layout(location = 3) in vec3 f_WorldTangent;
 layout(location = 4) in vec3 f_WorldBioTangent;
 layout(location = 5) in vec4 v2f_ProjPos;
+layout(location = 6) in vec4 v2f_PrevProjPos;
 
 layout(location = 0) out vec4 gPosition;
 layout(location = 1) out vec4 gNormal;
@@ -13,13 +14,14 @@ layout(location = 2) out vec4 gAlbedo;
 layout(location = 3) out vec4 gDepth;
 layout(location = 4) out vec4 gCustomParam0;
 layout(location = 5) out vec4 gEmission;
+layout(location = 6) out vec4 gVelocity;
 
 layout(binding = 0) uniform UniformBufferObject{
     // Vertex
 	mat4 model;
     mat4 view;
     mat4 proj;
-    mat4 lightVPMat;
+    mat4 prevMVP;
 
     int   useSkinMeshAnimation;
     int   useSpatialCulling;
@@ -170,16 +172,21 @@ void main(){
 	}
 
 	vec4 baseColor = GetBaseColor();
+
 	vec3 normal = getNormal();
-	// float depth = gl_FragCoord.z;
+
 	float depth = v2f_ProjPos.z / v2f_ProjPos.w;
 	depth = depth * 0.5 + 0.5;
 
-	// depth = 0.5;
-
 	vec2 metallicRoughness = GetMetallicRoughness();
-
 	vec3 emissive = GetEmissive();
+
+	vec2 ndcUV = v2f_ProjPos.xy / v2f_ProjPos.w;
+	ndcUV = ndcUV * 0.5 + 0.5;
+	vec2 prevNDCUV = v2f_PrevProjPos.xy / v2f_PrevProjPos.w;
+	prevNDCUV = prevNDCUV * 0.5 + 0.5;
+
+	vec2 velocity = ndcUV - prevNDCUV;
 
 	gPosition = f_WorldPos;
 	gNormal = vec4(normal, 0.0);
@@ -187,4 +194,5 @@ void main(){
 	gDepth = vec4(depth, depth, depth, 1.0);
 	gCustomParam0 = vec4(ubo.materialType, metallicRoughness.r, metallicRoughness.g, float(ubo.receiveSSR));
 	gEmission = vec4(emissive, 1.0);
+	gVelocity = vec4(velocity, 0.0, 1.0);
 }

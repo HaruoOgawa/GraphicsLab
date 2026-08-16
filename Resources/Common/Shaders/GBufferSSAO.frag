@@ -30,6 +30,7 @@ layout(binding = 6) uniform sampler2D gAlbedoTexture;
 layout(binding = 8) uniform sampler2D gDepthTexture;
 layout(binding = 10) uniform sampler2D gCustomParam0Texture;
 layout(binding = 12) uniform sampler2D gEmissionTexture;
+layout(binding = 14) uniform sampler2D gVelocityTexture;
 #else
 layout(binding = 2) uniform texture2D gPositionTexture;
 layout(binding = 3) uniform sampler gPositionTextureSampler;
@@ -43,6 +44,8 @@ layout(binding = 10) uniform texture2D gCustomParam0Texture;
 layout(binding = 11) uniform sampler gCustomParam0TextureSampler;
 layout(binding = 12) uniform texture2D gEmissionTexture;
 layout(binding = 13) uniform sampler gEmissionTextureSampler;
+layout(binding = 14) uniform texture2D gVelocityTexture;
+layout(binding = 15) uniform sampler gVelocityTextureSampler;
 #endif
 
 #define PI 3.14159265

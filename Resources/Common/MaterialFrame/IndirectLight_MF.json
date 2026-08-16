@@ -198,33 +198,43 @@
           "frameIndex" : 5
         },
         {
-          "name": "IBL_Diffuse_Texture",
+          "name": "gVelocityTexture",
           "viewBinding": 14,
           "samplerBinding": 15,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "frame",
+          "frameName" : "GBufferGenPass",
+          "frameIndex" : 6
+        },
+        {
+          "name": "IBL_Diffuse_Texture",
+          "viewBinding": 16,
+          "samplerBinding": 17,
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "diffuse"
         },
         {
           "name": "IBL_Specular_Texture",
-          "viewBinding": 16,
-          "samplerBinding": 17,
+          "viewBinding": 18,
+          "samplerBinding": 19,
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "specular"
         },
         {
           "name": "IBL_GGXLUT_Texture",
-          "viewBinding": 18,
-          "samplerBinding": 19,
+          "viewBinding": 20,
+          "samplerBinding": 21,
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "ggx"
         },
         {
           "name": "gDirectLightTexture",
-          "viewBinding": 20,
-          "samplerBinding": 21,
+          "viewBinding": 22,
+          "samplerBinding": 23,
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "frame",
@@ -233,8 +243,8 @@
         },
         {
           "name": "gSSAOBlurTexture",
-          "viewBinding": 22,
-          "samplerBinding": 23,
+          "viewBinding": 24,
+          "samplerBinding": 25,
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "frame",

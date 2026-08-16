@@ -181,9 +181,17 @@
           "textureUsage": "2d"
         },
         {
-          "name": "gSrcTexture",
+          "name": "gVelocityTexture",
           "viewBinding": 14,
           "samplerBinding": 15,
+          "textureIndex": -1,
+          "type": "texture",
+          "textureUsage": "2d"
+        },
+        {
+          "name": "gSrcTexture",
+          "viewBinding": 16,
+          "samplerBinding": 17,
           "textureIndex": -1,
           "type": "texture",
           "textureUsage": "2d"
