@@ -290,9 +290,10 @@ float ComputeSSAO(GBufferResult gResult, vec2 ScreenUV)
     vec3 ro = viewPos.xyz;
 
     float resultAO = 0.0;
-    float loop = 4.0;
+    float loop = 32.0;
+    float aoRadius = l_ubo.aoRadius;
 
-    float rayDist = l_ubo.aoRadius * GenerateRandomValue(ScreenUV, texSize, l_ubo.frame);
+    float rayDist = aoRadius * GenerateRandomValue(ScreenUV, texSize, l_ubo.frame);
 
     // SSAOのサンプリング
     for(int i = 0; i < int(loop); i++)
@@ -322,7 +323,17 @@ float ComputeSSAO(GBufferResult gResult, vec2 ScreenUV)
         if(currentUV.x < 0.0 || currentUV.x > 1.0 || currentUV.y < 0.0 || currentUV.y > 1.0) continue;
 
         // 実際の深度が理想的な深度よりも小さければ遮蔽されていると判断して暗い色を加算する
-        resultAO += (realDepth_View < currentDepth_View) ? 0.0 : 1.0;
+        float occluded = (realDepth_View < currentDepth_View) ? 0.0 : 1.0;
+
+        // レンジチェック。実際の深度が半径から大きく離れている(=無関係な奥の物体)の場合は無視する
+        // これがないと遮蔽されていないエッジ部分の背景に壁があるときに黒くなってしまう
+        float rangeCheck = smoothstep(
+            0.0, 
+            1.0,
+            aoRadius / max(abs(currentDepth_View - realDepth_View), 0.0001)
+        );
+
+        resultAO += mix(1.0, occluded, rangeCheck);
     }
 
     resultAO /= loop;
