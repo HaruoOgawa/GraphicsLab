@@ -11,6 +11,16 @@ layout(binding = 1) uniform LightUniformBuffer{
     mat4 view;
     mat4 proj;
 	mat4 mPad3;
+
+    int frame;
+    int iPad0;
+    int iPad1;
+    int iPad2;
+
+    float near;
+    float far;
+    float fPad1;
+    float fPad2;
 } l_ubo;
 
 #ifdef USE_OPENGL
@@ -59,11 +69,6 @@ struct PBRData
     vec3 ViewDir;
 };
 
-float rand(vec2 st)
-{
-    return fract(sin(dot(st ,vec2(12.9898,78.233))) * 43758.5453);
-}
-
 vec3 GetWorldPos(vec2 ScreenUV)
 {
 #ifdef USE_OPENGL
@@ -73,6 +78,17 @@ vec3 GetWorldPos(vec2 ScreenUV)
 #endif
 
     return WorldPos;
+}
+
+vec2 GetTextureSize()
+{
+    #ifdef USE_OPENGL
+	vec2 texSize = textureSize(gPositionTexture, 0);
+	#else
+	vec2 texSize = textureSize(sampler2D(gPositionTexture, gPositionTextureSampler), 0);
+	#endif
+
+    return texSize;
 }
 
 vec3 GetWorldNormal(vec2 ScreenUV)
@@ -106,6 +122,19 @@ float GetDepth(vec2 ScreenUV)
 #endif
 
     return Depth;
+}
+
+float GetTexLinearDepth(vec2 uv)
+{
+	#ifdef USE_OPENGL
+	float depth = texture(gDepthTexture, uv).r;
+	#else
+	float depth = texture(sampler2D(gDepthTexture, gDepthTextureSampler), uv).r;
+	#endif
+
+  // NDCのデプスだと差が小さすぎるのでカメラからの実際の距離に戻す
+  float z = depth * 2.0 - 1.0;
+  return (2.0 * l_ubo.near * l_ubo.far) / (l_ubo.far + l_ubo.near - z * (l_ubo.far - l_ubo.near));
 }
 
 vec4 GetCustomParam0(vec2 ScreenUV)
@@ -148,85 +177,138 @@ GBufferResult GetGBuffer(vec2 ScreenUV)
     return gResult;
 }
 
-mat3 calcTBNMatrix(vec3 normal)
+/*
+* ハッシュベースノイズ関数
+* https://www.reedbeta.com/blog/quick-and-easy-gpu-random-numbers-in-d3d11/
+* https://jcgt.org/published/0009/03/02/
+* https://burtleburtle.net/bob/hash/doobs.html
+*/
+uint JenkinsHash(uint x)
 {
-    vec3 T, B;
-    vec3 N = normalize(normal);
+    x += (x << 10u);
+    x ^= (x >> 6u);
+    x += (x << 3u);
+    x ^= (x >> 11u);
+    x += (x << 15u);
+    return x;
+}
 
+uint JenkinsHash(uvec2 v) { return JenkinsHash(v.x ^ JenkinsHash(v.y)); }
+uint JenkinsHash(uvec3 v) { return JenkinsHash(v.x ^ JenkinsHash(v.yz)); }
+
+// ハッシュ済みのビット列から[0,1)のfloatを組み立てる
+float ConstructFloat(uint m)
+{
+    const uint ieeeMantissa = 0x007FFFFFu; // 仮数部のビットマスク
+    const uint ieeeOne      = 0x3F800000u; // float 1.0 のビットパターン
+    m &= ieeeMantissa;                      // 仮数部だけ残す
+    m |= ieeeOne;                           // 指数部を1.0の形に固定 → 値は[1,2)
+    return uintBitsToFloat(m) - 1.0;        // [1,2) -> [0,1)
+}
+
+float GenerateHashedRandomFloat(uvec3 v)
+{
+    return ConstructFloat(JenkinsHash(v));
+}
+
+// 呼ぶたびに違う値を返すための簡易シード(グローバル変数、フラグメントごとに独立)
+float g_HashSeed = 0.0;
+
+float GenerateRandomValue(vec2 screenUV, vec2 texSize, int frame)
+{
+    g_HashSeed += 1.0;
+    uvec3 seed = uvec3(uvec2(screenUV * texSize), uint(float(frame) + g_HashSeed));
+    return GenerateHashedRandomFloat(seed);
+}
+
+// 半球上のコサイン加重ランダムベクトル(Cosine weighted randam normal)
+// パストレやモンテカルロ法でも使う面の法線を基準にランダムな反射・屈折ベクトルを生成する手法
+// これはMalley's Methodによる求め方
+// https://gamehacker1999.github.io/posts/SSGI/
+// https://cseweb.ucsd.edu/~tzli/cse272/wi2023/lectures/malley_method.pdf
+// https://pema.dev/obsidian/math/light-transport/cosine-weighted-sampling.html
+vec3 GetCosGemisphereSample(float rand1, float rand2, vec3 normal)
+{
+    // Tangent, BioTangentの計算
     vec3 up = vec3(0.0, 1.0, 0.0);
     vec3 side = vec3(1.0, 0.0, 0.0);
+    vec3 dir = (abs(dot(normal, up)) < 0.9)? up : side;
 
-    vec3 dir = (abs(dot(N, up)) < 0.9)? up : side;
+    vec3 tmpT = normalize(cross(dir, normal));
+    vec3 bioTangent = normalize(cross(normal, tmpT));
+    vec3 tangent = normalize(cross(bioTangent, normal));
 
-    vec3 tmpT = normalize(cross(dir, N));
-    B = normalize(cross(N, tmpT));
+    //
+    vec2 randVal = vec2(rand1, rand2);
 
-    T = normalize(cross(B, N));
+    float r = sqrt(randVal.x);
+    float phi = 2.0 * PI * randVal.y;
 
-    mat3 TBM = mat3(T, B, N);
-
-    return TBM;
+    return tangent * (r * cos(phi)) +
+           bioTangent * (r * sin(phi)) +
+           normal * sqrt(max(0.0, 1.0 - randVal.x));
 }
 
-vec3 GetRandomSemiSpherePos(float radius, float i)
+vec3 GetRandomVector(vec2 ScreenUV, vec3 worldNormal, vec2 texSize, int index)
 {
-    float theta = rand(vec2(i, 129.645)) * (PI * 0.5); // 0 ~ PI/2
-    float phi = rand(vec2(85.222, i)) * (2.0 * PI); // 0 ~ 2PI
+    float noise1 = GenerateRandomValue(ScreenUV, texSize, l_ubo.frame);
+    float noise2 = GenerateRandomValue(ScreenUV, texSize, l_ubo.frame);
 
-    float x = radius * sin(theta) * cos(phi);
-    float y = radius * sin(theta) * sin(phi);
-    float z = radius * cos(theta);
-
-    return vec3(x, y, z);
+    vec3 randNormal = GetCosGemisphereSample(noise1, noise2, worldNormal);
+    return normalize(randNormal);
 }
 
-float ComputeSSAO(GBufferResult gResult)
+float ComputeSSAO(GBufferResult gResult, vec2 ScreenUV)
 {
+    mat4 VMat = l_ubo.view;
+    mat4 PMat = l_ubo.proj;
+
     vec3 worldPos = gResult.worldPos;
     vec3 worldNormal = gResult.worldNormal;
+    vec2 texSize = GetTextureSize();
 
-    mat3 TBM = calcTBNMatrix(worldNormal);
-    mat4 VPMat = l_ubo.proj * l_ubo.view;
+    // 透視投影で歪むのでカメラ座標系で計算
+    vec4 viewPos = VMat * vec4(worldPos, 1.0);
+    vec3 ro = viewPos.xyz;
 
     float resultAO = 0.0;
-    float loop = 32.0;
-    float numOf = 0.0;
+    float loop = 4.0;
 
     float aoRadius = 0.1;
+    float rayDist = aoRadius * GenerateRandomValue(ScreenUV, texSize, l_ubo.frame);
 
     // SSAOのサンプリング
-    for(float i = 0.0; i < loop; i++)
+    for(int i = 0; i < int(loop); i++)
     {
-        // Z軸正方向を向いた半球内のランダムオフセットを取得
-        vec3 ssphPos = GetRandomSemiSpherePos(aoRadius, i);
+        // コサイン加重ランダムベクトルの計算
+        vec3 randVec = GetRandomVector(ScreenUV, worldNormal, texSize, i);
 
-        // TBN座標系に変換
-        vec3 tbn_ssphPos = TBM * ssphPos;
+        vec4 viewDir = VMat * vec4(randVec, 0.0);
+        vec3 rd = normalize(viewDir.xyz);
 
         // 空間内のランダムな位置を算出
-        vec3 worldSSPhPos = worldPos + tbn_ssphPos;
+        vec3 p = ro + rd * rayDist;
 
-        // プロジェクション座標系にして理想的な深度を計算
-        vec4 projSSPhPos = VPMat * vec4(worldSSPhPos, 1.0);
-        float idealDepth = projSSPhPos.z / projSSPhPos.w;
-        idealDepth = idealDepth * 0.5 + 0.5;
+        vec4 projPos = PMat * vec4(p, 1.0);
 
-        // そのピクセルにおける実際の深度を取得
-        vec2 projUV = projSSPhPos.xy / projSSPhPos.w;
-        projUV = projUV * 0.5 + 0.5;
+        vec2 currentUV = (projPos.xy / projPos.w) * 0.5 + 0.5;
+        // float currentDepth = (projPos.z / projPos.w) * 0.5 + 0.5;
+        // プロジェクション座標系の深度だと、透視投影によりnearに近いほど値の幅が広く、farに近いほど値が圧縮されてしまう
+        // それによってtickness=0.1をNDC座標で使い、カメラから少し離れた場所ではワールド座標換算で数mから数十mの厚みを許容してしまうことになる
+        // その対策としてカメラ座標系におけるZの値を深度とする
+        float currentDepth_View = -p.z; // View空間は-Z方向を向いている(OpenGL右手系なので)
 
-        // UVの範囲外はスキップする
-        if(projUV.x < 0.0 || projUV.x > 1.0 || projUV.y < 0.0 || projUV.y > 1.0) continue;
+        // float realDepth = GetDepth(currentUV);
+        float realDepth_View = GetTexLinearDepth(currentUV);
 
-        float actualDepth = GetDepth(projUV);
+        // ノイズ対策で範囲外なら抜ける
+        if(currentUV.x < 0.0 || currentUV.x > 1.0 || currentUV.y < 0.0 || currentUV.y > 1.0) continue;
 
         // 実際の深度が理想的な深度よりも小さければ遮蔽されていると判断して暗い色を加算する
-        resultAO += (actualDepth < idealDepth) ? 0.0 : 1.0;
-
-        numOf++;
+        resultAO += (realDepth_View < currentDepth_View) ? 0.0 : 1.0;
     }
 
-    resultAO /= numOf;
+    resultAO /= loop;
 
     resultAO = pow(resultAO, 2.0);    
 
@@ -248,7 +330,7 @@ void main()
     if(gResult.materialType == 1.0)
     {
         // SSAO
-        col.rgb = vec3(ComputeSSAO(gResult));
+        col.rgb = vec3(ComputeSSAO(gResult, ScreenUV));
     }
     
     outColor = vec4(col, 1.0);

@@ -153,9 +153,9 @@ namespace app
 		}
 
 		// ポストプロセス
-		m_PostProcess->SetUseFXAA(false);
+		m_PostProcess->SetUseFXAA(true);
 		m_PostProcess->SetUseToneMapping(true);
-		m_PostProcess->SetUseBloom(false);
+		m_PostProcess->SetUseBloom(true);
 		if (!m_PostProcess->Initialize(pGraphicsAPI, pLoadWorker)) return false;
 
 		if (!m_PostProcessSSGIFilter->Initialize(pGraphicsAPI, pLoadWorker)) return false;
