@@ -230,9 +230,11 @@ float IGN(vec2 pixel, int frame)
 
 /*
 * ハッシュベースノイズ関数
-* https://www.reedbeta.com/blog/quick-and-easy-gpu-random-numbers-in-d3d11/
-* https://jcgt.org/published/0009/03/02/
-* https://burtleburtle.net/bob/hash/doobs.html
+* 通常の乱数だとパターンが目立つのでできるだけまばらで質の高いこれを使う
+* ハッシュ関数とはある数値を一定のルールに従って、圧縮した短い数値に変換する関数のこと
+* ここではJenkinsハッシュ関数を使う
+* https://en.wikipedia.org/wiki/Jenkins_hash_function
+* https://amindforeverprogramming.blogspot.com/2013/07/random-floats-in-glsl-330.html
 */
 uint JenkinsHash(uint x)
 {
@@ -247,7 +249,9 @@ uint JenkinsHash(uint x)
 uint JenkinsHash(uvec2 v) { return JenkinsHash(v.x ^ JenkinsHash(v.y)); }
 uint JenkinsHash(uvec3 v) { return JenkinsHash(v.x ^ JenkinsHash(v.yz)); }
 
-// ハッシュ済みのビット列から[0,1)のfloatを組み立てる
+// ハッシュ関数によって生成されたビット列から『0 ~ 1』のfloatを組み立てる関数
+// https://amindforeverprogramming.blogspot.com/2013/07/random-floats-in-glsl-330.html
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/intBitsToFloat.xhtml
 float ConstructFloat(uint m)
 {
     const uint ieeeMantissa = 0x007FFFFFu; // 仮数部のビットマスク
@@ -350,7 +354,7 @@ vec3 Raymarch(vec2 ScreenUV, vec3 randVec, vec3 worldPos, vec2 texSize)
         // プロジェクション座標系の深度だと、透視投影によりnearに近いほど値の幅が広く、farに近いほど値が圧縮されてしまう
         // それによってtickness=0.1をNDC座標で使い、カメラから少し離れた場所ではワールド座標換算で数mから数十mの厚みを許容してしまうことになる
         // その対策としてカメラ座標系におけるZの値を深度とする
-        float currentDepth_View = -p.z; // View空間は-Z方向を向いている(OpenGL右手系なので)
+        float currentDepth_View = -p.z; // View空間は-Z方向を向いている(OpenGL右手系なので)ので、深度と合うようにする
 
         // float realDepth = GetDepth(currentUV);
         float realDepth_View = GetTexLinearDepth(currentUV);

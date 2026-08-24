@@ -398,6 +398,7 @@ namespace app
 		}
 #endif
 
+#ifdef USE_NETWORK
 		// DMXに照明灯体を渡す
 		{
 			const auto& Object = m_SceneController->FindObjectByName("LightList");
@@ -432,6 +433,7 @@ namespace app
 				}
 			}
 		}
+#endif
 
 		return true;
 	}
@@ -471,6 +473,7 @@ namespace app
 		return m_SceneController;
 	}
 
+#ifdef USE_NETWORK
 	// DMXデータ受信イベント
 	void CPerformanceOPTest::OnReceiveArtNetDMX(unsigned short Net, unsigned short SubNet, unsigned short Universe, const std::vector<unsigned char>& DataBuffer)
 	{
@@ -495,6 +498,7 @@ namespace app
 			}
 		}
 	}
+#endif
 
 	// カスタムイベント発火
 	void CPerformanceOPTest::OnRaisedEvent(const std::string& Type, const std::string& Params)

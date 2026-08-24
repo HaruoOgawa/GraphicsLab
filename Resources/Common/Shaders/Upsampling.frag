@@ -56,7 +56,13 @@ void main()
     vec4 h = GetTexColor(vec2(v2f_UV.x,     v2f_UV.y - y));
     vec4 i = GetTexColor(vec2(v2f_UV.x + x, v2f_UV.y - y));
 
-    // 3x3 tent filter
+    // 3x3 tent filter (テントフィルタ)
+	/*
+	中心・上下左右・斜めで重みを変えてスケーリングし、スケールの合計値の16で割る
+	-+-
+	+e+
+	-+-
+	*/
 	vec4 upsample = vec4(0.0);
     upsample = e*4.0;
     upsample += (b+d+f+h)*2.0;

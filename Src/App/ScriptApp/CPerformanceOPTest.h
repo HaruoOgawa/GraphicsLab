@@ -92,11 +92,13 @@ namespace app
 		virtual std::vector<std::shared_ptr<object::C3DObject>> GetObjectList() const override;
 		virtual std::shared_ptr<scene::CSceneController> GetSceneController() const override;
 
+#ifdef USE_NETWORK
 		// DMXデータ受信イベント
 		virtual void OnReceiveArtNetDMX(unsigned short Net, unsigned short SubNet, unsigned short Universe, const std::vector<unsigned char>& DataBuffer) override;
 
 		// NDIデータ受信イベント
 		virtual void OnReceiveNDIImage(const std::vector<unsigned char>& pixelData, int Width, int Height, api::ERenderPassFormat RenderPassFormat) override;
+#endif
 
 		// カスタムイベント発火
 		virtual void OnRaisedEvent(const std::string& Type, const std::string& Params) override;

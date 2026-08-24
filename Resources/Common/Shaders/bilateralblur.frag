@@ -1,5 +1,12 @@
 #version 450
 
+// ガウシアンブラーはガウス関数を使って処理の中心ピクセルと距離が近いほど、ピクセルを重心するようにして全体を一様にぼかすのに対して
+// バイラテラルブラーは画面のエッジとなる部分を残しながらぼかす手法
+// つまり通常のガウシアンブラーをベースに処理の中心ピクセルと大きく特徴の異なるピクセルの影響力を小さくするようにしたのが、バイラテラルブラー
+// SSGIでは離れていたり向きが全く違ったりと関係ないサーフェイスの影響を受けないようにデノイズしたいのでこれを使う
+// https://matcha-choco010.net/2018/07/02/gaussian-and-bilateral-filter/
+
+// https://github.com/nvpro-samples/gl_ssao/blob/master/bilateralblur.frag.glsl
 /*
  * Copyright (c) 2014-2021, NVIDIA CORPORATION.  All rights reserved.
  *
@@ -116,6 +123,13 @@ vec4 BlurFunction(vec2 uv, float r, vec4 center_c, float center_d, vec3 center_n
   float d = GetTexLinearDepth(uv);
   vec3  n = GetWorldNormal(uv);
   
+  // ガウス関数
+  // G(r) = exp( -r² / (2σ²) )
+  // r : 中心ピクセルからの距離
+  // GPUでは計算コストの都合上、exp2で計算(あんまり結果が変わらないのに計算コストが安い)
+  // σ = kernelRadius × 0.5
+  // https://www.eng.kagawa-u.ac.jp/~tishii/Lab/Etc/gauss.html
+  // BlurSigmaやBlurFalloffはガウス関数の項
   const float BlurSigma = float(frag_ubo.kernelRadius) * 0.5;
   const float BlurFalloff = 1.0 / (2.0*BlurSigma*BlurSigma);
   
@@ -127,7 +141,7 @@ vec4 BlurFunction(vec2 uv, float r, vec4 center_c, float center_d, vec3 center_n
   float normalDot = dot(center_n, n);
   float normalWeight = pow(max(normalDot, 0.0), frag_ubo.nExponent); 
 
-  //
+  // ガウス関数の項から深度の違いだけ、影響度を小さくするように減算する
   float w = exp2(-r*r*BlurFalloff - ddiff*ddiff) * normalWeight;
   w_total += w;
 
