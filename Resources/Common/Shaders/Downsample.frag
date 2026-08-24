@@ -47,6 +47,18 @@ vec2 GetTextureSize()
 
 void main()
 {
+    // 13タップの重み付きダウンサンプルフィルタ
+    // CoD Advanced Warfareに使われた手法
+    // SIGGRAPH 2014で発表された
+    // サンプラーにバイリニアフィルタを設定しておく必要がある
+    // (texture関数でサンプリングするときにフィルター処理が実行されるはず？)
+    // この手法は13回バイリニアフィルタを実行するので、実質36テクセル分の平均化されたカラーを取得することができる
+    // 重みをつけて影響度を変化させる
+    // // 安いコストで低解像度にきっちり落とし込むことができるのでこれを使う
+    // https://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare/
+    // https://github.com/bkaradzic/bgfx/blob/master/examples/38-bloom/fs_downsample.sc
+    // https://learnopengl.com/Guest-Articles/2022/Phys.-Based-Bloom
+
 	vec2 texSize = GetTextureSize();
 
     float x = 1.0 / texSize.x;
@@ -70,11 +82,12 @@ void main()
     vec3 m = GetTexColor(vec2(v2f_UV.x + x, v2f_UV.y - y)).rgb;
 
 	vec3 downsample = vec3(0.0);
-
-    downsample = e*0.125;
-    downsample += (a+c+g+i)*0.03125;
-    downsample += (b+d+f+h)*0.0625;
-    downsample += (j+k+l+m)*0.125;
+    
+    // 重みは合計で１になるように
+    downsample = e*0.125;             // 0.125       中心
+    downsample += (j+k+l+m)*0.125;    // 0.5   / 4   四隅
+    downsample += (b+d+f+h)*0.0625;   // 0.25  / 4   1つ外の上下左右
+    downsample += (a+c+g+i)*0.03125;  // 0.125 / 4   1つ外の四隅
 
 	outColor = vec4(downsample, 1.0);
 }
