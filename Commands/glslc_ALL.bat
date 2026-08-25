@@ -1,9 +1,21 @@
+@rem common shaders ///////////////////////////////////////////////////////////////////
 set CurrentDir=%~dp0
-set ShaderDir=..\Resources\Shaders
-set EXEDir=..\src\Library\Vulkan\bin\
+set ShaderDir=..\Resources\Common\Shaders
 
-for /R %ShaderDir% %%i in (*.vert) do %EXEDir%glslc.exe -o %%~pi%%~ni_vert.spv %%~i
+for /R %ShaderDir% %%i in (*.vert) do glslc.exe -o %%~pi%%~ni_vert.spv %%~i
 
-for /R %ShaderDir% %%i in (*.frag) do %EXEDir%glslc.exe -o %%~pi%%~ni_frag.spv %%~i
+for /R %ShaderDir% %%i in (*.frag) do glslc.exe -o %%~pi%%~ni_frag.spv %%~i
+
+for /R %ShaderDir% %%i in (*.comp) do glslc.exe -o %%~pi%%~ni_comp.spv %%~i
+
+@rem user shaders ///////////////////////////////////////////////////////////////////
+set CurrentDir=%~dp0
+set ShaderDir=..\Resources\User\Shaders
+
+for /R %ShaderDir% %%i in (*.vert) do glslc.exe -o %%~pi%%~ni_vert.spv %%~i
+
+for /R %ShaderDir% %%i in (*.frag) do glslc.exe -o %%~pi%%~ni_frag.spv %%~i
+
+for /R %ShaderDir% %%i in (*.comp) do glslc.exe -o %%~pi%%~ni_comp.spv %%~i
 
 pause
