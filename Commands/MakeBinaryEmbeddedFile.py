@@ -37,7 +37,7 @@ def DoJSONMin(src, dst):
         dstF.close()
 
 def Main():
-    resouces = "E:/CppDev/Garnet/GarnetDev"
+    resouces = "E:/CppDev/Garnet/GarnetTemplate"
     output = "Src/App/ScriptApp/"
     cppname = "CEmbeddedFileList"
     Prefix = "_Comp"

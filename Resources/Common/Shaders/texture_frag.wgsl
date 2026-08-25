@@ -12,16 +12,13 @@ fn main_1() {
     var st: vec2<f32>;
 
     col = vec4<f32>(1f, 1f, 1f, 1f);
-    let _e13 = fUV_1;
-    st = _e13;
-    let _e14 = st;
-    let _e15 = textureSample(texImage, texSampler, _e14);
-    let _e16 = _e15.xyz;
-    col[0u] = _e16.x;
-    col[1u] = _e16.y;
-    col[2u] = _e16.z;
-    let _e23 = col;
-    outColor = _e23;
+    let _e10 = fUV_1;
+    st = _e10;
+    let _e11 = st;
+    let _e12 = textureSample(texImage, texSampler, _e11);
+    col = _e12;
+    let _e13 = col;
+    outColor = _e13;
     return;
 }
 

@@ -1,16 +1,27 @@
+struct PBRData {
+    Albedo: vec3<f32>,
+    Metallic: f32,
+    Roughness: f32,
+    WorldNormal: vec3<f32>,
+    WorldPos: vec3<f32>,
+    ViewDir: vec3<f32>,
+}
+
+struct LightData {
+    dir: vec3<f32>,
+    color: vec3<f32>,
+    attenuation: f32,
+}
+
 struct PBRParam {
-    NdotL: f32,
-    NdotV: f32,
-    NdotH: f32,
-    LdotH: f32,
-    VdotH: f32,
-    perceptualRoughness: f32,
-    metallic: f32,
-    reflectance0_: vec3<f32>,
-    reflectance90_: vec3<f32>,
-    alphaRoughness: f32,
-    diffuseColor: vec3<f32>,
-    specularColor: vec3<f32>,
+    Albedo: vec3<f32>,
+    Metallic: f32,
+    Roughness: f32,
+    NdH: f32,
+    LdH: f32,
+    NdL: f32,
+    NdV: f32,
+    VdH: f32,
 }
 
 struct UniformBufferObject {
@@ -54,18 +65,6 @@ struct UniformBufferObject {
 
 @group(0) @binding(0) 
 var<uniform> ubo: UniformBufferObject;
-var<private> f_WorldTangent_1: vec3<f32>;
-var<private> f_WorldBioTangent_1: vec3<f32>;
-var<private> f_WorldNormal_1: vec3<f32>;
-@group(0) @binding(8) 
-var normalTexture: texture_2d<f32>;
-@group(0) @binding(9) 
-var normalTextureSampler: sampler;
-var<private> f_Texcoord_1: vec2<f32>;
-@group(0) @binding(14) 
-var shadowmapTexture: texture_2d<f32>;
-@group(0) @binding(15) 
-var shadowmapTextureSampler: sampler;
 @group(0) @binding(12) 
 var cubemapTexture: texture_cube<f32>;
 @group(0) @binding(13) 
@@ -74,10 +73,6 @@ var cubemapTextureSampler: sampler;
 var cubeMap2DTexture: texture_2d<f32>;
 @group(0) @binding(23) 
 var cubeMap2DTextureSampler: sampler;
-@group(0) @binding(20) 
-var IBL_GGXLUT_Texture: texture_2d<f32>;
-@group(0) @binding(21) 
-var IBL_GGXLUT_TextureSampler: sampler;
 @group(0) @binding(16) 
 var IBL_Diffuse_Texture: texture_2d<f32>;
 @group(0) @binding(17) 
@@ -86,710 +81,716 @@ var IBL_Diffuse_TextureSampler: sampler;
 var IBL_Specular_Texture: texture_2d<f32>;
 @group(0) @binding(19) 
 var IBL_Specular_TextureSampler: sampler;
-@group(0) @binding(4) 
-var metallicRoughnessTexture: texture_2d<f32>;
-@group(0) @binding(5) 
-var metallicRoughnessTextureSampler: sampler;
+@group(0) @binding(20) 
+var IBL_GGXLUT_Texture: texture_2d<f32>;
+@group(0) @binding(21) 
+var IBL_GGXLUT_TextureSampler: sampler;
 @group(0) @binding(2) 
 var baseColorTexture: texture_2d<f32>;
 @group(0) @binding(3) 
 var baseColorTextureSampler: sampler;
-var<private> f_WorldPos_1: vec4<f32>;
-@group(0) @binding(10) 
-var occlusionTexture: texture_2d<f32>;
-@group(0) @binding(11) 
-var occlusionTextureSampler: sampler;
+var<private> f_Texcoord_1: vec2<f32>;
+@group(0) @binding(4) 
+var metallicRoughnessTexture: texture_2d<f32>;
+@group(0) @binding(5) 
+var metallicRoughnessTextureSampler: sampler;
+var<private> f_WorldTangent_1: vec3<f32>;
+var<private> f_WorldBioTangent_1: vec3<f32>;
+var<private> f_WorldNormal_1: vec3<f32>;
+@group(0) @binding(8) 
+var normalTexture: texture_2d<f32>;
+@group(0) @binding(9) 
+var normalTextureSampler: sampler;
 @group(0) @binding(6) 
 var emissiveTexture: texture_2d<f32>;
 @group(0) @binding(7) 
 var emissiveTextureSampler: sampler;
-var<private> f_LightSpacePos_1: vec4<f32>;
+var<private> f_WorldPos_1: vec4<f32>;
 var<private> outColor: vec4<f32>;
+var<private> f_LightSpacePos_1: vec4<f32>;
+@group(0) @binding(10) 
+var occlusionTexture: texture_2d<f32>;
+@group(0) @binding(11) 
+var occlusionTextureSampler: sampler;
+@group(0) @binding(14) 
+var shadowmapTexture: texture_2d<f32>;
+@group(0) @binding(15) 
+var shadowmapTextureSampler: sampler;
 
-fn ComputePCF_u0028_vf2_u003b(uv: ptr<function, vec2<f32>>) -> vec2<f32> {
-    var moments: vec2<f32>;
-    var texelSize: vec2<f32>;
-
-    moments = vec2<f32>(0f, 0f);
-    let _e98 = ubo.ShadowMapX;
-    let _e101 = ubo.ShadowMapY;
-    texelSize = vec2<f32>((1f / _e98), (1f / _e101));
-    let _e104 = (*uv);
-    let _e105 = texelSize;
-    let _e108 = textureSample(shadowmapTexture, shadowmapTextureSampler, (_e104 + (vec2<f32>(-1f, -1f) * _e105)));
-    let _e110 = moments;
-    moments = (_e110 + _e108.xy);
-    let _e112 = (*uv);
-    let _e113 = texelSize;
-    let _e116 = textureSample(shadowmapTexture, shadowmapTextureSampler, (_e112 + (vec2<f32>(-1f, 0f) * _e113)));
-    let _e118 = moments;
-    moments = (_e118 + _e116.xy);
-    let _e120 = (*uv);
-    let _e121 = texelSize;
-    let _e124 = textureSample(shadowmapTexture, shadowmapTextureSampler, (_e120 + (vec2<f32>(-1f, 1f) * _e121)));
-    let _e126 = moments;
-    moments = (_e126 + _e124.xy);
-    let _e128 = (*uv);
-    let _e129 = texelSize;
-    let _e132 = textureSample(shadowmapTexture, shadowmapTextureSampler, (_e128 + (vec2<f32>(0f, -1f) * _e129)));
-    let _e134 = moments;
-    moments = (_e134 + _e132.xy);
-    let _e136 = (*uv);
-    let _e137 = texelSize;
-    let _e140 = textureSample(shadowmapTexture, shadowmapTextureSampler, (_e136 + (vec2<f32>(0f, 0f) * _e137)));
-    let _e142 = moments;
-    moments = (_e142 + _e140.xy);
-    let _e144 = (*uv);
-    let _e145 = texelSize;
-    let _e148 = textureSample(shadowmapTexture, shadowmapTextureSampler, (_e144 + (vec2<f32>(0f, 1f) * _e145)));
-    let _e150 = moments;
-    moments = (_e150 + _e148.xy);
-    let _e152 = (*uv);
-    let _e153 = texelSize;
-    let _e156 = textureSample(shadowmapTexture, shadowmapTextureSampler, (_e152 + (vec2<f32>(1f, -1f) * _e153)));
-    let _e158 = moments;
-    moments = (_e158 + _e156.xy);
-    let _e160 = (*uv);
-    let _e161 = texelSize;
-    let _e164 = textureSample(shadowmapTexture, shadowmapTextureSampler, (_e160 + (vec2<f32>(1f, 0f) * _e161)));
-    let _e166 = moments;
-    moments = (_e166 + _e164.xy);
-    let _e168 = (*uv);
-    let _e169 = texelSize;
-    let _e172 = textureSample(shadowmapTexture, shadowmapTextureSampler, (_e168 + (vec2<f32>(1f, 1f) * _e169)));
-    let _e174 = moments;
-    moments = (_e174 + _e172.xy);
-    let _e176 = moments;
-    moments = (_e176 / vec2(9f));
-    let _e179 = moments;
-    return _e179;
+fn SRGBtoLINEAR_u0028_vf3_u003b(srgbIn: ptr<function, vec3<f32>>) -> vec3<f32> {
+    let _e74 = (*srgbIn);
+    return pow(_e74, vec3<f32>(2.2f, 2.2f, 2.2f));
 }
 
-fn CalcShadow_u0028_vf3_u003b_vf3_u003b_vf3_u003b(lsp: ptr<function, vec3<f32>>, nomral: ptr<function, vec3<f32>>, lightDir: ptr<function, vec3<f32>>) -> f32 {
-    var moments_1: vec2<f32>;
-    var param: vec2<f32>;
-    var ShadowBias: f32;
-    var distance: f32;
+fn CalcEmissive_u0028_() -> vec3<f32> {
+    var emissive: vec3<f32>;
+    var param: vec3<f32>;
 
-    let _e101 = (*lsp);
-    param = _e101.xy;
-    let _e103 = ComputePCF_u0028_vf2_u003b((&param));
-    moments_1 = _e103;
-    let _e104 = moments_1;
-    moments_1 = ((_e104 * 0.5f) + vec2(0.5f));
-    let _e108 = (*nomral);
-    let _e109 = (*lightDir);
-    ShadowBias = max(0f, (0.001f * (1f - dot(_e108, _e109))));
-    let _e115 = (*lsp)[2u];
-    let _e116 = ShadowBias;
-    distance = (_e115 - _e116);
-    let _e118 = distance;
-    let _e120 = moments_1[0u];
-    if (_e118 <= _e120) {
-        return 1f;
+    let _e76 = ubo.emissiveFactor;
+    let _e79 = ubo.emissiveStrength;
+    emissive = (_e76.xyz * _e79);
+    let _e82 = ubo.useEmissiveTexture;
+    if (_e82 != 0i) {
+        let _e84 = f_Texcoord_1;
+        let _e85 = textureSample(emissiveTexture, emissiveTextureSampler, _e84);
+        param = _e85.xyz;
+        let _e87 = SRGBtoLINEAR_u0028_vf3_u003b((&param));
+        let _e88 = emissive;
+        emissive = (_e88 * _e87);
     }
-    return 0.1f;
-}
-
-fn SRGBtoLINEAR_u0028_vf4_u003b(srgbIn: ptr<function, vec4<f32>>) -> vec4<f32> {
-    let _e95 = (*srgbIn);
-    let _e97 = pow(_e95.xyz, vec3<f32>(2.2f, 2.2f, 2.2f));
-    let _e99 = (*srgbIn)[3u];
-    return vec4<f32>(_e97.x, _e97.y, _e97.z, _e99);
+    let _e90 = emissive;
+    return _e90;
 }
 
 fn CastDirToSt_u0028_vf3_u003b(Dir: ptr<function, vec3<f32>>) -> vec2<f32> {
-    var pi: f32;
     var theta: f32;
     var phi: f32;
     var st: vec2<f32>;
 
-    pi = 3.1415f;
-    let _e100 = (*Dir)[1u];
-    theta = acos(_e100);
-    let _e103 = (*Dir)[2u];
-    let _e105 = (*Dir)[0u];
-    phi = atan2(_e103, _e105);
-    let _e107 = phi;
-    let _e108 = pi;
-    let _e111 = theta;
-    let _e112 = pi;
-    st = vec2<f32>((_e107 / (2f * _e108)), (_e111 / _e112));
-    let _e115 = st;
-    return _e115;
+    let _e78 = (*Dir)[1u];
+    theta = acos(_e78);
+    let _e81 = (*Dir)[2u];
+    let _e83 = (*Dir)[0u];
+    phi = atan2(_e81, _e83);
+    let _e85 = phi;
+    let _e87 = theta;
+    st = vec2<f32>((_e85 / 6.2831855f), (_e87 / 3.1415927f));
+    let _e90 = st;
+    return _e90;
 }
 
-fn ComputeReflectionColor_u0028_struct_u002d_PBRParam_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_f1_u002d_vf3_u002d_vf31_u003b_vf3_u003b_vf3_u003b(pbrParam: ptr<function, PBRParam>, v: ptr<function, vec3<f32>>, n: ptr<function, vec3<f32>>) -> vec3<f32> {
+fn CalcReflectionProbe_u0028_struct_u002d_PBRData_u002d_vf3_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_vf31_u003b(pbr: ptr<function, PBRData>) -> vec3<f32> {
+    var v: vec3<f32>;
+    var reflectV: vec3<f32>;
     var reflectColor: vec3<f32>;
     var mipCount: f32;
     var lod: f32;
-    var param_1: vec4<f32>;
+    var param_1: vec3<f32>;
     var st_1: vec2<f32>;
     var param_2: vec3<f32>;
     var mipCount_1: f32;
     var lod_1: f32;
-    var param_3: vec4<f32>;
+    var param_3: vec3<f32>;
 
+    let _e86 = (*pbr).ViewDir;
+    v = normalize(_e86);
+    let _e88 = v;
+    let _e90 = (*pbr).WorldNormal;
+    reflectV = reflect(_e88, _e90);
     reflectColor = vec3<f32>(0f, 0f, 0f);
-    let _e107 = ubo.useCubeMap;
-    if (_e107 != 0i) {
-        let _e110 = ubo.mipCount;
-        mipCount = _e110;
-        let _e111 = mipCount;
-        let _e113 = (*pbrParam).perceptualRoughness;
-        lod = (_e111 * _e113);
-        let _e115 = (*v);
-        let _e116 = (*n);
-        let _e118 = lod;
-        let _e119 = textureSampleLevel(cubemapTexture, cubemapTextureSampler, reflect(_e115, _e116), _e118);
-        param_1 = _e119;
-        let _e120 = SRGBtoLINEAR_u0028_vf4_u003b((&param_1));
-        reflectColor = _e120.xyz;
+    let _e93 = ubo.useCubeMap;
+    if (_e93 != 0i) {
+        let _e96 = ubo.mipCount;
+        mipCount = _e96;
+        let _e97 = mipCount;
+        let _e99 = (*pbr).Roughness;
+        lod = (_e97 * _e99);
+        let _e101 = reflectV;
+        let _e102 = lod;
+        let _e103 = textureSampleLevel(cubemapTexture, cubemapTextureSampler, _e101, _e102);
+        param_1 = _e103.xyz;
+        let _e105 = SRGBtoLINEAR_u0028_vf3_u003b((&param_1));
+        reflectColor = _e105;
     } else {
-        let _e123 = ubo.useDirCubemap;
-        if (_e123 != 0i) {
-            let _e125 = (*v);
-            let _e126 = (*n);
-            param_2 = reflect(_e125, _e126);
-            let _e128 = CastDirToSt_u0028_vf3_u003b((&param_2));
-            st_1 = _e128;
-            let _e130 = ubo.mipCount;
-            mipCount_1 = _e130;
-            let _e131 = mipCount_1;
-            let _e133 = (*pbrParam).perceptualRoughness;
-            lod_1 = (_e131 * _e133);
-            let _e135 = st_1;
-            let _e136 = lod_1;
-            let _e137 = textureSampleLevel(cubeMap2DTexture, cubeMap2DTextureSampler, _e135, _e136);
-            param_3 = _e137;
-            let _e138 = SRGBtoLINEAR_u0028_vf4_u003b((&param_3));
-            reflectColor = _e138.xyz;
+        let _e107 = ubo.useDirCubemap;
+        if (_e107 != 0i) {
+            let _e109 = reflectV;
+            param_2 = _e109;
+            let _e110 = CastDirToSt_u0028_vf3_u003b((&param_2));
+            st_1 = _e110;
+            let _e112 = ubo.mipCount;
+            mipCount_1 = _e112;
+            let _e113 = mipCount_1;
+            let _e115 = (*pbr).Roughness;
+            lod_1 = (_e113 * _e115);
+            let _e117 = st_1;
+            let _e118 = lod_1;
+            let _e119 = textureSampleLevel(cubeMap2DTexture, cubeMap2DTextureSampler, _e117, _e118);
+            param_3 = _e119.xyz;
+            let _e121 = SRGBtoLINEAR_u0028_vf3_u003b((&param_3));
+            reflectColor = _e121;
         }
     }
-    let _e140 = reflectColor;
-    return _e140;
+    let _e122 = reflectColor;
+    return _e122;
 }
 
 fn GetSphericalTexcoord_u0028_vf3_u003b(Dir_1: ptr<function, vec3<f32>>) -> vec2<f32> {
-    var pi_1: f32;
     var theta_1: f32;
     var phi_1: f32;
     var st_2: vec2<f32>;
 
-    pi_1 = 3.1415f;
-    let _e100 = (*Dir_1)[1u];
-    theta_1 = acos(_e100);
-    let _e103 = (*Dir_1)[2u];
-    let _e105 = (*Dir_1)[0u];
-    phi_1 = atan2(_e103, _e105);
-    let _e107 = phi_1;
-    let _e108 = pi_1;
-    let _e111 = theta_1;
-    let _e112 = pi_1;
-    st_2 = vec2<f32>((_e107 / (2f * _e108)), (_e111 / _e112));
-    let _e115 = st_2;
-    return _e115;
+    let _e78 = (*Dir_1)[1u];
+    theta_1 = acos(_e78);
+    let _e81 = (*Dir_1)[2u];
+    let _e83 = (*Dir_1)[0u];
+    phi_1 = atan2(_e81, _e83);
+    let _e85 = phi_1;
+    let _e87 = theta_1;
+    st_2 = vec2<f32>((_e85 / 6.2831855f), (_e87 / 3.1415927f));
+    let _e90 = st_2;
+    return _e90;
 }
 
-fn ComputeIBL_u0028_struct_u002d_PBRParam_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_f1_u002d_vf3_u002d_vf31_u003b_vf3_u003b_vf3_u003b(pbrParam_1: ptr<function, PBRParam>, v_1: ptr<function, vec3<f32>>, n_1: ptr<function, vec3<f32>>) -> vec3<f32> {
-    var mipCount_2: f32;
-    var lod_2: f32;
-    var brdf: vec3<f32>;
-    var param_4: vec4<f32>;
+fn GetIndirectDiffuse_u0028_vf3_u003b(n: ptr<function, vec3<f32>>) -> vec3<f32> {
     var diffuseLight: vec3<f32>;
-    var param_5: vec3<f32>;
-    var param_6: vec4<f32>;
+    var param_4: vec3<f32>;
+
+    let _e76 = (*n);
+    param_4 = _e76;
+    let _e77 = GetSphericalTexcoord_u0028_vf3_u003b((&param_4));
+    let _e78 = textureSample(IBL_Diffuse_Texture, IBL_Diffuse_TextureSampler, _e77);
+    diffuseLight = _e78.xyz;
+    let _e80 = diffuseLight;
+    return _e80;
+}
+
+fn GetGGXRadiance_u0028_vf3_u003b_vf3_u003b_f1_u003b_f1_u003b(n_1: ptr<function, vec3<f32>>, v_1: ptr<function, vec3<f32>>, roughenss: ptr<function, f32>, mipCount_2: ptr<function, f32>) -> vec3<f32> {
+    var lod_2: f32;
     var specularLight: vec3<f32>;
-    var param_7: vec3<f32>;
-    var param_8: vec4<f32>;
-    var diffuse: vec3<f32>;
-    var specular: vec3<f32>;
+    var param_5: vec3<f32>;
 
-    let _e110 = ubo.mipCount;
-    mipCount_2 = _e110;
-    let _e111 = mipCount_2;
-    let _e113 = (*pbrParam_1).perceptualRoughness;
-    lod_2 = (_e111 * _e113);
-    let _e116 = (*pbrParam_1).NdotV;
-    let _e118 = (*pbrParam_1).perceptualRoughness;
-    let _e121 = textureSample(IBL_GGXLUT_Texture, IBL_GGXLUT_TextureSampler, vec2<f32>(_e116, (1f - _e118)));
-    param_4 = _e121;
-    let _e122 = SRGBtoLINEAR_u0028_vf4_u003b((&param_4));
-    brdf = _e122.xyz;
-    let _e124 = (*n_1);
-    param_5 = _e124;
-    let _e125 = GetSphericalTexcoord_u0028_vf3_u003b((&param_5));
-    let _e126 = textureSample(IBL_Diffuse_Texture, IBL_Diffuse_TextureSampler, _e125);
-    param_6 = _e126;
-    let _e127 = SRGBtoLINEAR_u0028_vf4_u003b((&param_6));
-    diffuseLight = _e127.xyz;
-    let _e129 = (*v_1);
-    let _e130 = (*n_1);
-    param_7 = reflect(_e129, _e130);
-    let _e132 = GetSphericalTexcoord_u0028_vf3_u003b((&param_7));
-    let _e133 = lod_2;
-    let _e134 = textureSampleLevel(IBL_Specular_Texture, IBL_Specular_TextureSampler, _e132, _e133);
-    param_8 = _e134;
-    let _e135 = SRGBtoLINEAR_u0028_vf4_u003b((&param_8));
-    specularLight = _e135.xyz;
-    let _e137 = diffuseLight;
-    let _e139 = (*pbrParam_1).diffuseColor;
-    diffuse = (_e137 * _e139);
-    let _e141 = specularLight;
-    let _e143 = (*pbrParam_1).specularColor;
-    let _e145 = brdf[0u];
-    let _e148 = brdf[1u];
-    specular = (_e141 * ((_e143 * _e145) + vec3(_e148)));
-    let _e152 = specular;
-    return _e152;
+    let _e80 = (*mipCount_2);
+    let _e81 = (*roughenss);
+    lod_2 = (_e80 * _e81);
+    let _e83 = (*v_1);
+    let _e84 = (*n_1);
+    param_5 = reflect(_e83, _e84);
+    let _e86 = GetSphericalTexcoord_u0028_vf3_u003b((&param_5));
+    let _e87 = lod_2;
+    let _e88 = textureSampleLevel(IBL_Specular_Texture, IBL_Specular_TextureSampler, _e86, _e87);
+    specularLight = _e88.xyz;
+    let _e90 = specularLight;
+    return _e90;
 }
 
-fn CalcDiffuseBRDF_u0028_struct_u002d_PBRParam_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_f1_u002d_vf3_u002d_vf31_u003b(param_9: ptr<function, PBRParam>) -> vec3<f32> {
-    var oneminus: f32;
+fn GetSpecularBRDF_u0028_f1_u003b_f1_u003b_vf3_u003b(NdV: ptr<function, f32>, roughenss_1: ptr<function, f32>, F0_: ptr<function, vec3<f32>>) -> vec3<f32> {
+    var uv: vec2<f32>;
+    var brdf: vec3<f32>;
+    var F: vec3<f32>;
 
-    let _e97 = (*param_9).metallic;
-    oneminus = (0.96f - (_e97 * 0.96f));
-    let _e101 = (*param_9).diffuseColor;
-    let _e102 = oneminus;
-    return (_e101 * _e102);
+    let _e79 = (*NdV);
+    let _e80 = (*roughenss_1);
+    uv = vec2<f32>(_e79, _e80);
+    let _e82 = uv;
+    let _e83 = textureSample(IBL_GGXLUT_Texture, IBL_GGXLUT_TextureSampler, _e82);
+    brdf = _e83.xyz;
+    let _e85 = (*F0_);
+    let _e86 = (*F0_);
+    let _e89 = (*NdV);
+    F = (_e85 + ((vec3(1f) - _e86) * pow((1f - _e89), 5f)));
+    let _e94 = F;
+    let _e96 = brdf[0u];
+    let _e99 = brdf[1u];
+    return ((_e94 * _e96) + vec3(_e99));
 }
 
-fn CalcFrenelReflection_u0028_struct_u002d_PBRParam_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_f1_u002d_vf3_u002d_vf31_u003b(param_10: ptr<function, PBRParam>) -> vec3<f32> {
-    let _e96 = (*param_10).reflectance0_;
-    let _e98 = (*param_10).reflectance90_;
-    let _e100 = (*param_10).reflectance0_;
-    let _e103 = (*param_10).VdotH;
-    return (_e96 + ((_e98 - _e100) * pow(clamp((1f - _e103), 0f, 1f), 5f)));
+fn ComputeIBL_u0028_struct_u002d_PBRData_u002d_vf3_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_vf31_u003b(pbr_1: ptr<function, PBRData>) -> vec3<f32> {
+    var n_2: vec3<f32>;
+    var v_2: vec3<f32>;
+    var NdV_1: f32;
+    var metal_fresnel: vec3<f32>;
+    var param_6: f32;
+    var param_7: f32;
+    var param_8: vec3<f32>;
+    var metal_specularBRDF: vec3<f32>;
+    var param_9: vec3<f32>;
+    var param_10: vec3<f32>;
+    var param_11: f32;
+    var param_12: f32;
+    var metal_specular_color: vec3<f32>;
+    var dielectric_fresnel: vec3<f32>;
+    var param_13: f32;
+    var param_14: f32;
+    var param_15: vec3<f32>;
+    var dielectric_diffuse: vec3<f32>;
+    var param_16: vec3<f32>;
+    var dielectric_specularBRDF: vec3<f32>;
+    var param_17: vec3<f32>;
+    var param_18: vec3<f32>;
+    var param_19: f32;
+    var param_20: f32;
+    var dielectric_color: vec3<f32>;
+    var finalColor: vec3<f32>;
+
+    let _e101 = (*pbr_1).WorldNormal;
+    n_2 = normalize(_e101);
+    let _e104 = (*pbr_1).ViewDir;
+    v_2 = normalize(-(_e104));
+    let _e107 = n_2;
+    let _e108 = v_2;
+    NdV_1 = clamp(dot(_e107, _e108), 0f, 1f);
+    let _e111 = NdV_1;
+    param_6 = _e111;
+    let _e113 = (*pbr_1).Roughness;
+    param_7 = _e113;
+    let _e115 = (*pbr_1).Albedo;
+    param_8 = _e115;
+    let _e116 = GetSpecularBRDF_u0028_f1_u003b_f1_u003b_vf3_u003b((&param_6), (&param_7), (&param_8));
+    metal_fresnel = _e116;
+    let _e117 = n_2;
+    param_9 = _e117;
+    let _e118 = v_2;
+    param_10 = _e118;
+    let _e120 = (*pbr_1).Roughness;
+    param_11 = _e120;
+    let _e122 = ubo.mipCount;
+    param_12 = _e122;
+    let _e123 = GetGGXRadiance_u0028_vf3_u003b_vf3_u003b_f1_u003b_f1_u003b((&param_9), (&param_10), (&param_11), (&param_12));
+    metal_specularBRDF = _e123;
+    let _e124 = metal_fresnel;
+    let _e125 = metal_specularBRDF;
+    metal_specular_color = (_e124 * _e125);
+    let _e127 = NdV_1;
+    param_13 = _e127;
+    let _e129 = (*pbr_1).Roughness;
+    param_14 = _e129;
+    param_15 = vec3<f32>(0.04f, 0.04f, 0.04f);
+    let _e130 = GetSpecularBRDF_u0028_f1_u003b_f1_u003b_vf3_u003b((&param_13), (&param_14), (&param_15));
+    dielectric_fresnel = _e130;
+    let _e131 = n_2;
+    param_16 = _e131;
+    let _e132 = GetIndirectDiffuse_u0028_vf3_u003b((&param_16));
+    let _e134 = (*pbr_1).Albedo;
+    dielectric_diffuse = (_e132 * _e134);
+    let _e136 = n_2;
+    param_17 = _e136;
+    let _e137 = v_2;
+    param_18 = _e137;
+    let _e139 = (*pbr_1).Roughness;
+    param_19 = _e139;
+    let _e141 = ubo.mipCount;
+    param_20 = _e141;
+    let _e142 = GetGGXRadiance_u0028_vf3_u003b_vf3_u003b_f1_u003b_f1_u003b((&param_17), (&param_18), (&param_19), (&param_20));
+    dielectric_specularBRDF = _e142;
+    let _e143 = dielectric_diffuse;
+    let _e144 = dielectric_specularBRDF;
+    let _e145 = dielectric_fresnel;
+    dielectric_color = mix(_e143, _e144, _e145);
+    let _e147 = dielectric_color;
+    let _e148 = metal_specular_color;
+    let _e150 = (*pbr_1).Metallic;
+    finalColor = mix(_e147, _e148, vec3(_e150));
+    let _e153 = finalColor;
+    finalColor = clamp(_e153, vec3<f32>(0f, 0f, 0f), vec3<f32>(3f, 3f, 3f));
+    let _e155 = finalColor;
+    return _e155;
 }
 
-fn CalcGeometricOcculusion_u0028_struct_u002d_PBRParam_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_f1_u002d_vf3_u002d_vf31_u003b(param_11: ptr<function, PBRParam>) -> f32 {
-    var NdotL: f32;
-    var NdotV: f32;
-    var r: f32;
+fn ComputeIndirectLight_u0028_struct_u002d_PBRData_u002d_vf3_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_vf31_u003b(pbr_2: ptr<function, PBRData>) -> vec3<f32> {
+    var ResultCol: vec3<f32>;
+    var param_21: PBRData;
+    var param_22: PBRData;
+    var gi_diffuse: vec3<f32>;
+    var n_3: vec3<f32>;
+    var v_3: vec3<f32>;
+    var NdV_2: f32;
+    var phi_669_: bool;
+
+    ResultCol = vec3<f32>(0f, 0f, 0f);
+    let _e82 = ubo.useIBL;
+    if (_e82 != 0i) {
+        let _e84 = (*pbr_2);
+        param_21 = _e84;
+        let _e85 = ComputeIBL_u0028_struct_u002d_PBRData_u002d_vf3_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_vf31_u003b((&param_21));
+        let _e86 = ResultCol;
+        ResultCol = (_e86 + _e85);
+    } else {
+        let _e89 = ubo.useCubeMap;
+        let _e90 = (_e89 != 0i);
+        phi_669_ = _e90;
+        if !(_e90) {
+            let _e93 = ubo.useDirCubemap;
+            phi_669_ = (_e93 != 0i);
+        }
+        let _e96 = phi_669_;
+        if _e96 {
+            let _e97 = (*pbr_2);
+            param_22 = _e97;
+            let _e98 = CalcReflectionProbe_u0028_struct_u002d_PBRData_u002d_vf3_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_vf31_u003b((&param_22));
+            let _e99 = ResultCol;
+            ResultCol = (_e99 + _e98);
+        } else {
+            let _e102 = ubo.ambientColor;
+            gi_diffuse = _e102.xyz;
+            let _e104 = gi_diffuse;
+            let _e105 = ResultCol;
+            ResultCol = (_e105 + _e104);
+        }
+    }
+    let _e108 = (*pbr_2).WorldNormal;
+    n_3 = normalize(_e108);
+    let _e111 = (*pbr_2).ViewDir;
+    v_3 = normalize(-(_e111));
+    let _e114 = n_3;
+    let _e115 = v_3;
+    NdV_2 = clamp(dot(_e114, _e115), 0f, 1f);
+    let _e118 = ResultCol;
+    return _e118;
+}
+
+fn CalcFrenelReflection_u0028_vf3_u003b_f1_u003b_f1_u003b(Albedo: ptr<function, vec3<f32>>, Metallic: ptr<function, f32>, NdV_3: ptr<function, f32>) -> vec3<f32> {
+    var F0_1: vec3<f32>;
+
+    let _e77 = (*Albedo);
+    let _e78 = (*Metallic);
+    F0_1 = mix(vec3<f32>(0.04f, 0.04f, 0.04f), _e77, vec3(_e78));
+    let _e81 = F0_1;
+    let _e82 = F0_1;
+    let _e85 = (*NdV_3);
+    return (_e81 + ((vec3(1f) - _e82) * pow((1f - _e85), 5f)));
+}
+
+fn CalcGeometricOcculusion_u0028_struct_u002d_PBRParam_u002d_vf3_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f11_u003b(param_23: ptr<function, PBRParam>) -> f32 {
+    var k: f32;
     var attenuationL: f32;
     var attenuationV: f32;
 
-    let _e101 = (*param_11).NdotL;
-    NdotL = _e101;
-    let _e103 = (*param_11).NdotV;
-    NdotV = _e103;
-    let _e105 = (*param_11).alphaRoughness;
-    r = _e105;
-    let _e106 = NdotL;
-    let _e108 = NdotL;
-    let _e109 = r;
-    let _e110 = r;
-    let _e112 = r;
-    let _e113 = r;
-    let _e116 = NdotL;
-    let _e117 = NdotL;
-    attenuationL = ((2f * _e106) / (_e108 + sqrt(((_e109 * _e110) + ((1f - (_e112 * _e113)) * (_e116 * _e117))))));
-    let _e124 = NdotV;
-    let _e126 = NdotV;
-    let _e127 = r;
-    let _e128 = r;
-    let _e130 = r;
-    let _e131 = r;
-    let _e134 = NdotV;
-    let _e135 = NdotV;
-    attenuationV = ((2f * _e124) / (_e126 + sqrt(((_e127 * _e128) + ((1f - (_e130 * _e131)) * (_e134 * _e135))))));
-    let _e142 = attenuationL;
-    let _e143 = attenuationV;
-    return (_e142 * _e143);
+    let _e78 = (*param_23).Roughness;
+    k = _e78;
+    let _e80 = (*param_23).NdV;
+    let _e82 = (*param_23).NdV;
+    let _e83 = k;
+    let _e86 = k;
+    attenuationL = (_e80 / ((_e82 * (1f - _e83)) + _e86));
+    let _e90 = (*param_23).NdL;
+    let _e92 = (*param_23).NdL;
+    let _e93 = k;
+    let _e96 = k;
+    attenuationV = (_e90 / ((_e92 * (1f - _e93)) + _e96));
+    let _e99 = attenuationL;
+    let _e100 = attenuationV;
+    return (_e99 * _e100);
 }
 
-fn CalcMicrofacet_u0028_struct_u002d_PBRParam_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_f1_u002d_vf3_u002d_vf31_u003b(param_12: ptr<function, PBRParam>) -> f32 {
-    var roughness2_: f32;
+fn CalcMicrofacet_u0028_struct_u002d_PBRParam_u002d_vf3_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f11_u003b(param_24: ptr<function, PBRParam>) -> f32 {
+    var r: f32;
+    var a: f32;
+    var a2_: f32;
     var f: f32;
 
-    let _e98 = (*param_12).alphaRoughness;
-    let _e100 = (*param_12).alphaRoughness;
-    roughness2_ = (_e98 * _e100);
-    let _e103 = (*param_12).NdotH;
-    let _e104 = roughness2_;
-    let _e107 = (*param_12).NdotH;
-    let _e110 = (*param_12).NdotH;
-    f = ((((_e103 * _e104) - _e107) * _e110) + 1f);
-    let _e113 = roughness2_;
-    let _e114 = f;
-    let _e116 = f;
-    return (_e113 / ((3.1415927f * _e114) * _e116));
+    let _e79 = (*param_24).Roughness;
+    r = _e79;
+    let _e80 = r;
+    a = _e80;
+    let _e81 = a;
+    let _e82 = a;
+    a2_ = max(0.001f, (_e81 * _e82));
+    let _e86 = (*param_24).NdH;
+    let _e88 = a2_;
+    f = ((pow(_e86, 2f) * (_e88 - 1f)) + 1f);
+    let _e92 = a2_;
+    let _e93 = f;
+    let _e95 = f;
+    return (_e92 / ((3.1415927f * _e93) * _e95));
 }
 
-fn getNormal_u0028_() -> vec3<f32> {
-    var nomral_1: vec3<f32>;
+fn CalcSpecularBRDF_u0028_struct_u002d_PBRParam_u002d_vf3_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f11_u003b(param_25: ptr<function, PBRParam>) -> vec3<f32> {
+    var D: f32;
+    var param_26: PBRParam;
+    var G: f32;
+    var param_27: PBRParam;
+    var F_1: vec3<f32>;
+    var param_28: vec3<f32>;
+    var param_29: f32;
+    var param_30: f32;
+    var spec: vec3<f32>;
+
+    let _e83 = (*param_25);
+    param_26 = _e83;
+    let _e84 = CalcMicrofacet_u0028_struct_u002d_PBRParam_u002d_vf3_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f11_u003b((&param_26));
+    D = _e84;
+    let _e85 = (*param_25);
+    param_27 = _e85;
+    let _e86 = CalcGeometricOcculusion_u0028_struct_u002d_PBRParam_u002d_vf3_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f11_u003b((&param_27));
+    G = _e86;
+    let _e88 = (*param_25).Albedo;
+    param_28 = _e88;
+    let _e90 = (*param_25).Metallic;
+    param_29 = _e90;
+    let _e92 = (*param_25).NdV;
+    param_30 = _e92;
+    let _e93 = CalcFrenelReflection_u0028_vf3_u003b_f1_u003b_f1_u003b((&param_28), (&param_29), (&param_30));
+    F_1 = _e93;
+    let _e94 = D;
+    let _e95 = G;
+    let _e97 = F_1;
+    let _e100 = (*param_25).NdV;
+    let _e103 = (*param_25).NdL;
+    spec = ((_e97 * (_e94 * _e95)) / vec3(((4f * _e100) * _e103)));
+    let _e108 = spec[0u];
+    spec[0u] = max(0f, _e108);
+    let _e112 = spec[1u];
+    spec[1u] = max(0f, _e112);
+    let _e116 = spec[2u];
+    spec[2u] = max(0f, _e116);
+    let _e119 = spec;
+    return _e119;
+}
+
+fn CalcDiffuseBRDF_u0028_struct_u002d_PBRData_u002d_vf3_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_vf31_u003b(pbr_3: ptr<function, PBRData>) -> vec3<f32> {
+    var OneMinusReflectivity: f32;
+    var col: vec3<f32>;
+
+    let _e77 = (*pbr_3).Metallic;
+    OneMinusReflectivity = (0.96f - (_e77 * 0.96f));
+    let _e81 = (*pbr_3).Albedo;
+    let _e82 = OneMinusReflectivity;
+    col = (_e81 * _e82);
+    let _e85 = col[0u];
+    col[0u] = max(0f, _e85);
+    let _e89 = col[1u];
+    col[1u] = max(0f, _e89);
+    let _e93 = col[2u];
+    col[2u] = max(0f, _e93);
+    let _e96 = col;
+    return _e96;
+}
+
+fn CreatePBRParam_u0028_struct_u002d_PBRData_u002d_vf3_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_vf31_u003b_struct_u002d_LightData_u002d_vf3_u002d_vf3_u002d_f11_u003b(pbr_4: ptr<function, PBRData>, light: ptr<function, LightData>) -> PBRParam {
+    var l: vec3<f32>;
+    var v_4: vec3<f32>;
+    var n_4: vec3<f32>;
+    var h: vec3<f32>;
+    var NdH: f32;
+    var LdH: f32;
+    var NdL: f32;
+    var NdV_4: f32;
+    var VdH: f32;
+    var param_31: PBRParam;
+
+    let _e86 = (*light).dir;
+    l = normalize(-(_e86));
+    let _e90 = (*pbr_4).ViewDir;
+    v_4 = normalize(-(_e90));
+    let _e94 = (*pbr_4).WorldNormal;
+    n_4 = normalize(_e94);
+    let _e96 = l;
+    let _e97 = v_4;
+    h = normalize((_e96 + _e97));
+    let _e100 = n_4;
+    let _e101 = h;
+    NdH = clamp(dot(_e100, _e101), 0f, 1f);
+    let _e104 = l;
+    let _e105 = h;
+    LdH = clamp(dot(_e104, _e105), 0f, 1f);
+    let _e108 = n_4;
+    let _e109 = l;
+    NdL = clamp(dot(_e108, _e109), 0f, 1f);
+    let _e112 = n_4;
+    let _e113 = v_4;
+    NdV_4 = clamp(dot(_e112, _e113), 0f, 1f);
+    let _e116 = v_4;
+    let _e117 = h;
+    VdH = clamp(dot(_e116, _e117), 0f, 1f);
+    let _e121 = (*pbr_4).Albedo;
+    param_31.Albedo = _e121;
+    let _e124 = (*pbr_4).Metallic;
+    param_31.Metallic = _e124;
+    let _e127 = (*pbr_4).Roughness;
+    param_31.Roughness = max(0.04f, _e127);
+    let _e130 = NdH;
+    param_31.NdH = _e130;
+    let _e132 = LdH;
+    param_31.LdH = _e132;
+    let _e134 = NdL;
+    param_31.NdL = _e134;
+    let _e136 = NdV_4;
+    param_31.NdV = _e136;
+    let _e138 = VdH;
+    param_31.VdH = _e138;
+    let _e140 = param_31;
+    return _e140;
+}
+
+fn ComputeDirectLight_u0028_struct_u002d_PBRData_u002d_vf3_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_vf31_u003b_struct_u002d_LightData_u002d_vf3_u002d_vf3_u002d_f11_u003b(pbr_5: ptr<function, PBRData>, light_1: ptr<function, LightData>) -> vec3<f32> {
+    var param_32: PBRParam;
+    var param_33: PBRData;
+    var param_34: LightData;
+    var DiffuseCol: vec3<f32>;
+    var param_35: PBRData;
+    var SpecularCol: vec3<f32>;
+    var param_36: PBRParam;
+    var ResultCol_1: vec3<f32>;
+
+    let _e83 = (*pbr_5);
+    param_33 = _e83;
+    let _e84 = (*light_1);
+    param_34 = _e84;
+    let _e85 = CreatePBRParam_u0028_struct_u002d_PBRData_u002d_vf3_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_vf31_u003b_struct_u002d_LightData_u002d_vf3_u002d_vf3_u002d_f11_u003b((&param_33), (&param_34));
+    param_32 = _e85;
+    let _e86 = (*pbr_5);
+    param_35 = _e86;
+    let _e87 = CalcDiffuseBRDF_u0028_struct_u002d_PBRData_u002d_vf3_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_vf31_u003b((&param_35));
+    DiffuseCol = _e87;
+    let _e88 = param_32;
+    param_36 = _e88;
+    let _e89 = CalcSpecularBRDF_u0028_struct_u002d_PBRParam_u002d_vf3_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f11_u003b((&param_36));
+    SpecularCol = _e89;
+    let _e91 = param_32.NdL;
+    let _e92 = DiffuseCol;
+    let _e93 = SpecularCol;
+    let _e97 = (*light_1).color;
+    let _e100 = (*light_1).attenuation;
+    ResultCol_1 = ((((_e92 + _e93) * _e91) * _e97) * _e100);
+    let _e102 = ResultCol_1;
+    return _e102;
+}
+
+fn CalcNormal_u0028_() -> vec3<f32> {
+    var nomral: vec3<f32>;
     var t: vec3<f32>;
     var b: vec3<f32>;
-    var n_2: vec3<f32>;
+    var n_5: vec3<f32>;
     var tbn: mat3x3<f32>;
 
-    nomral_1 = vec3<f32>(0f, 0f, 0f);
-    let _e100 = ubo.useNormalTexture;
-    if (_e100 != 0i) {
-        let _e102 = f_WorldTangent_1;
-        t = normalize(_e102);
-        let _e104 = f_WorldBioTangent_1;
-        b = normalize(_e104);
-        let _e106 = f_WorldNormal_1;
-        n_2 = normalize(_e106);
-        let _e108 = t;
-        let _e109 = b;
-        let _e110 = n_2;
-        tbn = mat3x3<f32>(vec3<f32>(_e108.x, _e108.y, _e108.z), vec3<f32>(_e109.x, _e109.y, _e109.z), vec3<f32>(_e110.x, _e110.y, _e110.z));
-        let _e124 = f_Texcoord_1;
-        let _e125 = textureSample(normalTexture, normalTextureSampler, _e124);
-        nomral_1 = _e125.xyz;
-        let _e127 = tbn;
-        let _e128 = nomral_1;
-        let _e133 = ubo.normalMapScale;
-        let _e135 = ubo.normalMapScale;
-        nomral_1 = normalize((_e127 * (((_e128 * 2f) - vec3(1f)) * vec3<f32>(_e133, _e135, 1f))));
+    nomral = vec3<f32>(0f, 0f, 0f);
+    let _e79 = ubo.useNormalTexture;
+    if (_e79 != 0i) {
+        let _e81 = f_WorldTangent_1;
+        t = normalize(_e81);
+        let _e83 = f_WorldBioTangent_1;
+        b = normalize(_e83);
+        let _e85 = f_WorldNormal_1;
+        n_5 = normalize(_e85);
+        let _e87 = t;
+        let _e88 = b;
+        let _e89 = n_5;
+        tbn = mat3x3<f32>(vec3<f32>(_e87.x, _e87.y, _e87.z), vec3<f32>(_e88.x, _e88.y, _e88.z), vec3<f32>(_e89.x, _e89.y, _e89.z));
+        let _e103 = f_Texcoord_1;
+        let _e104 = textureSample(normalTexture, normalTextureSampler, _e103);
+        nomral = _e104.xyz;
+        let _e106 = tbn;
+        let _e107 = nomral;
+        let _e112 = ubo.normalMapScale;
+        let _e114 = ubo.normalMapScale;
+        nomral = normalize((_e106 * (((_e107 * 2f) - vec3(1f)) * vec3<f32>(_e112, _e114, 1f))));
     } else {
-        let _e140 = f_WorldNormal_1;
-        nomral_1 = _e140;
+        let _e119 = f_WorldNormal_1;
+        nomral = _e119;
     }
-    let _e141 = nomral_1;
-    return _e141;
+    let _e120 = nomral;
+    return _e120;
 }
 
-fn CalcSurface_u0028_() -> vec4<f32> {
-    var col: vec3<f32>;
-    var perceptualRoughness: f32;
+fn CalcMetallicRoughness_u0028_() -> vec2<f32> {
     var metallic: f32;
+    var roughness: f32;
     var metallicRoughnessColor: vec4<f32>;
-    var alphaRoughness: f32;
-    var baseColor: vec4<f32>;
-    var f0_: vec3<f32>;
-    var diffuseColor: vec3<f32>;
-    var specularColor: vec3<f32>;
-    var reflectance: f32;
-    var reflectance90_: f32;
-    var specularEnvironmentR0_: vec3<f32>;
-    var specularEnvironmentR90_: vec3<f32>;
-    var n_3: vec3<f32>;
-    var v_2: vec3<f32>;
-    var l: vec3<f32>;
-    var h: vec3<f32>;
-    var reflection: vec3<f32>;
-    var NdotL_1: f32;
-    var NdotV_1: f32;
-    var NdotH: f32;
-    var LdotH: f32;
-    var VdotH: f32;
-    var pbrParam_2: PBRParam;
-    var specular_1: vec3<f32>;
-    var diffuse_1: vec3<f32>;
-    var D: f32;
-    var param_13: PBRParam;
-    var G: f32;
-    var param_14: PBRParam;
-    var F: vec3<f32>;
-    var param_15: PBRParam;
-    var param_16: PBRParam;
-    var param_17: PBRParam;
-    var param_18: vec3<f32>;
-    var param_19: vec3<f32>;
-    var param_20: PBRParam;
-    var param_21: vec3<f32>;
-    var param_22: vec3<f32>;
-    var gi_diffuse: vec3<f32>;
-    var ao: f32;
-    var emissive: vec3<f32>;
-    var param_23: vec4<f32>;
-    var lsp_1: vec3<f32>;
-    var shadowCol: f32;
-    var outSide: bool;
-    var param_24: vec3<f32>;
-    var param_25: vec3<f32>;
-    var param_26: vec3<f32>;
-    var alpha: f32;
-    var result: vec4<f32>;
-    var phi_877_: bool;
-    var phi_983_: bool;
-    var phi_990_: bool;
-    var phi_1003_: bool;
-    var phi_1010_: bool;
-    var phi_1011_: bool;
 
-    col = vec3<f32>(0f, 0f, 0f);
-    let _e146 = ubo.roughnessFactor;
-    perceptualRoughness = _e146;
-    let _e148 = ubo.metallicFactor;
-    metallic = _e148;
-    let _e150 = ubo.useMetallicRoughnessTexture;
-    if (_e150 != 0i) {
-        let _e152 = f_Texcoord_1;
-        let _e153 = textureSample(metallicRoughnessTexture, metallicRoughnessTextureSampler, _e152);
-        metallicRoughnessColor = _e153;
-        let _e154 = perceptualRoughness;
-        let _e156 = metallicRoughnessColor[1u];
-        perceptualRoughness = (_e154 * _e156);
-        let _e158 = metallic;
-        let _e160 = metallicRoughnessColor[2u];
-        metallic = (_e158 * _e160);
+    let _e77 = ubo.metallicFactor;
+    metallic = _e77;
+    let _e79 = ubo.roughnessFactor;
+    roughness = _e79;
+    let _e81 = ubo.useMetallicRoughnessTexture;
+    if (_e81 != 0i) {
+        let _e83 = f_Texcoord_1;
+        let _e84 = textureSample(metallicRoughnessTexture, metallicRoughnessTextureSampler, _e83);
+        metallicRoughnessColor = _e84;
+        let _e85 = roughness;
+        let _e87 = metallicRoughnessColor[1u];
+        roughness = (_e85 * _e87);
+        let _e89 = metallic;
+        let _e91 = metallicRoughnessColor[2u];
+        metallic = (_e89 * _e91);
     }
-    let _e162 = perceptualRoughness;
-    perceptualRoughness = clamp(_e162, 0.04f, 1f);
-    let _e164 = metallic;
-    metallic = clamp(_e164, 0f, 1f);
-    let _e166 = perceptualRoughness;
-    let _e167 = perceptualRoughness;
-    alphaRoughness = (_e166 * _e167);
-    let _e170 = ubo.useBaseColorTexture;
-    if (_e170 != 0i) {
-        let _e172 = f_Texcoord_1;
-        let _e173 = textureSample(baseColorTexture, baseColorTextureSampler, _e172);
-        baseColor = _e173;
+    let _e93 = metallic;
+    let _e94 = roughness;
+    return vec2<f32>(_e93, _e94);
+}
+
+fn CalcBaseColor_u0028_() -> vec4<f32> {
+    var baseColor: vec4<f32>;
+    var param_37: vec3<f32>;
+
+    let _e76 = ubo.useBaseColorTexture;
+    if (_e76 != 0i) {
+        let _e78 = f_Texcoord_1;
+        let _e79 = textureSample(baseColorTexture, baseColorTextureSampler, _e78);
+        baseColor = _e79;
+        let _e80 = baseColor;
+        param_37 = _e80.xyz;
+        let _e82 = SRGBtoLINEAR_u0028_vf3_u003b((&param_37));
+        baseColor[0u] = _e82.x;
+        baseColor[1u] = _e82.y;
+        baseColor[2u] = _e82.z;
     } else {
-        let _e175 = ubo.baseColorFactor;
-        baseColor = _e175;
+        let _e90 = ubo.baseColorFactor;
+        baseColor = _e90;
     }
-    f0_ = vec3<f32>(0.04f, 0.04f, 0.04f);
-    let _e176 = baseColor;
-    let _e178 = f0_;
-    diffuseColor = (_e176.xyz * (vec3<f32>(1f, 1f, 1f) - _e178));
-    let _e181 = f0_;
-    let _e182 = baseColor;
-    let _e184 = metallic;
-    specularColor = mix(_e181, _e182.xyz, vec3(_e184));
-    let _e188 = specularColor[0u];
-    let _e190 = specularColor[1u];
-    let _e193 = specularColor[2u];
-    reflectance = max(max(_e188, _e190), _e193);
-    let _e195 = reflectance;
-    reflectance90_ = clamp((_e195 * 25f), 0f, 1f);
-    let _e198 = specularColor;
-    specularEnvironmentR0_ = _e198;
-    let _e199 = reflectance90_;
-    specularEnvironmentR90_ = (vec3<f32>(1f, 1f, 1f) * _e199);
-    let _e201 = getNormal_u0028_();
-    n_3 = _e201;
-    let _e202 = f_WorldPos_1;
-    let _e205 = ubo.cameraPos;
-    v_2 = (normalize((_e202.xyz - _e205.xyz)) * -1f);
-    let _e211 = ubo.lightDir;
-    l = (normalize(_e211.xyz) * -1f);
-    let _e215 = v_2;
-    let _e216 = l;
-    h = normalize((_e215 + _e216));
-    let _e219 = v_2;
-    let _e220 = n_3;
-    reflection = normalize(reflect(_e219, _e220));
-    let _e223 = n_3;
-    let _e224 = l;
-    NdotL_1 = clamp(dot(_e223, _e224), 0f, 1f);
-    let _e227 = n_3;
-    let _e228 = v_2;
-    NdotV_1 = clamp(abs(dot(_e227, _e228)), 0f, 1f);
-    let _e232 = n_3;
-    let _e233 = h;
-    NdotH = clamp(dot(_e232, _e233), 0f, 1f);
-    let _e236 = l;
-    let _e237 = h;
-    LdotH = clamp(dot(_e236, _e237), 0f, 1f);
-    let _e240 = v_2;
-    let _e241 = h;
-    VdotH = clamp(dot(_e240, _e241), 0f, 1f);
-    let _e244 = NdotL_1;
-    let _e245 = NdotV_1;
-    let _e246 = NdotH;
-    let _e247 = LdotH;
-    let _e248 = VdotH;
-    let _e249 = perceptualRoughness;
-    let _e250 = metallic;
-    let _e251 = specularEnvironmentR0_;
-    let _e252 = specularEnvironmentR90_;
-    let _e253 = alphaRoughness;
-    let _e254 = diffuseColor;
-    let _e255 = specularColor;
-    pbrParam_2 = PBRParam(_e244, _e245, _e246, _e247, _e248, _e249, _e250, _e251, _e252, _e253, _e254, _e255);
-    specular_1 = vec3<f32>(0f, 0f, 0f);
-    diffuse_1 = vec3<f32>(0f, 0f, 0f);
-    let _e257 = pbrParam_2;
-    param_13 = _e257;
-    let _e258 = CalcMicrofacet_u0028_struct_u002d_PBRParam_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_f1_u002d_vf3_u002d_vf31_u003b((&param_13));
-    D = _e258;
-    let _e259 = pbrParam_2;
-    param_14 = _e259;
-    let _e260 = CalcGeometricOcculusion_u0028_struct_u002d_PBRParam_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_f1_u002d_vf3_u002d_vf31_u003b((&param_14));
-    G = _e260;
-    let _e261 = pbrParam_2;
-    param_15 = _e261;
-    let _e262 = CalcFrenelReflection_u0028_struct_u002d_PBRParam_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_f1_u002d_vf3_u002d_vf31_u003b((&param_15));
-    F = _e262;
-    let _e263 = NdotL_1;
-    let _e265 = NdotV_1;
-    if ((_e263 > 0f) || (_e265 > 0f)) {
-        let _e268 = D;
-        let _e269 = G;
-        let _e271 = F;
-        let _e273 = NdotL_1;
-        let _e275 = NdotV_1;
-        let _e279 = specular_1;
-        specular_1 = (_e279 + ((_e271 * (_e268 * _e269)) / vec3(((4f * _e273) * _e275))));
-        let _e281 = specular_1;
-        specular_1 = max(_e281, vec3<f32>(0f, 0f, 0f));
-        let _e283 = F;
-        let _e286 = pbrParam_2;
-        param_16 = _e286;
-        let _e287 = CalcDiffuseBRDF_u0028_struct_u002d_PBRParam_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_f1_u002d_vf3_u002d_vf31_u003b((&param_16));
-        let _e289 = diffuse_1;
-        diffuse_1 = (_e289 + ((vec3(1f) - _e283) * _e287));
-        let _e291 = NdotL_1;
-        let _e292 = specular_1;
-        let _e293 = diffuse_1;
-        col = ((_e292 + _e293) * _e291);
-    }
-    let _e297 = ubo.useIBL;
-    if (_e297 != 0i) {
-        let _e299 = pbrParam_2;
-        param_17 = _e299;
-        let _e300 = v_2;
-        param_18 = _e300;
-        let _e301 = n_3;
-        param_19 = _e301;
-        let _e302 = ComputeIBL_u0028_struct_u002d_PBRParam_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_f1_u002d_vf3_u002d_vf31_u003b_vf3_u003b_vf3_u003b((&param_17), (&param_18), (&param_19));
-        let _e303 = col;
-        col = (_e303 + _e302);
-    } else {
-        let _e306 = ubo.useCubeMap;
-        let _e307 = (_e306 != 0i);
-        phi_877_ = _e307;
-        if !(_e307) {
-            let _e310 = ubo.useDirCubemap;
-            phi_877_ = (_e310 != 0i);
-        }
-        let _e313 = phi_877_;
-        if _e313 {
-            let _e314 = pbrParam_2;
-            param_20 = _e314;
-            let _e315 = v_2;
-            param_21 = _e315;
-            let _e316 = n_3;
-            param_22 = _e316;
-            let _e317 = ComputeReflectionColor_u0028_struct_u002d_PBRParam_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_f1_u002d_vf3_u002d_vf31_u003b_vf3_u003b_vf3_u003b((&param_20), (&param_21), (&param_22));
-            let _e318 = F;
-            let _e320 = col;
-            col = (_e320 + (_e317 * _e318));
-        } else {
-            let _e323 = ubo.ambientColor;
-            gi_diffuse = _e323.xyz;
-            let _e325 = gi_diffuse;
-            let _e326 = col;
-            col = (_e326 + _e325);
-        }
-    }
-    let _e329 = ubo.useOcclusionTexture;
-    if (_e329 != 0i) {
-        let _e331 = f_Texcoord_1;
-        let _e332 = textureSample(occlusionTexture, occlusionTextureSampler, _e331);
-        ao = _e332.x;
-        let _e334 = col;
-        let _e335 = col;
-        let _e336 = ao;
-        let _e339 = ubo.occlusionStrength;
-        col = mix(_e334, (_e335 * _e336), vec3(_e339));
-    }
-    let _e343 = ubo.emissiveFactor;
-    let _e346 = ubo.emissiveStrength;
-    emissive = (_e343.xyz * _e346);
-    let _e349 = ubo.useEmissiveTexture;
-    if (_e349 != 0i) {
-        let _e351 = f_Texcoord_1;
-        let _e352 = textureSample(emissiveTexture, emissiveTextureSampler, _e351);
-        param_23 = _e352;
-        let _e353 = SRGBtoLINEAR_u0028_vf4_u003b((&param_23));
-        let _e355 = emissive;
-        emissive = (_e355 * _e353.xyz);
-    }
-    let _e357 = emissive;
-    let _e358 = col;
-    col = (_e358 + _e357);
-    let _e361 = ubo.useShadowMap;
-    if (_e361 != 0i) {
-        let _e363 = f_LightSpacePos_1;
-        let _e366 = f_LightSpacePos_1[3u];
-        lsp_1 = (_e363.xyz / vec3(_e366));
-        let _e369 = lsp_1;
-        lsp_1 = ((_e369 * 0.5f) + vec3(0.5f));
-        shadowCol = 1f;
-        let _e374 = lsp_1[0u];
-        let _e375 = (_e374 < 0f);
-        phi_983_ = _e375;
-        if !(_e375) {
-            let _e378 = lsp_1[1u];
-            phi_983_ = (_e378 < 0f);
-        }
-        let _e381 = phi_983_;
-        phi_990_ = _e381;
-        if !(_e381) {
-            let _e384 = lsp_1[2u];
-            phi_990_ = (_e384 < 0f);
-        }
-        let _e387 = phi_990_;
-        phi_1011_ = _e387;
-        if !(_e387) {
-            let _e390 = lsp_1[0u];
-            let _e391 = (_e390 > 1f);
-            phi_1003_ = _e391;
-            if !(_e391) {
-                let _e394 = lsp_1[1u];
-                phi_1003_ = (_e394 > 1f);
-            }
-            let _e397 = phi_1003_;
-            phi_1010_ = _e397;
-            if !(_e397) {
-                let _e400 = lsp_1[2u];
-                phi_1010_ = (_e400 > 1f);
-            }
-            let _e403 = phi_1010_;
-            phi_1011_ = _e403;
-        }
-        let _e405 = phi_1011_;
-        outSide = _e405;
-        let _e406 = outSide;
-        if !(_e406) {
-            let _e408 = lsp_1;
-            param_24 = _e408;
-            let _e409 = n_3;
-            param_25 = _e409;
-            let _e410 = l;
-            param_26 = _e410;
-            let _e411 = CalcShadow_u0028_vf3_u003b_vf3_u003b_vf3_u003b((&param_24), (&param_25), (&param_26));
-            shadowCol = _e411;
-        }
-        let _e412 = shadowCol;
-        let _e413 = col;
-        col = (_e413 * _e412);
-    }
-    let _e415 = col;
-    col = pow(_e415, vec3<f32>(0.45454547f, 0.45454547f, 0.45454547f));
-    let _e418 = baseColor[3u];
-    alpha = _e418;
-    let _e419 = col;
-    let _e420 = alpha;
-    result = vec4<f32>(_e419.x, _e419.y, _e419.z, _e420);
-    let _e425 = result;
-    return _e425;
+    let _e91 = baseColor;
+    return _e91;
 }
 
 fn main_1() {
-    var result_1: vec4<f32>;
+    var col_1: vec4<f32>;
+    var baseColor_1: vec4<f32>;
+    var MetallicRoughness: vec2<f32>;
+    var Normal: vec3<f32>;
+    var pbr_6: PBRData;
+    var light_2: LightData;
+    var param_38: PBRData;
+    var param_39: LightData;
+    var param_40: PBRData;
 
-    result_1 = vec4<f32>(0f, 0f, 0f, 0f);
-    let _e95 = CalcSurface_u0028_();
-    result_1 = _e95;
-    let _e96 = result_1;
-    outColor = _e96;
+    col_1 = vec4<f32>(0f, 0f, 0f, 1f);
+    let _e82 = CalcBaseColor_u0028_();
+    baseColor_1 = _e82;
+    let _e83 = CalcMetallicRoughness_u0028_();
+    MetallicRoughness = _e83;
+    let _e84 = CalcNormal_u0028_();
+    Normal = _e84;
+    let _e85 = baseColor_1;
+    pbr_6.Albedo = _e85.xyz;
+    let _e89 = MetallicRoughness[0u];
+    pbr_6.Metallic = _e89;
+    let _e92 = MetallicRoughness[1u];
+    pbr_6.Roughness = _e92;
+    let _e94 = Normal;
+    pbr_6.WorldNormal = _e94;
+    let _e96 = f_WorldPos_1;
+    let _e99 = ubo.cameraPos;
+    pbr_6.ViewDir = normalize((_e96.xyz - _e99.xyz));
+    let _e105 = ubo.lightDir;
+    light_2.dir = _e105.xyz;
+    let _e109 = ubo.lightColor;
+    light_2.color = _e109.xyz;
+    light_2.attenuation = 1f;
+    let _e113 = pbr_6;
+    param_38 = _e113;
+    let _e114 = light_2;
+    param_39 = _e114;
+    let _e115 = ComputeDirectLight_u0028_struct_u002d_PBRData_u002d_vf3_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_vf31_u003b_struct_u002d_LightData_u002d_vf3_u002d_vf3_u002d_f11_u003b((&param_38), (&param_39));
+    let _e116 = col_1;
+    let _e118 = (_e116.xyz + _e115);
+    col_1[0u] = _e118.x;
+    col_1[1u] = _e118.y;
+    col_1[2u] = _e118.z;
+    let _e125 = pbr_6;
+    param_40 = _e125;
+    let _e126 = ComputeIndirectLight_u0028_struct_u002d_PBRData_u002d_vf3_u002d_f1_u002d_f1_u002d_vf3_u002d_vf3_u002d_vf31_u003b((&param_40));
+    let _e127 = col_1;
+    let _e129 = (_e127.xyz + _e126);
+    col_1[0u] = _e129.x;
+    col_1[1u] = _e129.y;
+    col_1[2u] = _e129.z;
+    let _e136 = CalcEmissive_u0028_();
+    let _e137 = col_1;
+    let _e139 = (_e137.xyz + _e136);
+    col_1[0u] = _e139.x;
+    col_1[1u] = _e139.y;
+    col_1[2u] = _e139.z;
+    let _e146 = col_1;
+    outColor = _e146;
     return;
 }
 
 @fragment 
-fn main(@location(3) f_WorldTangent: vec3<f32>, @location(4) f_WorldBioTangent: vec3<f32>, @location(0) f_WorldNormal: vec3<f32>, @location(1) f_Texcoord: vec2<f32>, @location(2) f_WorldPos: vec4<f32>, @location(5) f_LightSpacePos: vec4<f32>) -> @location(0) vec4<f32> {
+fn main(@location(1) f_Texcoord: vec2<f32>, @location(3) f_WorldTangent: vec3<f32>, @location(4) f_WorldBioTangent: vec3<f32>, @location(0) f_WorldNormal: vec3<f32>, @location(2) f_WorldPos: vec4<f32>, @location(5) f_LightSpacePos: vec4<f32>) -> @location(0) vec4<f32> {
+    f_Texcoord_1 = f_Texcoord;
     f_WorldTangent_1 = f_WorldTangent;
     f_WorldBioTangent_1 = f_WorldBioTangent;
     f_WorldNormal_1 = f_WorldNormal;
-    f_Texcoord_1 = f_Texcoord;
     f_WorldPos_1 = f_WorldPos;
     f_LightSpacePos_1 = f_LightSpacePos;
     main_1();

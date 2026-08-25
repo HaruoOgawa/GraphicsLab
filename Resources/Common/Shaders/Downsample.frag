@@ -39,7 +39,7 @@ vec2 GetTextureSize()
   #ifdef USE_OPENGL
   vec2 texSize = textureSize(texImage, 0);
   #else
-  vec2 texSize = textureSize(sampler2D(texImage, texImageSampler), 0);
+  vec2 texSize = textureSize(sampler2D(texImage, texSampler), 0);
   #endif
 
   return texSize;
